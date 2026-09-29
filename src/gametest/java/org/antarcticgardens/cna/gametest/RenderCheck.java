@@ -129,10 +129,21 @@ public class RenderCheck implements FabricClientGameTest {
             context.waitTicks(20);
             context.takeScreenshot("cna_wires");
 
+            // motor extension: alone, and behind a motor
+            set(server, 1, 0, -6, "create_new_age:basic_motor_extension[facing=north]");
+            set(server, 3, 0, -7, "create_new_age:basic_motor[facing=north]");
+            set(server, 3, 0, -6, "create_new_age:basic_motor_extension[facing=north]");
+            look(context, server, 4.8, Y, -3.8, 2, Y, -6);
+            context.waitTicks(20);
+            context.takeScreenshot("cna_motor_extension_back");
+            look(context, server, 0.5, Y, -7.9, 2, Y, -6);
+            context.waitTicks(20);
+            context.takeScreenshot("cna_motor_extension_front");
+
             server.runCommand("clear @p");
-            for (String item : new String[]{"basic_motor", "advanced_motor", "reinforced_motor", "basic_energiser",
-                    "stirling_engine", "carbon_brushes", "generator_coil", "electrical_connector", "copper_wire",
-                    "heat_pipe", "reactor_casing", "overcharged_diamond", "nuclear_fuel", "basic_motor_extension",
+            for (String item : new String[]{"basic_motor", "advanced_motor", "basic_motor_extension", "advanced_motor_extension",
+                    "basic_energiser", "stirling_engine", "carbon_brushes", "generator_coil", "electrical_connector",
+                    "copper_wire", "heat_pipe", "reactor_casing", "overcharged_diamond", "nuclear_fuel",
                     "street_light", "thorium_ore"})
                 server.runCommand("give @p create_new_age:" + item);
             context.waitTicks(5);
