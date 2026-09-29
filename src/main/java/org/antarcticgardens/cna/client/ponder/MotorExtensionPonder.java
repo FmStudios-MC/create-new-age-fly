@@ -1,4 +1,4 @@
-package org.antarcticgardens.cna.content.ponders;
+package org.antarcticgardens.cna.client.ponder;
 
 import com.zurrtum.create.content.kinetics.gauge.StressGaugeBlockEntity;
 import com.zurrtum.create.client.foundation.ponder.CreateSceneBuilder;
@@ -41,7 +41,7 @@ public class MotorExtensionPonder {
         redstoneIdle(scene, stressometer, 4);
         
         scene.overlay().showText(60)
-                .pointAt(stressometer.getCenter())
+                .pointAt(Vec3.atCenterOf(stressometer))
                 .placeNearTarget()
                 .text("Tired of your motors being overstressed? Use a motor extension!");
 
@@ -50,7 +50,7 @@ public class MotorExtensionPonder {
         scene.world().showSection(util.select().position(3, 1, 2), Direction.SOUTH);
 
         scene.overlay().showText(60)
-                .pointAt(util.grid().at(3, 1, 2).getCenter())
+                .pointAt(Vec3.atCenterOf(util.grid().at(3, 1, 2)))
                 .placeNearTarget()
                 .text("Extensions allow you to configure motor stress capacity multiplier");
 
@@ -71,7 +71,7 @@ public class MotorExtensionPonder {
         scene.idle(30);
         
         scene.overlay().showText(60)
-                .pointAt(util.grid().at(3, 1, 2).getCenter())
+                .pointAt(Vec3.atCenterOf(util.grid().at(3, 1, 2)))
                 .placeNearTarget()
                 .text("Note that energy consumption is proportional to stress capacity");
         

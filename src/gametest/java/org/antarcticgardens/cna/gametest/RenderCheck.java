@@ -6,7 +6,12 @@ import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import com.zurrtum.create.client.ponder.foundation.ui.PonderUI;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.level.ServerLevel;
 import org.antarcticgardens.cna.content.electricity.connector.AbstractElectricalConnector;
 import org.antarcticgardens.cna.content.electricity.wire.WireType;
@@ -125,6 +130,17 @@ public class RenderCheck implements FabricClientGameTest {
             context.waitTicks(5);
             context.takeScreenshot("cna_items");
             context.setScreen(() -> null);
+
+            // one ponder per scene file; each opens its first storyboard
+            for (String item : new String[]{"basic_energiser", "generator_coil", "heater", "heat_pipe", "basic_motor",
+                    "basic_motor_extension", "reactor_rod", "electrical_connector"}) {
+                Item ponderItem = BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath("create_new_age", item));
+                context.setScreen(() -> PonderUI.of(new ItemStack(ponderItem)));
+                context.waitTicks(120);
+                context.takeScreenshot("ponder_" + item);
+                context.setScreen(() -> null);
+                context.waitTicks(2);
+            }
         }
     }
 

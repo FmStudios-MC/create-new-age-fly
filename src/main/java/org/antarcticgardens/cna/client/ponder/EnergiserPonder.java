@@ -1,4 +1,4 @@
-package org.antarcticgardens.cna.content.ponders;
+package org.antarcticgardens.cna.client.ponder;
 
 import net.minecraft.world.item.ItemStack;
 

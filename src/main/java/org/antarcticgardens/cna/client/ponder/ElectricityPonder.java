@@ -1,4 +1,4 @@
-package org.antarcticgardens.cna.content.ponders;
+package org.antarcticgardens.cna.client.ponder;
 
 import net.minecraft.world.item.ItemStack;
 
@@ -84,7 +84,7 @@ public class ElectricityPonder {
         scene.idle(120);
 
         scene.overlay().showControls(util.vector().centerOf(3, 2, 2), Pointing.DOWN, 20).rightClick()
-                .withItem(AllItems.WRENCH.asStack());
+                .withItem(new ItemStack(AllItems.WRENCH));
         
         scene.idle(5);
 

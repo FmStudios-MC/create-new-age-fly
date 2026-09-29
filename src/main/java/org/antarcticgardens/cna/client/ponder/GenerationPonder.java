@@ -1,4 +1,4 @@
-package org.antarcticgardens.cna.content.ponders;
+package org.antarcticgardens.cna.client.ponder;
 
 import com.zurrtum.create.content.kinetics.gauge.StressGaugeBlockEntity;
 import com.zurrtum.create.client.foundation.ponder.CreateSceneBuilder;

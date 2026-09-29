@@ -1,9 +1,9 @@
-package org.antarcticgardens.cna.content.ponders;
+package org.antarcticgardens.cna.client.ponder;
 
-import com.tterrag.registrate.util.entry.ItemProviderEntry;
-import com.tterrag.registrate.util.entry.RegistryEntry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.ItemLike;
 import com.zurrtum.create.client.ponder.api.level.PonderLevel;
-import net.createmod.ponder.api.registration.*;
+import com.zurrtum.create.client.ponder.api.registration.*;
 import net.minecraft.resources.Identifier;
 import org.antarcticgardens.cna.CNABlocks;
 import org.antarcticgardens.cna.CNAItems;
@@ -41,7 +41,8 @@ public class CNAPonders implements PonderPlugin {
     }
 
     public static void register(PonderSceneRegistrationHelper<Identifier> helper) {
-        PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
+        // Keyed by item, as Create Fly does; blocks and items both qualify.
+        PonderSceneRegistrationHelper<ItemLike> HELPER = helper.withKeyFunction(item -> BuiltInRegistries.ITEM.getKey(item.asItem()));
 
         HELPER.addStoryBoard(CNABlocks.BASIC_ENERGISER, "energiser", EnergiserPonder::ponder);
         HELPER.addStoryBoard(CNABlocks.REINFORCED_ENERGISER, "energiser", EnergiserPonder::ponder);
@@ -93,7 +94,7 @@ public class CNAPonders implements PonderPlugin {
     static Identifier MOTOR_EXTENSION = Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "motor_extension");
 
     public static void register(PonderTagRegistrationHelper<Identifier> helper) {
-        PonderTagRegistrationHelper<RegistryEntry<?, ?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
+        PonderTagRegistrationHelper<ItemLike> HELPER = helper.withKeyFunction(item -> BuiltInRegistries.ITEM.getKey(item.asItem()));
 
         HELPER.registerTag(ELECTRICAL)
                 .item(CNABlocks.ADVANCED_ENERGISER)

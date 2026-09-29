@@ -38,7 +38,6 @@ sourceSets.main.java {
     exclude 'org/antarcticgardens/cna/compat/computercraft/**'
     exclude 'org/antarcticgardens/cna/compat/jei/**'
     exclude 'org/antarcticgardens/cna/compat/RecipeViewerEnergiserRenderer.java'
-    exclude 'org/antarcticgardens/cna/content/ponders/**'
 
 }
 

@@ -1,4 +1,4 @@
-package org.antarcticgardens.cna.content.ponders;
+package org.antarcticgardens.cna.client.ponder;
 
 import net.minecraft.world.item.ItemStack;
 
@@ -11,7 +11,7 @@ import com.zurrtum.create.client.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -122,7 +122,7 @@ public class ReactorPonder {
         scene.idle(10);
 
         var ent = scene.world().createEntity(level -> {
-            Creeper c = new Creeper(EntityType.CREEPER, level);
+            Creeper c = new Creeper(EntityTypes.CREEPER, level);
             c.setPos(1, 1, 4);
             return c;
         });
