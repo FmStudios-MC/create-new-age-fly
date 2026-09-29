@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "create:andesite_casing"
-    },
-    "M": {
-      "item": "create_new_age:magnetite_block"
-    },
-    "N": {
-      "tag": "c:nuggets/iron"
-    },
-    "S": {
-      "item": "create:shaft"
-    }
+    "C": "create:andesite_casing",
+    "M": "create_new_age:magnetite_block",
+    "N": "#c:nuggets/iron",
+    "S": "create:shaft"
   },
   "pattern": [
     "NNN",

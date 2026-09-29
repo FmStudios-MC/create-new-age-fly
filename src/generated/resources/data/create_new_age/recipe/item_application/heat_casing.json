@@ -1,16 +1,10 @@
 {
   "type": "create:item_application",
-  "ingredients": [
-    {
-      "item": "create:industrial_iron_block"
-    },
-    {
-      "item": "create:zinc_ingot"
-    }
-  ],
   "results": [
     {
       "id": "create_new_age:heat_casing"
     }
-  ]
+  ],
+  "target": "create:industrial_iron_block",
+  "ingredient": "create:zinc_ingot"
 }

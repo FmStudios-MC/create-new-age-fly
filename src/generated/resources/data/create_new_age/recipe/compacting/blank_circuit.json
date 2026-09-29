@@ -2,18 +2,10 @@
   "type": "create:compacting",
   "heat_requirement": "superheated",
   "ingredients": [
-    {
-      "tag": "c:stones"
-    },
-    {
-      "tag": "c:dusts/redstone"
-    },
-    {
-      "tag": "c:ingots/iron"
-    },
-    {
-      "item": "minecraft:quartz"
-    }
+    "#c:stones",
+    "#c:dusts/redstone",
+    "#c:ingots/iron",
+    "minecraft:quartz"
   ],
   "results": [
     {

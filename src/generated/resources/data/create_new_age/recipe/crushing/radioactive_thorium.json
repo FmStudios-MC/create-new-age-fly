@@ -1,10 +1,5 @@
 {
   "type": "create:crushing",
-  "ingredients": [
-    {
-      "item": "create_new_age:thorium"
-    }
-  ],
   "processing_time": 400,
   "results": [
     {
@@ -19,5 +14,6 @@
       "chance": 0.75,
       "id": "create:experience_nugget"
     }
-  ]
+  ],
+  "ingredient": "create_new_age:thorium"
 }

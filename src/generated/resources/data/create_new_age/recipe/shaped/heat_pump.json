@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "P": {
-      "item": "create_new_age:heat_pipe"
-    },
-    "T": {
-      "item": "create_new_age:thorium"
-    }
+    "P": "create_new_age:heat_pipe",
+    "T": "create_new_age:thorium"
   },
   "pattern": [
     "PTP"

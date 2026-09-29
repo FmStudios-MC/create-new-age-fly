@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "tag": "c:storage_blocks/copper"
-    },
-    "N": {
-      "tag": "c:nuggets/iron"
-    },
-    "P": {
-      "item": "create_new_age:heat_pipe"
-    },
-    "S": {
-      "item": "create:shaft"
-    }
+    "C": "#c:storage_blocks/copper",
+    "N": "#c:nuggets/iron",
+    "P": "create_new_age:heat_pipe",
+    "S": "create:shaft"
   },
   "pattern": [
     "NSN",

@@ -1,16 +1,10 @@
 {
   "type": "create:deploying",
-  "ingredients": [
-    {
-      "item": "create_new_age:blank_circuit"
-    },
-    {
-      "item": "create_new_age:copper_wire"
-    }
-  ],
   "results": [
     {
       "id": "create_new_age:copper_circuit"
     }
-  ]
+  ],
+  "target": "create_new_age:blank_circuit",
+  "ingredient": "create_new_age:copper_wire"
 }

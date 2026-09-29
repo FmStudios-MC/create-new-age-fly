@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": {
-      "tag": "c:glass_blocks/colorless"
-    },
-    "I": {
-      "item": "create_new_age:overcharged_iron"
-    },
-    "P": {
-      "item": "create_new_age:heat_pipe"
-    }
+    "G": "#c:glass_blocks/colorless",
+    "I": "create_new_age:overcharged_iron",
+    "P": "create_new_age:heat_pipe"
   },
   "pattern": [
     "GGG",

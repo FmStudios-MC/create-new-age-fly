@@ -1,25 +1,21 @@
 {
   "type": "create:mixing",
   "ingredients": [
-    {
-      "item": "create_new_age:thorium"
-    },
-    {
-      "tag": "c:stones"
-    },
-    {
-      "item": "minecraft:clay"
-    },
-    {
-      "type": "neoforge:single",
-      "amount": 1000,
-      "fluid": "minecraft:water"
-    }
+    "create_new_age:thorium",
+    "#c:stones",
+    "minecraft:clay"
   ],
   "results": [
     {
       "count": 2,
       "id": "create_new_age:thorium"
+    }
+  ],
+  "fluid_ingredients": [
+    {
+      "type": "fluid_stack",
+      "amount": 81000,
+      "fluid": "minecraft:water"
     }
   ]
 }

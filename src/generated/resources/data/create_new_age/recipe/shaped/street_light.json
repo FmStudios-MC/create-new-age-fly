@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "create_new_age:electrical_connector"
-    },
-    "G": {
-      "tag": "c:glass_blocks/colorless"
-    },
-    "S": {
-      "tag": "c:plates/iron"
-    }
+    "C": "create_new_age:electrical_connector",
+    "G": "#c:glass_blocks/colorless",
+    "S": "#c:plates/iron"
   },
   "pattern": [
     "S",

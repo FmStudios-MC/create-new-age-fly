@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "W": {
-      "item": "create_new_age:copper_wire"
-    }
+    "W": "create_new_age:copper_wire"
   },
   "pattern": [
     "WW",

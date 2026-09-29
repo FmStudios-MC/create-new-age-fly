@@ -2,21 +2,11 @@
   "type": "create:mechanical_crafting",
   "accept_mirrored": true,
   "key": {
-    "C": {
-      "item": "create:brass_casing"
-    },
-    "P": {
-      "tag": "c:plates/iron"
-    },
-    "R": {
-      "tag": "c:storage_blocks/redstone"
-    },
-    "S": {
-      "item": "create:shaft"
-    },
-    "d": {
-      "tag": "c:gems/diamond"
-    }
+    "C": "create:brass_casing",
+    "P": "#c:plates/iron",
+    "R": "#c:storage_blocks/redstone",
+    "S": "create:shaft",
+    "d": "#c:gems/diamond"
   },
   "pattern": [
     "dRPPd",

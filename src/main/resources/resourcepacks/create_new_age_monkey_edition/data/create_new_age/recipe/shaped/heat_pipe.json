@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "tag": "c:plates/copper"
-    }
+    "C": "#c:plates/copper"
   },
   "pattern": [
     "CCC",

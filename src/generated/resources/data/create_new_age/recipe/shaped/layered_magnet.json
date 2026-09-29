@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": {
-      "item": "create_new_age:overcharged_gold"
-    },
-    "I": {
-      "item": "create_new_age:overcharged_iron"
-    }
+    "G": "create_new_age:overcharged_gold",
+    "I": "create_new_age:overcharged_iron"
   },
   "pattern": [
     "III",

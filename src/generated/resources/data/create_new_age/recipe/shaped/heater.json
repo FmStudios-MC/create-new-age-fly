@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "create:empty_blaze_burner"
-    },
-    "I": {
-      "item": "create_new_age:overcharged_iron"
-    },
-    "N": {
-      "tag": "c:nuggets/iron"
-    },
-    "P": {
-      "item": "create_new_age:heat_pipe"
-    }
+    "B": "create:empty_blaze_burner",
+    "I": "create_new_age:overcharged_iron",
+    "N": "#c:nuggets/iron",
+    "P": "create_new_age:heat_pipe"
   },
   "pattern": [
     "N N",

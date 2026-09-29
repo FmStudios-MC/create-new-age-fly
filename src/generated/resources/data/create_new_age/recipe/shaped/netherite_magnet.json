@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "D": {
-      "item": "create_new_age:overcharged_diamond"
-    },
-    "S": {
-      "item": "minecraft:netherite_scrap"
-    }
+    "D": "create_new_age:overcharged_diamond",
+    "S": "minecraft:netherite_scrap"
   },
   "pattern": [
     "SDS",

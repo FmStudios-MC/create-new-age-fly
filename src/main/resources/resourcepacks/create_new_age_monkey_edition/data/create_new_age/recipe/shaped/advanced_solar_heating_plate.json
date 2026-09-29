@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": {
-      "item": "minecraft:glass"
-    },
-    "I": {
-      "item": "minecraft:black_wool"
-    },
-    "P": {
-      "item": "create_new_age:heat_pipe"
-    }
+    "G": "minecraft:glass",
+    "I": "minecraft:black_wool",
+    "P": "create_new_age:heat_pipe"
   },
   "pattern": [
     "GGG",
