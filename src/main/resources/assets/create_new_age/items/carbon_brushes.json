@@ -10,15 +10,15 @@
         "type": "minecraft:composite",
         "transformation": {
           "translation": [
+            -0.190887,
             0.0,
-            0.0,
-            0.0
+            0.650584
           ],
           "left_rotation": [
-            0.620545,
-            0.339005,
-            0.339005,
-            0.620545
+            0.0,
+            0.479426,
+            0.0,
+            0.877583
           ],
           "scale": [
             1,
@@ -36,7 +36,36 @@
           {
             "type": "minecraft:model",
             "model": "create:block/shaft"
-          },
+          }
+        ]
+      },
+      {
+        "type": "minecraft:composite",
+        "transformation": {
+          "translation": [
+            0.253425,
+            0.0,
+            1.162722
+          ],
+          "left_rotation": [
+            0.0,
+            0.841471,
+            0.0,
+            0.540302
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "right_rotation": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "models": [
           {
             "type": "minecraft:model",
             "model": "create_new_age:block/carbon_brushes/coil"

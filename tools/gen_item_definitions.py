@@ -4,8 +4,9 @@
 file. Plain items point at their existing item model. The items that upstream drew with
 ItemShaftRenderer / CarbonBrushesItemRenderer (a Create shaft, and for the brushes the coil, added
 on top of the item model) become vanilla composite models, with the extra parts transformed
-exactly as those renderers did: rotate 90 degrees about X, then 1 radian about Y, then translate
-by the offset in pixels. The transform is about the item's centre, as the renderers' was.
+exactly as those renderers did: rotate about X, then about Y, then translate by the offset in
+pixels, about the item's centre as the renderers did (the composite model's
+transformation turns about the corner, so the centre is folded into the translation).
 
     python tools/gen_item_definitions.py        # ids are read from CNABlocks / CNAItems
 """
@@ -18,28 +19,41 @@ ROOT = Path(__file__).resolve().parent.parent
 JAVA = ROOT / "src/main/java/org/antarcticgardens/cna"
 OUT = ROOT / "src/main/resources/assets/create_new_age/items"
 
-# id -> (offset in pixels along x, extra part models)
+# id -> parts, each (extra part model, offset in pixels along x, X rotation in degrees, Y rotation in radians)
 SHAFT = "create:block/shaft"
 COIL = "create_new_age:block/carbon_brushes/coil"
+MOTOR = [(SHAFT, 0.0, 90, 1.0)]
+OFFSET_SHAFT = [(SHAFT, 0.5, 90, 1.0)]
 WITH_SHAFT = {
-    "basic_motor": (0.0, [SHAFT]),
-    "advanced_motor": (0.0, [SHAFT]),
-    "reinforced_motor": (0.0, [SHAFT]),
-    "stirling_engine": (0.5, [SHAFT]),
-    "basic_energiser": (0.5, [SHAFT]),
-    "advanced_energiser": (0.5, [SHAFT]),
-    "reinforced_energiser": (0.5, [SHAFT]),
-    "carbon_brushes": (0.0, [SHAFT, COIL]),
+    "basic_motor": MOTOR,
+    "advanced_motor": MOTOR,
+    "reinforced_motor": MOTOR,
+    "stirling_engine": OFFSET_SHAFT,
+    "basic_energiser": OFFSET_SHAFT,
+    "advanced_energiser": OFFSET_SHAFT,
+    "reinforced_energiser": OFFSET_SHAFT,
+    # upstream's brushes renderer has no X rotation, and it turns the pose again for the coil
+    # without popping it, so the coil ends up turned twice
+    "carbon_brushes": [(SHAFT, 0.0, 0, 1.0), (COIL, 0.0, 0, 2.0)],
 }
 
 
-def shaft_transformation(offset_px):
-    ax, ay = math.radians(90), 1.0  # Axis.XP.rotationDegrees(90), then Axis.YP.rotation(1.0f)
+def shaft_transformation(offset_px, ax_deg, ay):
+    ax = math.radians(ax_deg)  # Axis.XP.rotationDegrees(ax_deg), then Axis.YP.rotation(ay)
     sx, cx = math.sin(ax / 2), math.cos(ax / 2)
     sy, cy = math.sin(ay / 2), math.cos(ay / 2)
     q = [sx * cy, cx * sy, sx * sy, cx * cy]  # qx(90) * qy(1), as x, y, z, w
-    t = offset_px / 16
-    translation = [t * math.cos(ay), t * math.sin(ay), 0.0]  # Rx(90) * Ry(1) * (t, 0, 0)
+    # The renderer turned the shaft about the item's centre; the composite model's transformation
+    # is applied after ItemTransform.apply's final translate(-0.5), so it turns about the model's
+    # corner. So: centre + R * (offset - centre).
+    def rotate(v):
+        x, y, z = v
+        x, z = x * math.cos(ay) + z * math.sin(ay), -x * math.sin(ay) + z * math.cos(ay)  # Ry(1)
+        y, z = y * math.cos(ax) - z * math.sin(ax), y * math.sin(ax) + z * math.cos(ax)  # then Rx(90)
+        return [x, y, z]
+    c = 0.5
+    r = rotate([offset_px / 16 - c, -c, -c])
+    translation = [c + r[0], c + r[1], c + r[2]]
     return {"translation": [round(c, 6) for c in translation],
             "left_rotation": [round(c, 6) for c in q],
             "scale": [1, 1, 1],
@@ -62,12 +76,10 @@ OUT.mkdir(parents=True, exist_ok=True)
 for item_id in ids():
     base = model(f"create_new_age:item/{item_id}")
     if item_id in WITH_SHAFT:
-        offset, parts = WITH_SHAFT[item_id]
-        definition = {"model": {"type": "minecraft:composite", "models": [
-            base,
-            {"type": "minecraft:composite", "transformation": shaft_transformation(offset),
-             "models": [model(p) for p in parts]},
-        ]}}
+        definition = {"model": {"type": "minecraft:composite", "models": [base] + [
+            {"type": "minecraft:composite", "transformation": shaft_transformation(offset, ax, ay),
+             "models": [model(part)]}
+            for part, offset, ax, ay in WITH_SHAFT[item_id]]}}
     else:
         definition = {"model": base}
     (OUT / f"{item_id}.json").write_text(json.dumps(definition, indent=2) + "\n", encoding="utf-8")
