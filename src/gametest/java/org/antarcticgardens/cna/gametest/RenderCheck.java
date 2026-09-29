@@ -131,6 +131,21 @@ public class RenderCheck implements FabricClientGameTest {
             context.takeScreenshot("cna_items");
             context.setScreen(() -> null);
 
+            // JEI: the energising category, and the sequenced assemblies that contain energising steps
+            context.waitFor(mc -> JeiRuntimeGrabber.runtime != null);
+            context.runOnClient(mc -> JeiRuntimeGrabber.runtime.getRecipesGui()
+                    .showTypes(java.util.List.of(org.antarcticgardens.cna.client.compat.jei.CNAJeiPlugin.ENERGISING)));
+            context.waitTicks(20);
+            context.takeScreenshot("jei_energising");
+            context.runOnClient(mc -> JeiRuntimeGrabber.runtime.getRecipesGui().show(
+                    JeiRuntimeGrabber.runtime.getJeiHelpers().getFocusFactory().createFocus(
+                            mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT,
+                            mezz.jei.api.constants.VanillaTypes.ITEM_STACK,
+                            new ItemStack(BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath("create_new_age", "nuclear_fuel"))))));
+            context.waitTicks(20);
+            context.takeScreenshot("jei_nuclear_fuel");
+            context.setScreen(() -> null);
+
             // one ponder per scene file; each opens its first storyboard
             for (String item : new String[]{"basic_energiser", "generator_coil", "heater", "heat_pipe", "basic_motor",
                     "basic_motor_extension", "reactor_rod", "electrical_connector"}) {

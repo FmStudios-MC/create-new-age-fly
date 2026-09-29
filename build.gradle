@@ -36,8 +36,6 @@ sourceSets.main.java {
 
     // Phase 5 of the port (see PORTING.md): re-enabled once the core runs.
     exclude 'org/antarcticgardens/cna/compat/computercraft/**'
-    exclude 'org/antarcticgardens/cna/compat/jei/**'
-    exclude 'org/antarcticgardens/cna/compat/RecipeViewerEnergiserRenderer.java'
 
 }
 
@@ -88,12 +86,16 @@ dependencies {
     implementation fabricApi.module("fabric-transfer-api-v1", project.fabric_version)
     implementation fabricApi.module("fabric-biome-api-v1", project.fabric_version)
     implementation fabricApi.module("fabric-rendering-v1", project.fabric_version)
+    implementation fabricApi.module("fabric-recipe-api-v1", project.fabric_version)
     implementation fabricApi.module("fabric-model-loading-api-v1", project.fabric_version)
     runtimeOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     implementation "maven.modrinth:create-fly:${project.create_fly_version}"
 
     implementation include("teamreborn:energy:${project.team_reborn_energy_version}")
+
+    // JEI finds the plugin through the jei_mod_plugin entrypoint; optional at runtime.
+    compileOnly "maven.modrinth:jei:${project.jei_version}"
 }
 
 processResources {
@@ -147,4 +149,6 @@ fabricApi {
 
 dependencies {
     gametestImplementation fabricApi.module("fabric-client-gametest-api-v1", project.fabric_version)
+    // JEI in the test run only, to screenshot the energising category
+    gametestImplementation "maven.modrinth:jei:${project.jei_version}"
 }

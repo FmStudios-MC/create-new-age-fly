@@ -7,6 +7,9 @@
   "entrypoints": {
     "fabric-client-gametest": [
       "org.antarcticgardens.cna.gametest.RenderCheck"
+    ],
+    "jei_mod_plugin": [
+      "org.antarcticgardens.cna.gametest.JeiRuntimeGrabber"
     ]
   },
   "depends": {
