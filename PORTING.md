@@ -17,7 +17,7 @@ rise before it falls once the missing symbols are fixed.
 | JDK | 25, pinned via `org.gradle.java.home` in `gradle.properties` |
 | Licence | Upstream is BSD-3-Clause style: keep `LICENSE` + copyright notice, do not use the authors' name to promote the port |
 
-Sibling folders in `E:\Create Ported`:
+Sibling folders in `D:\Documents\Claude\Create Ported`:
 
 - `create-fly/` – full Create Fly source (master; newer than the rc-2 jar we compile against). Grep it first when asking "what did X become".
 - `create-new-age-upstream/` – untouched upstream checkout.
