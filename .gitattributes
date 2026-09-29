@@ -1,0 +1,11 @@
+# Normalise line endings; keep scripts runnable on their platform
+* text=auto eol=lf
+*.bat text eol=crlf
+gradlew text eol=lf
+
+# Binary assets
+*.png binary
+*.jar binary
+*.nbt binary
+*.ogg binary
+*.webp binary

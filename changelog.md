@@ -1,4 +1,14 @@
 ------------------------------------------------------
+Version 1.2.1-fly.26.2-alpha.1 (unofficial Fabric port)
+------------------------------------------------------
+First release of the unofficial port to Create Fly (Fabric, Minecraft 26.2). Not made or
+supported by Antarctic Gardens; please report problems with it to this port's issue tracker.
+#### Changes from 1.2.1
+- Runs on Fabric with Create Fly instead of NeoForge with Create
+- Energy goes through Team Reborn Energy (bundled) instead of NeoForge's energy capability
+- New logo
+
+------------------------------------------------------
 Version 1.2.1
 ------------------------------------------------------
 #### Additions

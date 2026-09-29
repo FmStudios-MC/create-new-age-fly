@@ -28,7 +28,7 @@ through Team Reborn Energy, and long sessions.
 | Target | Minecraft 26.2, Fabric Loader 0.19.3, Fabric API 0.160.0+26.2 (CC: Tweaked 1.120.2 needs >= 0.156) |
 | Optional | JEI 30.26.0.182 (Modrinth id `x6nG9OT2`), CC: Tweaked 1.120.2 |
 | Create Fly | `maven.modrinth:create-fly:26.2-rc-2-6.0.9-1` (latest 26.2 release on Modrinth) |
-| JDK | 25, pinned via `org.gradle.java.home` in `gradle.properties` |
+| JDK | 25, requested via `gradle/gradle-daemon-jvm.properties` (Gradle finds an installed JDK 25 even when `JAVA_HOME` is 21) |
 | Licence | Upstream is BSD-3-Clause style: keep `LICENSE` + copyright notice, do not use the authors' name to promote the port |
 
 Sibling folders in `D:\Documents\Claude\Create Ported`:
@@ -65,7 +65,7 @@ Sibling folders in `D:\Documents\Claude\Create Ported`:
 - **Config**: `config/ModConfigSpec` is a small stand-in for the slice of NeoForge's API CNA uses, writing `config/create_new_age-{client,server}.toml`. Catnip's config has no doubles. The server config is not synced to clients (only tooltips read it client-side).
 - **Datagen code** (`data/`, `*BlockStateGen`) is excluded from compilation, kept in the tree for upstream merges.
 - **Energising recipe** is a record like Create Fly's processing recipes: `{"ingredient": ..., "results": [...], "energy_needed": n}`. The committed JSONs still use upstream's `ingredients` list: phase 4.
-- `_neoforge_old/` keeps the NeoForge entrypoints/platform code for reference; delete once phase 5 is done.
+- The NeoForge entrypoints/platform code (`_neoforge_old/`) was deleted after phase 5; see upstream if needed.
 
 ## Server/client split (the biggest structural change)
 
