@@ -119,6 +119,8 @@ All client rendering lives in `client/render` and is registered from `CreateNewA
 
 ## Tools
 
+The `tools/` folder is local only (ignored by git, not in the public repository).
+
 - `tools/createfly-classes.txt` – every class in the Create Fly jar we compile against. Regenerate after a Create Fly bump.
 - `tools/remap_imports.py` – maps Create/Catnip/Ponder/Flywheel references to Create Fly packages (dry run by default, `--write` to apply).
 - `tools/show_errors.py <log> "<message part>" [lines]` – each distinct javac error with source context. Run with `PYTHONIOENCODING=utf-8`.

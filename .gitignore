@@ -22,7 +22,8 @@ crash-reports/
 bin/
 .fleet/
 
-# Python helper scripts in tools/
+# Local porting helpers (scripts, class lists), not published
+tools/
 __pycache__/
 *.pyc
 
