@@ -22,7 +22,7 @@ public class EnergiserBlockEntityPeripheral extends SyncedPeripheral<EnergiserBl
 
     @LuaFunction(mainThread = true)
     public final long getCurrentEnergy() {
-        return blockEntity.getEnergyStorage().getStoredEnergy();
+        return blockEntity.getEnergyStorage().getAmount();
     }
 
     @Override

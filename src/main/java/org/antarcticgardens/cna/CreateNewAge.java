@@ -2,6 +2,7 @@ package org.antarcticgardens.cna;
 
 import com.zurrtum.create.api.boiler.BoilerHeater;
 import com.zurrtum.create.catnip.placement.PlacementHelpers;
+import com.zurrtum.create.compat.Mods;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -16,6 +17,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import org.antarcticgardens.cna.compat.computercraft.CNAComputerPeripherals;
 import org.antarcticgardens.cna.config.CNAConfig;
 import org.antarcticgardens.cna.content.electricity.connector.ElectricalConnectorBlockEntity;
 import org.antarcticgardens.cna.content.electricity.generation.brushes.CarbonBrushesBlockEntity;
@@ -58,6 +60,10 @@ public class CreateNewAge implements ModInitializer {
         CarbonBrushesBlockEntity.registerEnergyStorage();
         EnergiserBlockEntity.registerEnergyStorage();
         StreetLightBlockEntity.registerEnergyStorage();
+
+        // Behind the check so none of CC: Tweaked's classes load without it.
+        if (Mods.COMPUTERCRAFT.isLoaded())
+            CNAComputerPeripherals.register();
 
         magnetPlacementHelperId = PlacementHelpers.register(new MagnetPlacementHelper());
 

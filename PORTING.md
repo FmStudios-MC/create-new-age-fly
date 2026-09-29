@@ -4,19 +4,23 @@ Working document. Read *State* first.
 
 ## State
 
-**Phase 3 (rendering) done, 2026-09-29.** Verified in game with the automated render check
-(`./gradlew runClientGameTest`, see *Testing*): every block renders, kinetic parts spin, connected
-textures join, wires hang between connectors, items show in the inventory, no render errors.
-A dedicated server (`runServer`) loads all data and reaches `Done` without errors.
+**Phases 1 to 5 done, 2026-09-29.** Everything upstream had is ported and compiles with nothing
+excluded but datagen. Verified with the automated render check (`./gradlew runClientGameTest`, see
+*Testing*): every block renders, kinetic parts spin, connected textures join, wires hang between
+connectors, items show in the inventory, all 8 ponder scenes open, the JEI energising category
+lists its 5 recipes, CC: Tweaked finds the peripherals. A dedicated server (`runServer`) loads all
+data and reaches `Done` without errors.
 
-Not yet checked in game: goggle tooltips, value boxes, energy flow, heat, reactor, recipes in use,
-the energiser's beam (only drawn while processing), the stirling engine's miniature flywheel.
+Not yet checked in game (phase 6): goggle tooltips, value boxes, energy flow, heat, reactor, recipes
+in use, the energiser's beam (only drawn while processing), the stirling engine's miniature
+flywheel, multiplayer.
 
 | | |
 |---|---|
 | Upstream | https://gitlab.com/antarcticgardens/create-new-age, branch `1.21.1` (NeoForge) |
 | Port branch | `fly/26.2` |
-| Target | Minecraft 26.2, Fabric Loader 0.19.3, Fabric API 0.155.0+26.2 |
+| Target | Minecraft 26.2, Fabric Loader 0.19.3, Fabric API 0.160.0+26.2 (CC: Tweaked 1.120.2 needs >= 0.156) |
+| Optional | JEI 30.26.0.182 (Modrinth id `x6nG9OT2`), CC: Tweaked 1.120.2 |
 | Create Fly | `maven.modrinth:create-fly:26.2-rc-2-6.0.9-1` (latest 26.2 release on Modrinth) |
 | JDK | 25, pinned via `org.gradle.java.home` in `gradle.properties` |
 | Licence | Upstream is BSD-3-Clause style: keep `LICENSE` + copyright notice, do not use the authors' name to promote the port |
@@ -34,8 +38,15 @@ Sibling folders in `D:\Documents\Claude\Create Ported`:
 2. ~~Core: registration, energy, networks, motors, generators, heat, reactor logic~~ (compiles; untested)
 3. ~~Client: renderers, visuals, connected textures, item models, wires~~
 4. ~~Resources: recipe JSONs, item model definitions~~ (done early: a single malformed sequenced assembly recipe stops the server loading any world)
-5. Ponders, JEI, ComputerCraft
+5. ~~Ponders, JEI, ComputerCraft~~
 6. Play-test gameplay: energy networks, motors, heat, reactor, recipes; multiplayer
+7. Release: name/description, licence notice, changelog, Modrinth/CurseForge pages
+
+## Compat (phase 5)
+
+- **Ponders** (`client/ponder`): keyed by item as Create Fly does (`ItemLike`, since CNA mixes blocks and items). `tools/fix_ponder_nbt.py` removed two structure fields 26.2 cannot decode (a belt's `Casing: NONE`, a funnel's empty `Filter`). Ponder structures are written back out through current code on every hover, so check `Serialization errors` in the log after changing one.
+- **JEI** (`client/compat/jei`): `jei_mod_plugin` entrypoint. **Recipes only reach clients for serializers registered with Fabric's `RecipeSynchronization`** (done in `CreateNewAge`); without it the category is silently empty.
+- **ComputerCraft** (`compat/computercraft`): Create Fly's pattern, a `ComputerBehaviour` added per block entity type plus `PeripheralLookup`, only when CC: Tweaked is loaded. CC's `fabric-api` artifact must be non-transitive, or its POM drags the whole Fabric API in and Loom's interface injection breaks compilation.
 
 ## Decisions
 

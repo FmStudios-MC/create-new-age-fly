@@ -27,7 +27,7 @@ public class RenderCheck implements FabricClientGameTest {
     @Override
     public void runTest(ClientGameTestContext context) {
         try (TestSingleplayerContext singleplayer = context.worldBuilder().setUseConsistentSettings(true).create()) {
-            singleplayer.getClientLevel().waitForChunksRender();
+            singleplayer.getConnection().waitForChunksRender();
             TestServerContext server = singleplayer.getServer();
 
             server.runCommand("gamemode creative @p");
@@ -88,9 +88,19 @@ public class RenderCheck implements FabricClientGameTest {
                     a.connect(b, WireType.COPPER);
             });
 
+            // ComputerCraft: the peripherals CC: Tweaked finds on CNA's block entities
+            context.waitTicks(20);
+            server.runOnServer(minecraftServer -> {
+                ServerLevel level = minecraftServer.overworld();
+                for (BlockPos pos : new BlockPos[]{new BlockPos(0, Y, 0), new BlockPos(13, Y, 1), new BlockPos(11, Y, 0)}) {
+                    var peripheral = dan200.computercraft.api.peripheral.PeripheralLookup.get().find(level, pos, null);
+                    System.out.println("CNA-CHECK peripheral at " + pos + ": " + (peripheral == null ? "none" : peripheral.getType()));
+                }
+            });
+
             look(context, server, 8, Y + 5, -9, 8, Y, 4);
             context.waitTicks(40);
-            singleplayer.getClientLevel().waitForChunksRender();
+            singleplayer.getConnection().waitForChunksRender();
             look(context, server, 8, Y + 5, -9, 8, Y, 4);
             context.waitTicks(5);
             context.takeScreenshot("cna_overview");

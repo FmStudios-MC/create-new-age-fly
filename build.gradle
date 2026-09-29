@@ -35,7 +35,6 @@ sourceSets.main.java {
     exclude 'org/antarcticgardens/cna/content/motor/MotorBlockStateGen.java'
 
     // Phase 5 of the port (see PORTING.md): re-enabled once the core runs.
-    exclude 'org/antarcticgardens/cna/compat/computercraft/**'
 
 }
 
@@ -54,6 +53,17 @@ repositories {
         }
         filter {
             includeGroup "maven.modrinth"
+        }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "SquidDev"
+                url = "https://maven.squiddev.cc"
+            }
+        }
+        filter {
+            includeGroup "cc.tweaked"
         }
     }
     exclusiveContent {
@@ -96,6 +106,11 @@ dependencies {
 
     // JEI finds the plugin through the jei_mod_plugin entrypoint; optional at runtime.
     compileOnly "maven.modrinth:jei:${project.jei_version}"
+    // Peripherals are only registered when CC: Tweaked is installed.
+    // Not transitive: its POM pulls the whole fabric-api, whose interface injections then name
+    // modules that are not on the compile classpath.
+    compileOnly("cc.tweaked:cc-tweaked-${project.minecraft_version}-fabric-api:${project.cct_version}") { transitive = false }
+    compileOnly("cc.tweaked:cc-tweaked-${project.minecraft_version}-core-api:${project.cct_version}") { transitive = false }
 }
 
 processResources {
@@ -151,4 +166,8 @@ dependencies {
     gametestImplementation fabricApi.module("fabric-client-gametest-api-v1", project.fabric_version)
     // JEI in the test run only, to screenshot the energising category
     gametestImplementation "maven.modrinth:jei:${project.jei_version}"
+    // CC: Tweaked in the test run only, to check that the peripherals are found
+    gametestImplementation("cc.tweaked:cc-tweaked-${project.minecraft_version}-fabric-api:${project.cct_version}") { transitive = false }
+    gametestImplementation("cc.tweaked:cc-tweaked-${project.minecraft_version}-core-api:${project.cct_version}") { transitive = false }
+    gametestRuntimeOnly("cc.tweaked:cc-tweaked-${project.minecraft_version}-fabric:${project.cct_version}") { transitive = false }
 }
