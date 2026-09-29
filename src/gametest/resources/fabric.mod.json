@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "create_new_age_gametest",
+  "version": "1.0.0",
+  "name": "Create: New Age render check",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-client-gametest": [
+      "org.antarcticgardens.cna.gametest.RenderCheck"
+    ]
+  },
+  "depends": {
+    "create_new_age": "*"
+  }
+}

@@ -133,3 +133,19 @@ jar {
     }
     from("CREDITS.md")
 }
+
+// Automated in-game rendering check: ./gradlew runClientGameTest builds a test scene with every
+// block, takes screenshots into build/run/clientGameTest/screenshots and exits. Not shipped.
+fabricApi {
+    configureTests {
+        createSourceSet = true
+        modId = "create_new_age_gametest"
+        enableGameTests = false
+        enableClientGameTests = true
+        eula = true
+    }
+}
+
+dependencies {
+    gametestImplementation fabricApi.module("fabric-client-gametest-api-v1", project.fabric_version)
+}

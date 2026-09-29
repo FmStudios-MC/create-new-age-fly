@@ -4,9 +4,13 @@ Working document. Read *State* first.
 
 ## State
 
-**Phase 2 (core) compiles, 2026-09-29.** `./gradlew compileJava` is green with the phase 3/5 files
-excluded in `build.gradle` (renderers, visuals, ponders, JEI, ComputerCraft). **Never launched yet**:
-nothing below has been verified in game.
+**Phase 3 (rendering) done, 2026-09-29.** Verified in game with the automated render check
+(`./gradlew runClientGameTest`, see *Testing*): every block renders, kinetic parts spin, connected
+textures join, wires hang between connectors, items show in the inventory, no render errors.
+A dedicated server (`runServer`) loads all data and reaches `Done` without errors.
+
+Not yet checked in game: goggle tooltips, value boxes, energy flow, heat, reactor, recipes in use,
+the energiser's beam (only drawn while processing), the stirling engine's miniature flywheel.
 
 | | |
 |---|---|
@@ -28,10 +32,10 @@ Sibling folders in `D:\Documents\Claude\Create Ported`:
 
 1. ~~Setup~~
 2. ~~Core: registration, energy, networks, motors, generators, heat, reactor logic~~ (compiles; untested)
-3. Client: block entity renderers, Flywheel visuals, partial models, connected textures + casings, item renderers, wire rendering
-4. Resources: migrate generated JSONs to 26.2 formats (item model definitions, recipe ingredient strings, energising recipe shape, loot tables)
+3. ~~Client: renderers, visuals, connected textures, item models, wires~~
+4. ~~Resources: recipe JSONs, item model definitions~~ (done early: a single malformed sequenced assembly recipe stops the server loading any world)
 5. Ponders, JEI, ComputerCraft
-6. First launch: client, then `runServer` (dedicated server catches client classes on the server path)
+6. Play-test gameplay: energy networks, motors, heat, reactor, recipes; multiplayer
 
 ## Decisions
 
@@ -60,29 +64,22 @@ Create Fly never asks a block entity for goggle lines or value boxes. It attache
 
 26.2 split `onRemove`: `BlockEntity#preRemoveSideEffects` runs while the block entity still exists, `affectNeighborsAfterRemoval` after it is gone. Connector wire cleanup moved to `AbstractElectricalConnector.preRemoveSideEffects`. The reactor blocks' `IBE.onRemove` calls are gone: `SmartBlockEntity.preRemoveSideEffects` calls `destroy()` itself.
 
-## Phase 3 worklist (rendering)
+## Rendering (phase 3)
 
-Excluded in `build.gradle` until ported: `*Renderer.java`, `*Visual.java`, `rendering/`, `CNARenderTypes`, `CNAPartialModels`, `CNASpriteShifts`, `connector/Wire.java`, `compat/RenderingUtil.java`.
+All client rendering lives in `client/render` and is registered from `CreateNewAgeClient`.
 
-To register from `CreateNewAgeClient` once ported (from upstream's Registrate chains):
+- **26.2 renders block entities in two passes**: `extractRenderState` (level readable) and `submit` (no level). Everything that reads the world, including the wires' per-section light, happens in extract. Wires are built into a `Wire.Mesh` there and written out through `submitCustomGeometry` with vanilla's `entityCutout` render type (upstream had its own "wire" render type).
+- **`visual` vs `normal`** (Create Fly's `AllBlockEntityRenders`): `visual` skips the renderer while Flywheel draws, `normal` always runs it. Registrate's one-argument `visual(...)` kept the renderer running; the energiser beam, the brushes' coil and the stirling flywheel depend on that, so those use `normal` and skip their shaft themselves under Flywheel. The generator coil was `visual(..., false)` and is `visual` here.
+- **Classtweaker**: `BlockEntityRenderState.blockState` must be opened in our own classtweaker; Create Fly's entry does not carry over.
+- **Connected textures**: Create Fly reads one sprite per tile, `block/<name>_connected/<1..46>.png`, not Create's 8x8 sheet. `tools/split_ct_sheets.py` cuts the sheets; its mapping was verified pixel-for-pixel against Create's andesite casing sheet and Create Fly's shipped tiles (`--verify`). **Re-run it whenever a `*_connected.png` changes.** Without the tiles the blocks render as missing texture, with no log line.
+- **Generator coil model**: upstream used NeoForge's OBJ loader. `tools/obj_to_json.py --quads` turns `tools/models/generator_coil.obj` into a `create_new_age:quads` model, baked by `client/model/QuadListModel` (Fabric `UnbakedModelDeserializer`). Plain elements cannot express the coil's parallelogram faces. The block itself uses `RenderShape.INVISIBLE` and is drawn by its renderer/visual.
+- **Item models**: every item needs `assets/create_new_age/items/<id>.json` (`tools/gen_item_definitions.py`). The shaft items (motors, energisers, stirling engine, carbon brushes) are vanilla `composite` models; the shaft's transform reproduces upstream's `ItemShaftRenderer` exactly (X 90 degrees, Y 1 rad, then the offset).
+- `generator_coil`, `street_light` and `electrical_connector` render beyond their block; the connector renderer returns `shouldRenderOffScreen`.
 
-| Block entity | Visual | Renderer |
-|---|---|---|
-| energiser | `SingleAxisRotatingVisual::shaft` | `EnergiserRenderer` |
-| electrical_connector, street_light | – | `ElectricalConnectorRenderer` |
-| generator_coil | `SingleAxisRotatingVisual.of(CNAPartialModels.GENERATOR_COIL)`, no vanilla render skip | `KineticBlockEntityRenderer` |
-| carbon_brushes | `SingleAxisRotatingVisual::shaft` | `CarbonBrushesRenderer` |
-| stirling_engine | `StirlingEngineVisual` | `StirlingEngineRenderer` |
-| basic/advanced/reinforced_motor | `OrientedRotatingVisual.of(AllPartialModels.SHAFT_HALF)` | `HalfShaftRenderer` |
+## Testing
 
-Connected textures / casings (were `onRegister` on the block chains):
-- `heat_casing`, `encased_heat_pipe`: `EncasedCTBehaviour(HEAT_CASING)`; casing connectivity `makeCasing` / `make(..., (s, f) -> !s.getValue(EncasedHeatPipeBlock.getDirectionProperty(f)))`
-- `reactor_casing`, `reactor_encased_heat_pipe`: same with `REACTOR_CASING`
-- `redstone_magnet`: `SimpleCTBehaviour(REDSTONE_MAGNET)`; `reactor_glass`: `SimpleCTBehaviour(REACTOR_GLASS)`
-
-Item renderers (were `initializeClient` + `SimpleCustomRenderer`): motors `ItemShaftRenderer(Vector3f(0), XP 90°)`; stirling engine and energisers `ItemShaftRenderer(Vector3f(0.5, 0, 0), XP 90°)`; carbon brushes `CarbonBrushesItemRenderer(Vector3f(0), identity)`. 26.2 does item rendering through item model definitions / special models.
-
-`generator_coil` now uses `RenderShape.INVISIBLE` (was `ENTITYBLOCK_ANIMATED`, gone): it needs a particle-only blockstate model.
+- `./gradlew runServer` – dedicated server; checks data loading and that no client class is reached on the server. `run/eula.txt` is accepted (the user agreed).
+- `./gradlew runClientGameTest` – `src/gametest/.../RenderCheck` builds a scene with every block in a fresh world, drives some with creative motors, wires two connectors, and saves screenshots to `build/run/clientGameTest/screenshots`. It asserts nothing; look at the pictures. The run ends with a Flywheel shutdown-watchdog crash report after the test completes: Create Fly's worker threads do not stop in time. Not ours, and harmless.
 
 ## Things learned about Create Fly so far
 
