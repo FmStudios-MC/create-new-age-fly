@@ -66,4 +66,5 @@ public class HeatPumpBlockEntity extends SmartBlockEntity implements HeatBlockEn
         if (getLevel() == null)
             return false;
         return from != getLevel().getBlockState(getBlockPos()).getValue(HeatPumpBlock.FACING).getOpposite();
-    }}
+    }
+}

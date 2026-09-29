@@ -131,4 +131,5 @@ public class StirlingEngineBlockEntity extends GeneratingKineticBlockEntity impl
         float impact = 32.0f;
         this.lastStressApplied = impact;
         return impact;
-    }}
+    }
+}

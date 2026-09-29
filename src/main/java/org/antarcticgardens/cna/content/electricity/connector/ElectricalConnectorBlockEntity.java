@@ -39,4 +39,5 @@ public class ElectricalConnectorBlockEntity extends AbstractElectricalConnector 
     /** Exposes the storage to Team Reborn Energy. Was re-registered from every constructor under ESL. */
     public static void registerEnergyStorage() {
         EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> ((ElectricalConnectorBlockEntity) blockEntity).storage, CNABlockEntityTypes.ELECTRICAL_CONNECTOR);
-    }}
+    }
+}

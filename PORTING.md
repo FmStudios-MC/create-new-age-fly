@@ -11,9 +11,15 @@ connectors, items show in the inventory, all 8 ponder scenes open, the JEI energ
 lists its 5 recipes, CC: Tweaked finds the peripherals. A dedicated server (`runServer`) loads all
 data and reaches `Done` without errors.
 
-Not yet checked in game (phase 6): goggle tooltips, value boxes, energy flow, heat, reactor, recipes
-in use, the energiser's beam (only drawn while processing), the stirling engine's miniature
-flywheel, multiplayer.
+**Phase 6 (automated gameplay checks) done, 2026-09-29.** `GameplayCheck` and `MultiplayerCheck`
+pass: generation (coil + magnets + brushes, 135 energy/t) over a wire into a motor that spins,
+an energising recipe on a depot, lava heating a pipe and a heater, a reactor rod taking fuel,
+wires and energy surviving save/reload, and on a dedicated server with a connected client the same
+chain runs and the goggle overlay and motor value box show synced values.
+
+Still only checkable by playing: balance and feel, the energiser's beam and the stirling engine's
+flywheel in motion, placing wires by hand, reactor overheating and corium, other energy mods
+through Team Reborn Energy, and long sessions.
 
 | | |
 |---|---|
@@ -39,7 +45,7 @@ Sibling folders in `D:\Documents\Claude\Create Ported`:
 3. ~~Client: renderers, visuals, connected textures, item models, wires~~
 4. ~~Resources: recipe JSONs, item model definitions~~ (done early: a single malformed sequenced assembly recipe stops the server loading any world)
 5. ~~Ponders, JEI, ComputerCraft~~
-6. Play-test gameplay: energy networks, motors, heat, reactor, recipes; multiplayer
+6. ~~Automated gameplay checks~~; a human play-test remains
 7. Release: name/description, licence notice, changelog, Modrinth/CurseForge pages
 
 ## Compat (phase 5)
@@ -90,7 +96,15 @@ All client rendering lives in `client/render` and is registered from `CreateNewA
 ## Testing
 
 - `./gradlew runServer` – dedicated server; checks data loading and that no client class is reached on the server. `run/eula.txt` is accepted (the user agreed).
-- `./gradlew runClientGameTest` – `src/gametest/.../RenderCheck` builds a scene with every block in a fresh world, drives some with creative motors, wires two connectors, and saves screenshots to `build/run/clientGameTest/screenshots`. It asserts nothing; look at the pictures. The run ends with a Flywheel shutdown-watchdog crash report after the test completes: Create Fly's worker threads do not stop in time. Not ours, and harmless.
+- `./gradlew runClientGameTest` runs three client gametests (`src/gametest`), about 4 minutes:
+  - `GameplayCheck` – working setups, checked through block entity state; logs `CNA-TEST PASS/FAIL` lines and fails the run if any check fails.
+  - `MultiplayerCheck` – a dedicated server plus a connected client; screenshots of the goggle overlay and value box.
+  - `RenderCheck` – see below.
+
+  Test fixtures inject energy with `internalInsert`, which does not sync to clients by itself (real
+  transfers go through transactions, whose final commit syncs), so a goggle overlay on such a block
+  can read 0 while the server holds the energy.
+- `RenderCheck` builds a scene with every block in a fresh world, drives some with creative motors, wires two connectors, and saves screenshots to `build/run/clientGameTest/screenshots`. It asserts nothing; look at the pictures. The run ends with a Flywheel shutdown-watchdog crash report after the test completes: Create Fly's worker threads do not stop in time. Not ours, and harmless.
 
 ## Things learned about Create Fly so far
 

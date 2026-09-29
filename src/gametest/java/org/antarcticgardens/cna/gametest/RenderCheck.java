@@ -170,7 +170,7 @@ public class RenderCheck implements FabricClientGameTest {
     }
 
     /** Teleports the player to (px, py, pz) looking at the centre of block (tx, ty, tz). */
-    private static void look(ClientGameTestContext context, TestServerContext server, double px, double py, double pz,
+    static void look(ClientGameTestContext context, TestServerContext server, double px, double py, double pz,
                              int tx, int ty, int tz) {
         double dx = tx + 0.5 - px, dy = ty + 0.5 - (py + 1.62), dz = tz + 0.5 - pz;
         float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));

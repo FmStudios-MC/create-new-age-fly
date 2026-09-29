@@ -6,7 +6,9 @@
   "environment": "client",
   "entrypoints": {
     "fabric-client-gametest": [
-      "org.antarcticgardens.cna.gametest.RenderCheck"
+      "org.antarcticgardens.cna.gametest.RenderCheck",
+      "org.antarcticgardens.cna.gametest.GameplayCheck",
+      "org.antarcticgardens.cna.gametest.MultiplayerCheck"
     ],
     "jei_mod_plugin": [
       "org.antarcticgardens.cna.gametest.JeiRuntimeGrabber"

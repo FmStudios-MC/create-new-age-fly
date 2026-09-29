@@ -97,4 +97,9 @@ public class EnergiserBlockEntity extends KineticBlockEntity {
     /** Exposes the storage to Team Reborn Energy. Was re-registered from every constructor under ESL. */
     public static void registerEnergyStorage() {
         EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> ((EnergiserBlockEntity) blockEntity).storage, CNABlockEntityTypes.ENERGISER);
-    }}
+    }
+
+    public EnergiserBehaviour getEnergisingBehaviour() {
+        return energisingBehaviour;
+    }
+}
