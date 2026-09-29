@@ -1,6 +1,5 @@
 package org.antarcticgardens.cna.content.energising;
 
-import com.zurrtum.create.compat.computercraft.AbstractComputerBehaviour;
 import com.zurrtum.create.content.kinetics.base.KineticBlockEntity;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
 import com.zurrtum.create.client.foundation.utility.CreateLang;
@@ -15,7 +14,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.antarcticgardens.cna.CNABlockEntityTypes;
 import org.antarcticgardens.cna.CNABlocks;
-import org.antarcticgardens.cna.compat.computercraft.CNAComputerCraftProxy;
 import org.antarcticgardens.cna.util.RunnableUtil;
 import org.antarcticgardens.cna.util.StringFormatUtil;
 import org.antarcticgardens.esl.energy.EnergyStorage;
@@ -30,14 +28,13 @@ public class EnergiserBlockEntity extends KineticBlockEntity {
     public float size = 0f;
     private EnergiserBehaviour energisingBehaviour;
 
-    public AbstractComputerBehaviour computerBehaviour;
 
     public EnergiserBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         
-        if (state.getBlock().equals(CNABlocks.BASIC_ENERGISER.get())) {
+        if (state.getBlock().equals(CNABlocks.BASIC_ENERGISER)) {
             tier = 1;
-        } else if (state.getBlock().equals(CNABlocks.ADVANCED_ENERGISER.get())) {
+        } else if (state.getBlock().equals(CNABlocks.ADVANCED_ENERGISER)) {
             tier = 2;
         } else {
             tier = 3;
@@ -46,7 +43,7 @@ public class EnergiserBlockEntity extends KineticBlockEntity {
         storage = new SimpleEnergyStorage(EnergiserBlock.getCapacity(tier))
                 .onFinalCommit(RunnableUtil.createBlockEntityUpdater(this));
         
-        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.ENERGISER.get());
+        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.ENERGISER);
         
         this.energisingBehaviour.tier = tier;
     }
@@ -73,13 +70,11 @@ public class EnergiserBlockEntity extends KineticBlockEntity {
         super.addBehaviours(behaviours);
         energisingBehaviour = new EnergiserBehaviour(this);
         behaviours.add(energisingBehaviour);
-        behaviours.add(computerBehaviour = CNAComputerCraftProxy.behaviour(this));
     }
 
     @Override
     public void invalidate() {
         super.invalidate();
-        computerBehaviour.removePeripheral();
     }
 
     public long lastCharged = -1;

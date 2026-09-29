@@ -1,7 +1,7 @@
 package org.antarcticgardens.cna.content.electricity.generation.magnet;
 
 import com.zurrtum.create.client.foundation.utility.CreateLang;
-import com.tterrag.registrate.util.nullness.NonNullFunction;
+import java.util.function.Function;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -34,7 +34,7 @@ public class ImplementedMagnetBlock extends Block implements IMagneticBlock {
         return strength;
     }
 
-    public static NonNullFunction<Properties, ImplementedMagnetBlock> simple(int level) {
+    public static Function<Properties, ImplementedMagnetBlock> simple(int level) {
         return (p) -> new ImplementedMagnetBlock(p, level);
     }
 }

@@ -7,10 +7,10 @@ import org.antarcticgardens.cna.CreateNewAge;
 import org.antarcticgardens.cna.config.CNAConfig;
 
 public enum WireType {
-    COPPER(1024, CNAItems.COPPER_WIRE::asStack),
-    OVERCHARGED_IRON(2048, CNAItems.OVERCHARGED_IRON_WIRE::asStack),
-    OVERCHARGED_GOLD(4096, CNAItems.OVERCHARGED_GOLDEN_WIRE::asStack),
-    OVERCHARGED_DIAMOND(8192, CNAItems.OVERCHARGED_DIAMOND_WIRE::asStack);
+    COPPER(1024, () -> new ItemStack(CNAItems.COPPER_WIRE)),
+    OVERCHARGED_IRON(2048, () -> new ItemStack(CNAItems.OVERCHARGED_IRON_WIRE)),
+    OVERCHARGED_GOLD(4096, () -> new ItemStack(CNAItems.OVERCHARGED_GOLDEN_WIRE)),
+    OVERCHARGED_DIAMOND(8192, () -> new ItemStack(CNAItems.OVERCHARGED_DIAMOND_WIRE));
 
     private final long conductivity;
     private final IRegistrateIsAFuckingShitNeverUseIt dropProvider;

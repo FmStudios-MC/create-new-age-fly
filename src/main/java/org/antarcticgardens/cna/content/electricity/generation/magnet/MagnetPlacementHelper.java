@@ -25,7 +25,7 @@ public class MagnetPlacementHelper implements IPlacementHelper {
 
     @Override
     public Predicate<BlockState> getStatePredicate() {
-        return bs -> bs.is(CNABlocks.GENERATOR_COIL.get());
+        return bs -> bs.is(CNABlocks.GENERATOR_COIL);
     }
 
     @Override

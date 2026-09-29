@@ -1,7 +1,6 @@
 package org.antarcticgardens.cna.content.electricity.generation.brushes;
 
 import com.zurrtum.create.client.api.goggles.IHaveGoggleInformation;
-import com.zurrtum.create.compat.computercraft.AbstractComputerBehaviour;
 import com.zurrtum.create.content.kinetics.base.DirectionalKineticBlock;
 import com.zurrtum.create.content.kinetics.base.KineticBlockEntity;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
@@ -15,7 +14,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.antarcticgardens.cna.CNABlockEntityTypes;
-import org.antarcticgardens.cna.compat.computercraft.CNAComputerCraftProxy;
 import org.antarcticgardens.cna.config.CNAConfig;
 import org.antarcticgardens.cna.content.electricity.generation.coil.GeneratorCoilBlock;
 import org.antarcticgardens.cna.content.electricity.generation.coil.GeneratorCoilBlockEntity;
@@ -33,7 +31,6 @@ public class CarbonBrushesBlockEntity extends KineticBlockEntity implements IHav
 
     private int lastOutput = 0;
 
-    public AbstractComputerBehaviour computerBehaviour;
 
     public CarbonBrushesBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -41,7 +38,7 @@ public class CarbonBrushesBlockEntity extends KineticBlockEntity implements IHav
         storage = new SimpleEnergyStorage(0)
                 .setSupportsInsertion(false);
 
-        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.CARBON_BRUSHES.get());
+        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.CARBON_BRUSHES);
 
         setLazyTickRate(20);
     }
@@ -61,13 +58,11 @@ public class CarbonBrushesBlockEntity extends KineticBlockEntity implements IHav
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         super.addBehaviours(behaviours);
-        behaviours.add(computerBehaviour = CNAComputerCraftProxy.behaviour(this));
     }
 
     @Override
     public void invalidate() {
         super.invalidate();
-        computerBehaviour.removePeripheral();
     }
 
     @Override

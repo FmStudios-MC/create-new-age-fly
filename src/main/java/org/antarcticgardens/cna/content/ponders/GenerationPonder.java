@@ -145,7 +145,7 @@ public class GenerationPonder {
 
         scene.idle(20);
 
-        replaceCoil(scene, util, CNABlocks.REDSTONE_MAGNET.getDefaultState());
+        replaceCoil(scene, util, CNABlocks.REDSTONE_MAGNET.defaultBlockState());
         scene.overlay().showText(20)
                 .pointAt(new Vec3(4.5, 3.5, 5.5))
                 .text("");
@@ -170,14 +170,14 @@ public class GenerationPonder {
 
         scene.idle(160);
 
-        replaceCoil(scene, util, CNABlocks.LAYERED_MAGNET.getDefaultState());
+        replaceCoil(scene, util, CNABlocks.LAYERED_MAGNET.defaultBlockState());
 
         scene.world().modifyBlockEntityNBT(util.select().position(4, 3, 8), StressGaugeBlockEntity.class,
                 nbt -> nbt.putFloat("Value", .5f));
 
         scene.idle(20);
 
-        replaceCoil(scene, util, CNABlocks.FLUXUATED_MAGNETITE.getDefaultState());
+        replaceCoil(scene, util, CNABlocks.FLUXUATED_MAGNETITE.defaultBlockState());
 
         scene.world().modifyBlockEntityNBT(util.select().position(4, 3, 8), StressGaugeBlockEntity.class,
                 nbt -> nbt.putFloat("Value", 1.0f));

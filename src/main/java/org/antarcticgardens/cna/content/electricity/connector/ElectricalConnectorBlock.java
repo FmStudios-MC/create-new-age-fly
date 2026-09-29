@@ -42,7 +42,7 @@ public class ElectricalConnectorBlock extends DirectionalBlock implements IBE<El
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if (newState.is(CNABlocks.ELECTRICAL_CONNECTOR.get()))
+        if (newState.is(CNABlocks.ELECTRICAL_CONNECTOR))
             return;
 
         if (level.getBlockEntity(pos) instanceof ElectricalConnectorBlockEntity connector) {
@@ -116,6 +116,6 @@ public class ElectricalConnectorBlock extends DirectionalBlock implements IBE<El
 
     @Override
     public BlockEntityType<? extends ElectricalConnectorBlockEntity> getBlockEntityType() {
-        return CNABlockEntityTypes.ELECTRICAL_CONNECTOR.get();
+        return CNABlockEntityTypes.ELECTRICAL_CONNECTOR;
     }
 }

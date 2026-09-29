@@ -2,7 +2,6 @@ package org.antarcticgardens.cna.content.motor;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.zurrtum.create.client.api.goggles.IHaveGoggleInformation;
-import com.zurrtum.create.compat.computercraft.AbstractComputerBehaviour;
 import com.zurrtum.create.content.kinetics.KineticNetwork;
 import com.zurrtum.create.content.kinetics.base.DirectionalKineticBlock;
 import com.zurrtum.create.content.kinetics.base.GeneratingKineticBlockEntity;
@@ -11,7 +10,7 @@ import com.zurrtum.create.content.kinetics.motor.CreativeMotorBlock;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
 import com.zurrtum.create.client.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.zurrtum.create.client.foundation.utility.CreateLang;
-import com.tterrag.registrate.builders.BlockEntityBuilder;
+import org.antarcticgardens.cna.CNABlockEntityTypes;
 import com.zurrtum.create.client.flywheel.lib.transform.TransformStack;
 import com.zurrtum.create.catnip.math.AngleHelper;
 import com.zurrtum.create.catnip.math.VecHelper;
@@ -26,7 +25,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.antarcticgardens.cna.CNABlockEntityTypes;
-import org.antarcticgardens.cna.compat.computercraft.CNAComputerCraftProxy;
 import org.antarcticgardens.cna.config.CNAConfig;
 import org.antarcticgardens.cna.content.motor.extension.MotorExtensionBlockEntity;
 import org.antarcticgardens.cna.content.motor.variants.AdvancedMotorVariant;
@@ -52,7 +50,6 @@ public class MotorBlockEntity extends GeneratingKineticBlockEntity implements IH
     private float actualStress = 0;
     private long prvEnergy = -100000;
 
-    public AbstractComputerBehaviour computerBehaviour;
 
     private float speed = 0;
     private float stress = 0;
@@ -71,12 +68,12 @@ public class MotorBlockEntity extends GeneratingKineticBlockEntity implements IH
                 .onFinalCommit(RunnableUtil.createBlockEntityUpdater(this))
                 .setSupportsExtraction(false);
 
-        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.BASIC_MOTOR.get());
-        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.ADVANCED_MOTOR.get());
-        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.REINFORCED_MOTOR.get());
+        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.BASIC_MOTOR);
+        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.ADVANCED_MOTOR);
+        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.REINFORCED_MOTOR);
     }
 
-    public static BlockEntityBuilder.BlockEntityFactory<MotorBlockEntity> create(IMotorVariant variant) {
+    public static CNABlockEntityTypes.Factory<MotorBlockEntity> create(IMotorVariant variant) {
         return (type, pos, state) -> new MotorBlockEntity(type, pos, state, variant);
     }
 
@@ -94,13 +91,11 @@ public class MotorBlockEntity extends GeneratingKineticBlockEntity implements IH
         speedBehavior.value = getDefaultSpeed();
         speedBehavior.withCallback(i -> this.updateGeneratedRotation());
         behaviours.add(speedBehavior);
-        behaviours.add(computerBehaviour = CNAComputerCraftProxy.behaviour(this));
     }
 
     @Override
     public void invalidate() {
         super.invalidate();
-        computerBehaviour.removePeripheral();
     }
 
     static class MotorValueBox extends ValueBoxTransform.Sided {

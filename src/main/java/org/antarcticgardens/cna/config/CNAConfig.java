@@ -1,8 +1,7 @@
 package org.antarcticgardens.cna.config;
 
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.common.ModConfigSpec;
-import org.antarcticgardens.cna.CreateNewAge;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 
 public class CNAConfig {
     private static final CNAConfig INSTANCE = new CNAConfig();
@@ -13,11 +12,14 @@ public class CNAConfig {
     private CNAConfig() {
         var client = new ModConfigSpec.Builder().configure(ClientConfig::new);
         this.client = client.getLeft();
-        CreateNewAge.getInstance().getPlatform().getRegistrar().registerConfig(ModConfig.Type.CLIENT, client.getRight());
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+            client.getRight().load("create_new_age-client.toml");
 
-        var common = new ModConfigSpec.Builder().configure(ServerConfig::new);
-        this.server = common.getLeft();
-        CreateNewAge.getInstance().getPlatform().getRegistrar().registerConfig(ModConfig.Type.SERVER, common.getRight());
+        // NeoForge kept this per world and synced it to clients. Here it is one global file, read on
+        // both sides; a server's values only reach clients where they drive the server's own logic.
+        var server = new ModConfigSpec.Builder().configure(ServerConfig::new);
+        this.server = server.getLeft();
+        server.getRight().load("create_new_age-server.toml");
     }
 
     public static ClientConfig getClient() {
@@ -27,6 +29,6 @@ public class CNAConfig {
     public static ServerConfig getServer() {
         return INSTANCE.server;
     }
-    
+
     public static void load() {  }
 }

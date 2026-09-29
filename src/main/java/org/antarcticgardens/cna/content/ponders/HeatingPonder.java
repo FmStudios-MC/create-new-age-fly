@@ -74,7 +74,7 @@ public class HeatingPonder {
 
         scene.idleSeconds(4);
 
-        scene.world().setBlock(util.grid().at(1, 1, 1), CNABlocks.ADVANCED_SOLAR_HEATING_PLATE.getDefaultState(), true);
+        scene.world().setBlock(util.grid().at(1, 1, 1), CNABlocks.ADVANCED_SOLAR_HEATING_PLATE.defaultBlockState(), true);
 
         scene.idle(20);
 

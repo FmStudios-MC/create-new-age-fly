@@ -1,5 +1,7 @@
 package org.antarcticgardens.cna.content.ponders;
 
+import net.minecraft.world.item.ItemStack;
+
 import com.zurrtum.create.content.processing.burner.BlazeBurnerBlock;
 import com.zurrtum.create.client.foundation.ponder.CreateSceneBuilder;
 import com.zurrtum.create.catnip.math.Pointing;
@@ -66,7 +68,7 @@ public class ReactorPonder {
 
         scene.world().showSection(util.select().position(5, 2, 1), Direction.DOWN);
         scene.idle(10);
-        scene.overlay().showControls(new Vec3(5.5, 2.5, 1.5), Pointing.DOWN, 30).withItem(CNAItems.NUCLEAR_FUEL.asStack());
+        scene.overlay().showControls(new Vec3(5.5, 2.5, 1.5), Pointing.DOWN, 30).withItem(new ItemStack(CNAItems.NUCLEAR_FUEL));
         scene.idle(10);
         scene.world().flapFunnel(util.grid().at(5, 2, 1), false);
         scene.idle(10);
@@ -175,30 +177,30 @@ public class ReactorPonder {
 
         scene.idle(20);
 
-        scene.world().setBlocks(util.select().fromTo(5, 2, 3, 5, 2, 5), CNABlocks.CORIUM.getDefaultState(), false);
+        scene.world().setBlocks(util.select().fromTo(5, 2, 3, 5, 2, 5), CNABlocks.CORIUM.defaultBlockState(), false);
 
         scene.idle(20);
 
-        scene.world().setBlock(util.grid().at(5, 2, 5), CNABlocks.SOLID_CORIUM.getDefaultState(), false);
+        scene.world().setBlock(util.grid().at(5, 2, 5), CNABlocks.SOLID_CORIUM.defaultBlockState(), false);
 
         scene.world().setBlock(util.grid().at(5, 2, 4), Blocks.AIR.defaultBlockState(), false);
 
         scene.world().setBlock(util.grid().at(5, 2, 3),Blocks.AIR.defaultBlockState(), false);
 
-        scene.world().setBlock(util.grid().at(5, 1, 4), CNABlocks.CORIUM.getDefaultState(), false);
+        scene.world().setBlock(util.grid().at(5, 1, 4), CNABlocks.CORIUM.defaultBlockState(), false);
 
-        scene.world().setBlock(util.grid().at(5, 1, 3), CNABlocks.CORIUM.getDefaultState(), false);
+        scene.world().setBlock(util.grid().at(5, 1, 3), CNABlocks.CORIUM.defaultBlockState(), false);
 
         scene.idle(20);
 
-        scene.world().setBlock(util.grid().at(5, 1, 4), CNABlocks.SOLID_CORIUM.getDefaultState(), false);
+        scene.world().setBlock(util.grid().at(5, 1, 4), CNABlocks.SOLID_CORIUM.defaultBlockState(), false);
 
         scene.world().setBlock(util.grid().at(5, 1, 3), Blocks.AIR.defaultBlockState(), false);
-        scene.world().setBlock(util.grid().at(5, 0, 3), CNABlocks.CORIUM.getDefaultState(), false);
+        scene.world().setBlock(util.grid().at(5, 0, 3), CNABlocks.CORIUM.defaultBlockState(), false);
 
         scene.idle(20);
 
-        scene.world().setBlock(util.grid().at(5, 0, 3), CNABlocks.SOLID_CORIUM.getDefaultState(), false);
+        scene.world().setBlock(util.grid().at(5, 0, 3), CNABlocks.SOLID_CORIUM.defaultBlockState(), false);
 
 
         scene.idle(20);

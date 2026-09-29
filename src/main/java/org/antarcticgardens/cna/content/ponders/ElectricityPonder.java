@@ -1,5 +1,7 @@
 package org.antarcticgardens.cna.content.ponders;
 
+import net.minecraft.world.item.ItemStack;
+
 import com.zurrtum.create.AllItems;
 import com.zurrtum.create.client.foundation.ponder.CreateSceneBuilder;
 import com.zurrtum.create.catnip.math.Pointing;
@@ -45,12 +47,12 @@ public class ElectricityPonder {
         scene.idle(75);
         
         scene.overlay().showControls(util.vector().centerOf(3, 2, 2), Pointing.DOWN, 20)
-                .withItem(CNAItems.OVERCHARGED_GOLDEN_WIRE.asStack());
+                .withItem(new ItemStack(CNAItems.OVERCHARGED_GOLDEN_WIRE));
 
         scene.idle(25);
 
         scene.overlay().showControls(util.vector().centerOf(1, 2, 2), Pointing.DOWN, 20)
-                .withItem(CNAItems.OVERCHARGED_GOLDEN_WIRE.asStack());
+                .withItem(new ItemStack(CNAItems.OVERCHARGED_GOLDEN_WIRE));
 
         scene.idle(20);
 
@@ -97,7 +99,7 @@ public class ElectricityPonder {
         
         scene.world().hideSection(util.select().position(3, 2, 3), Direction.UP);
         scene.idle(15);
-        scene.world().setBlock(util.grid().at(3, 2, 3), CNABlocks.ADVANCED_ENERGISER.getDefaultState(), false);
+        scene.world().setBlock(util.grid().at(3, 2, 3), CNABlocks.ADVANCED_ENERGISER.defaultBlockState(), false);
         scene.world().showSection(util.select().position(3, 2, 3), Direction.DOWN);
         
         scene.world().setKineticSpeed(util.select().position(1, 1, 2), 0);

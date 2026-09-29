@@ -2,7 +2,8 @@ package org.antarcticgardens.cna.content.heat.plate;
 
 import com.zurrtum.create.content.equipment.wrench.IWrenchable;
 import com.zurrtum.create.client.foundation.utility.CreateLang;
-import com.tterrag.registrate.util.entry.BlockEntityEntry;
+import java.util.function.Supplier;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -25,10 +26,10 @@ import java.util.List;
 import static org.antarcticgardens.cna.content.heat.pipe.HeatPipeBlock.massPipe;
 
 public class SolarHeatingPlateBlock extends Block implements EntityBlock, IWrenchable {
-    private final BlockEntityEntry<?> entry;
+    private final Supplier<? extends BlockEntityType<?>> entry;
     private final int strength;
 
-    public SolarHeatingPlateBlock(Properties properties, BlockEntityEntry<?> entry, int strength) {
+    public SolarHeatingPlateBlock(Properties properties, Supplier<? extends BlockEntityType<?>> entry, int strength) {
         super(properties.strength(4.0f));
         this.entry = entry;
         this.strength = strength;
@@ -37,7 +38,7 @@ public class SolarHeatingPlateBlock extends Block implements EntityBlock, IWrenc
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return entry.create(pos, state);
+        return entry.get().create(pos, state);
     }
 
     @Nullable
@@ -55,11 +56,11 @@ public class SolarHeatingPlateBlock extends Block implements EntityBlock, IWrenc
     }
 
     public static SolarHeatingPlateBlock createAdvanced(Properties properties) {
-        return  new SolarHeatingPlateBlock(properties, CNABlockEntityTypes.ADVANCED_SOLAR_HEATING_PLATE, 60);
+        return  new SolarHeatingPlateBlock(properties, () -> CNABlockEntityTypes.ADVANCED_SOLAR_HEATING_PLATE, 60);
     }
 
     public static SolarHeatingPlateBlock createBasic(Properties properties) {
-        return  new SolarHeatingPlateBlock(properties, CNABlockEntityTypes.BASIC_SOLAR_HEATING_PLATE, 20);
+        return  new SolarHeatingPlateBlock(properties, () -> CNABlockEntityTypes.BASIC_SOLAR_HEATING_PLATE, 20);
     }
 
     @Override

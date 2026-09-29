@@ -5,7 +5,8 @@ import com.zurrtum.create.content.kinetics.base.DirectionalKineticBlock;
 import com.zurrtum.create.content.kinetics.base.IRotate;
 import com.zurrtum.create.foundation.block.IBE;
 import com.zurrtum.create.client.foundation.utility.CreateLang;
-import com.tterrag.registrate.util.entry.BlockEntityEntry;
+import java.util.function.Supplier;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -39,9 +40,9 @@ public class MotorBlock extends DirectionalKineticBlock implements IRotate, IBE<
     protected static final VoxelShape Z_AXIS_AABB = Block.box(2.0, 2.0, 0.0, 14.0, 14.0, 16.0);
     protected static final VoxelShape X_AXIS_AABB = Block.box(0.0, 2.0, 2.0, 16.0, 14.0, 14.0);
     private final IMotorVariant variant;
-    BlockEntityEntry<MotorBlockEntity> entry;
+    Supplier<BlockEntityType<MotorBlockEntity>> entry;
 
-    public MotorBlock(Properties properties, BlockEntityEntry<MotorBlockEntity> entry, IMotorVariant variant) {
+    public MotorBlock(Properties properties, Supplier<BlockEntityType<MotorBlockEntity>> entry, IMotorVariant variant) {
         super(properties);
         this.variant = variant;
         this.entry = entry;

@@ -6,7 +6,7 @@ import com.zurrtum.create.foundation.blockEntity.SmartBlockEntity;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
 import com.zurrtum.create.client.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.zurrtum.create.client.foundation.utility.CreateLang;
-import com.tterrag.registrate.builders.BlockEntityBuilder;
+import org.antarcticgardens.cna.CNABlockEntityTypes;
 import com.zurrtum.create.client.flywheel.lib.transform.TransformStack;
 import com.zurrtum.create.catnip.math.AngleHelper;
 import com.zurrtum.create.catnip.math.VecHelper;
@@ -32,7 +32,7 @@ public class MotorExtensionBlockEntity extends SmartBlockEntity {
         this.variant = variant;
     }
 
-    public static BlockEntityBuilder.BlockEntityFactory<MotorExtensionBlockEntity> create(IMotorExtensionVariant variant) {
+    public static CNABlockEntityTypes.Factory<MotorExtensionBlockEntity> create(IMotorExtensionVariant variant) {
         return (type, pos, state) -> new MotorExtensionBlockEntity(type, pos, state, variant);
     }
 

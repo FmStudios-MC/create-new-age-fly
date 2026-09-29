@@ -5,7 +5,8 @@ import com.zurrtum.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.zurrtum.create.content.kinetics.base.KineticBlockEntity;
 import com.zurrtum.create.content.kinetics.base.RotatedPillarKineticBlock;
 import com.zurrtum.create.foundation.block.IBE;
-import com.tterrag.registrate.util.entry.BlockEntityEntry;
+import java.util.function.Supplier;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -23,9 +24,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class StirlingEngineBlock extends RotatedPillarKineticBlock implements IBE<StirlingEngineBlockEntity> {
-    private final BlockEntityEntry<StirlingEngineBlockEntity> entry;
+    private final Supplier<BlockEntityType<StirlingEngineBlockEntity>> entry;
 
-    public StirlingEngineBlock(Properties properties, BlockEntityEntry<StirlingEngineBlockEntity> entry) {
+    public StirlingEngineBlock(Properties properties, Supplier<BlockEntityType<StirlingEngineBlockEntity>> entry) {
         super(properties);
         this.entry = entry;
     }

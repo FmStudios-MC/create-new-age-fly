@@ -1,6 +1,5 @@
 package org.antarcticgardens.cna.config;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ServerConfig {
     public final ModConfigSpec.ConfigValue<Double> suToEnergy;

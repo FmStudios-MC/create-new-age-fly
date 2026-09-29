@@ -33,6 +33,6 @@ public class CarbonBrushesBlock extends DirectionalKineticBlock implements IBE<C
 
     @Override
     public BlockEntityType<? extends CarbonBrushesBlockEntity> getBlockEntityType() {
-        return CNABlockEntityTypes.CARBON_BRUSHES.get();
+        return CNABlockEntityTypes.CARBON_BRUSHES;
     }
 }

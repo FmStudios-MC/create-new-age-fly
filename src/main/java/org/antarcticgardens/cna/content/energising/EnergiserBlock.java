@@ -77,7 +77,7 @@ public class EnergiserBlock extends HorizontalKineticBlock implements IBE<Energi
 
     @Override
     public BlockEntityType<? extends EnergiserBlockEntity> getBlockEntityType() {
-        return CNABlockEntityTypes.ENERGISER.get();
+        return CNABlockEntityTypes.ENERGISER;
     }
 
 

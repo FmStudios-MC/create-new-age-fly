@@ -83,7 +83,7 @@ public class ReactorRodBlock extends ReactorBlock implements EntityBlock {
                 lvl.explode(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, explosionRadius, useFire, Level.ExplosionInteraction.TNT);
             }
             //Add block after explosion logic
-            level.setBlock(pos, CNABlocks.CORIUM.getDefaultState(), 3);
+            level.setBlock(pos, CNABlocks.CORIUM.defaultBlockState(), 3);
         }
     }
 

@@ -28,10 +28,10 @@ public class CNAJeiPlugin implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registration) {
         energisingType = builder(EnergisingRecipe.class)
                 .addTypedRecipes(CNARecipeTypes.ENERGISING)
-                .catalyst(CNABlocks.BASIC_ENERGISER::get)
-                .catalyst(CNABlocks.ADVANCED_ENERGISER::get)
-                .catalyst(CNABlocks.REINFORCED_ENERGISER::get)
-                .itemIcon(CNABlocks.BASIC_ENERGISER.get())
+                .catalyst(() -> CNABlocks.BASIC_ENERGISER)
+                .catalyst(() -> CNABlocks.ADVANCED_ENERGISER)
+                .catalyst(() -> CNABlocks.REINFORCED_ENERGISER)
+                .itemIcon(CNABlocks.BASIC_ENERGISER)
                 .build(Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "energising"), EnergisingJeiCategory::new);
         registration.addRecipeCategories(
                 energisingType

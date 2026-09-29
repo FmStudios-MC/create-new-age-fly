@@ -66,7 +66,7 @@ public class EncasedHeatPipeBlock extends Block implements EntityBlock, IWrencha
 
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
-        return CNABlocks.HEAT_PIPE.asStack();
+        return new ItemStack(CNABlocks.HEAT_PIPE);
     }
 
     public static BooleanProperty getDirectionProperty(Direction dir) {
@@ -109,7 +109,7 @@ public class EncasedHeatPipeBlock extends Block implements EntityBlock, IWrencha
 
         context.getLevel().levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, context.getClickedPos(), Block.getId(state));
 
-        world.setBlockAndUpdate(pos, HeatPipeBlock.updateState(CNABlocks.HEAT_PIPE.get().defaultBlockState(), world, pos));
+        world.setBlockAndUpdate(pos, HeatPipeBlock.updateState(CNABlocks.HEAT_PIPE.defaultBlockState(), world, pos));
         return InteractionResult.SUCCESS;
     }
 

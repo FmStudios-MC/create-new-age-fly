@@ -62,7 +62,7 @@ public class NuclearUtil {
 //                            ie.getZ() + 0.5,
 //                            0.0, 0.5, 0.0);
                     // TODO: Maybe make this a recipe type
-                    ie.setItem(CNAItems.NUCLEAR_FUEL.asStack());
+                    ie.setItem(new ItemStack(CNAItems.NUCLEAR_FUEL));
                 }*/
             }
         }

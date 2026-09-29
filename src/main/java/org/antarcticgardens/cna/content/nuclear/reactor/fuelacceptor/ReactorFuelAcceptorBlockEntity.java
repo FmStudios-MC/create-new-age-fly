@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class ReactorFuelAcceptorBlockEntity extends RodFindingReactorBlockEntity {
+public class ReactorFuelAcceptorBlockEntity extends RodFindingReactorBlockEntity {
     public SimpleContainer container;
 
     public ReactorFuelAcceptorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {

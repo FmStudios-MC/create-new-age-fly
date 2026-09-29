@@ -1,7 +1,6 @@
 package org.antarcticgardens.cna.config;
 
 
-import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ClientConfig {
     public final ModConfigSpec.ConfigValue<Integer> wireSectionsPerMeter;

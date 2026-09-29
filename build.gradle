@@ -25,6 +25,21 @@ loom {
 // and migrated to the 26.2 formats instead of being regenerated.
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
+// Datagen only: these produced the JSONs under src/generated, which are migrated by hand now.
+// Kept in the tree so upstream changes to them stay visible in merges.
+sourceSets.main.java {
+    exclude 'org/antarcticgardens/cna/data/CNABlockStateGen.java'
+    exclude 'org/antarcticgardens/cna/data/CNAGeneratedEntriesProvider.java'
+    exclude 'org/antarcticgardens/cna/data/CreateNewAgeDatagen.java'
+    exclude 'org/antarcticgardens/cna/data/recipe/**'
+    exclude 'org/antarcticgardens/cna/content/motor/MotorBlockStateGen.java'
+
+    // Phase 5 of the port (see PORTING.md): re-enabled once the core runs.
+    exclude 'org/antarcticgardens/cna/compat/computercraft/**'
+    exclude 'org/antarcticgardens/cna/compat/jei/**'
+    exclude 'org/antarcticgardens/cna/content/ponders/**'
+}
+
 repositories {
     mavenCentral()
     maven {
@@ -67,6 +82,7 @@ dependencies {
     implementation fabricApi.module("fabric-networking-api-v1", project.fabric_version)
     implementation fabricApi.module("fabric-object-builder-api-v1", project.fabric_version)
     implementation fabricApi.module("fabric-resource-conditions-api-v1", project.fabric_version)
+    implementation fabricApi.module("fabric-resource-loader-v1", project.fabric_version)
     implementation fabricApi.module("fabric-transfer-api-v1", project.fabric_version)
     implementation fabricApi.module("fabric-biome-api-v1", project.fabric_version)
     implementation fabricApi.module("fabric-rendering-v1", project.fabric_version)

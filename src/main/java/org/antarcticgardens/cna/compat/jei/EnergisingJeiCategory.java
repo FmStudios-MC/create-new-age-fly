@@ -1,5 +1,7 @@
 package org.antarcticgardens.cna.compat.jei;
 
+import net.minecraft.world.item.ItemStack;
+
 import com.simibubi.create.compat.jei.ItemIcon;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.zurrtum.create.content.processing.recipe.ProcessingOutput;
@@ -44,7 +46,7 @@ public class EnergisingJeiCategory extends CreateRecipeCategory<EnergisingRecipe
 
     @Override
     public IDrawable getIcon() {
-        return new ItemIcon(CNABlocks.ADVANCED_ENERGISER::asStack);
+        return new ItemIcon(() -> new ItemStack(CNABlocks.ADVANCED_ENERGISER));
     }
 
     @Override

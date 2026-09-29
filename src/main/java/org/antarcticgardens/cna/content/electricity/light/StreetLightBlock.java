@@ -70,7 +70,7 @@ public class StreetLightBlock extends Block implements IBE<StreetLightBlockEntit
 
     @Override
     public BlockEntityType<? extends StreetLightBlockEntity> getBlockEntityType() {
-        return CNABlockEntityTypes.STREET_LIGHT.get();
+        return CNABlockEntityTypes.STREET_LIGHT;
     }
 
     @Override
@@ -86,7 +86,7 @@ public class StreetLightBlock extends Block implements IBE<StreetLightBlockEntit
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if (newState.is(CNABlocks.STREET_LIGHT.get()))
+        if (newState.is(CNABlocks.STREET_LIGHT))
             return;
 
         if (level.getBlockEntity(pos) instanceof StreetLightBlockEntity connector) {

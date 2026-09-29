@@ -18,10 +18,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "org.antarcticgardens.cna.fabric.CreateNewAgeFabric"
+      "org.antarcticgardens.cna.CreateNewAge"
     ],
     "client": [
-      "org.antarcticgardens.cna.fabric.CreateNewAgeFabricClient"
+      "org.antarcticgardens.cna.CreateNewAgeClient"
     ]
   },
   "accessWidener": "create_new_age.classtweaker",

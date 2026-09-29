@@ -3,7 +3,8 @@ package org.antarcticgardens.cna.content.motor.extension;
 import com.zurrtum.create.content.equipment.wrench.IWrenchable;
 import com.zurrtum.create.foundation.block.IBE;
 import com.zurrtum.create.client.foundation.utility.CreateLang;
-import com.tterrag.registrate.util.entry.BlockEntityEntry;
+import java.util.function.Supplier;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -42,9 +43,9 @@ public class MotorExtensionBlock extends Block implements IBE<MotorExtensionBloc
     protected static final VoxelShape WEST_AABB = Block.box(0.0, 2.0, 2.0, 12.0, 14.0, 14.0);
     protected static final VoxelShape EAST_AABB = Block.box(4.0, 2.0, 2.0, 16.0, 14.0, 14.0);
     private final IMotorExtensionVariant variant;
-    BlockEntityEntry<MotorExtensionBlockEntity> entry;
+    Supplier<BlockEntityType<MotorExtensionBlockEntity>> entry;
 
-    public MotorExtensionBlock(Properties properties, BlockEntityEntry<MotorExtensionBlockEntity> entry, IMotorExtensionVariant variant) {
+    public MotorExtensionBlock(Properties properties, Supplier<BlockEntityType<MotorExtensionBlockEntity>> entry, IMotorExtensionVariant variant) {
         super(properties);
         this.variant = variant;
         this.entry = entry;

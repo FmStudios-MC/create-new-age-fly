@@ -32,7 +32,7 @@ public class RecipeViewerEnergiserRenderer {
                 .scale(20)
                 .render(graphics);
 
-        blockElement.apply(CNABlocks.BASIC_ENERGISER.getDefaultState())
+        blockElement.apply(CNABlocks.BASIC_ENERGISER.defaultBlockState())
                 .scale(20)
                 .render(graphics);
 

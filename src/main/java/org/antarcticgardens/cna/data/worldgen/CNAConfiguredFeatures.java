@@ -22,9 +22,9 @@ public class CNAConfiguredFeatures {
         RuleTest stoneOreReplaceables = new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES);
         
         FeatureUtils.register(ctx, THORIUM_ORE, Feature.ORE, 
-                new OreConfiguration(stoneOreReplaceables, CNABlocks.THORIUM_ORE.getDefaultState(), 16, 0.4f));
+                new OreConfiguration(stoneOreReplaceables, CNABlocks.THORIUM_ORE.defaultBlockState(), 16, 0.4f));
         FeatureUtils.register(ctx, MAGNETITE_BLOCK, Feature.ORE,
-                new OreConfiguration(stoneOreReplaceables, CNABlocks.MAGNETITE_BLOCK.getDefaultState(), 4, 0.4f));
+                new OreConfiguration(stoneOreReplaceables, CNABlocks.MAGNETITE_BLOCK.defaultBlockState(), 4, 0.4f));
     }
     
     private static ResourceKey<ConfiguredFeature<?, ?>> key(String name) {

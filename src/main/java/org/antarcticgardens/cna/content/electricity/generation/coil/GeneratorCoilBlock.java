@@ -50,7 +50,7 @@ public class GeneratorCoilBlock extends RotatedPillarKineticBlock implements IBE
 
         ItemStack itemInHand = player.getItemInHand(hand);
 
-        IPlacementHelper helper = PlacementHelpers.get(CreateNewAge.getInstance().getMagnetPlacementHelperId());
+        IPlacementHelper helper = PlacementHelpers.get(CreateNewAge.getMagnetPlacementHelperId());
         if (helper.matchesItem(itemInHand))
             return helper.getOffset(player, level, state, pos, hitResult)
                     .placeInWorld(level, (BlockItem) itemInHand.getItem(), player, hand, hitResult);
@@ -65,6 +65,6 @@ public class GeneratorCoilBlock extends RotatedPillarKineticBlock implements IBE
 
     @Override
     public BlockEntityType<? extends GeneratorCoilBlockEntity> getBlockEntityType() {
-        return CNABlockEntityTypes.GENERATOR_COIL.get();
+        return CNABlockEntityTypes.GENERATOR_COIL;
     }
 }

@@ -96,7 +96,7 @@ public class CNAPonders implements PonderPlugin {
         PonderTagRegistrationHelper<RegistryEntry<?, ?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
 
         HELPER.registerTag(ELECTRICAL)
-                .item(CNABlocks.ADVANCED_ENERGISER.get())
+                .item(CNABlocks.ADVANCED_ENERGISER)
                 .addToIndex()
                 .register();
 
@@ -106,7 +106,7 @@ public class CNAPonders implements PonderPlugin {
                 .register();
 
         HELPER.registerTag(MAGNETS)
-                .item(CNABlocks.REDSTONE_MAGNET.get())
+                .item(CNABlocks.REDSTONE_MAGNET)
                 .addToIndex()
                 .register();
 
@@ -116,17 +116,17 @@ public class CNAPonders implements PonderPlugin {
                 .register();
 
         HELPER.registerTag(HEATING)
-                .item(CNABlocks.HEAT_PIPE.get())
+                .item(CNABlocks.HEAT_PIPE)
                 .addToIndex()
                 .register();
 
         HELPER.registerTag(REACTOR)
-                .item(CNABlocks.REACTOR_ROD.get())
+                .item(CNABlocks.REACTOR_ROD)
                 .addToIndex()
                 .register();
 
         HELPER.registerTag(MOTOR_EXTENSION)
-                .item(CNABlocks.BASIC_MOTOR_EXTENSION.get())
+                .item(CNABlocks.BASIC_MOTOR_EXTENSION)
                 .addToIndex()
                 .register();
 

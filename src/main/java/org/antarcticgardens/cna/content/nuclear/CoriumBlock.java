@@ -39,7 +39,7 @@ public class CoriumBlock extends FallingBlock {
             }
         }
         if (random.nextFloat() < 0.05) {
-            level.setBlock(pos, CNABlocks.SOLID_CORIUM.getDefaultState(), 3);
+            level.setBlock(pos, CNABlocks.SOLID_CORIUM.defaultBlockState(), 3);
             return;
         }
         if (level.getBlockState(pos.relative(Direction.DOWN)).getBlock().getExplosionResistance() < random.nextInt(2, 12)) {

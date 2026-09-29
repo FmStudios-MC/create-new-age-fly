@@ -1,5 +1,7 @@
 package org.antarcticgardens.cna.content.ponders;
 
+import net.minecraft.world.item.ItemStack;
+
 import com.zurrtum.create.client.foundation.ponder.CreateSceneBuilder;
 import com.zurrtum.create.client.ponder.api.scene.SceneBuilder;
 import com.zurrtum.create.client.ponder.api.scene.SceneBuildingUtil;
@@ -61,7 +63,7 @@ public class EnergiserPonder {
         }
 
         scene.world().removeItemsFromBelt(new BlockPos(3, 1, 5));
-        scene.world().createItemOnBeltLike(new BlockPos(3, 1, 5), Direction.DOWN, CNAItems.OVERCHARGED_IRON.asStack());
+        scene.world().createItemOnBeltLike(new BlockPos(3, 1, 5), Direction.DOWN, new ItemStack(CNAItems.OVERCHARGED_IRON));
         scene.effects().emitParticles(new Vec3(3.5, 1.8, 5.5), scene.effects().simpleParticleEmitter(ParticleTypes.GLOW, new Vec3(0.2, 0.25, 0)),
                 4, 2);
 
@@ -90,7 +92,7 @@ public class EnergiserPonder {
         }
 
         scene.world().removeItemsFromBelt(new BlockPos(3, 1, 3));
-        scene.world().createItemOnBeltLike(new BlockPos(3, 1, 3), Direction.DOWN, CNAItems.OVERCHARGED_GOLD.asStack());
+        scene.world().createItemOnBeltLike(new BlockPos(3, 1, 3), Direction.DOWN, new ItemStack(CNAItems.OVERCHARGED_GOLD));
         scene.effects().emitParticles(new Vec3(3.5, 1.8, 3.5), scene.effects().simpleParticleEmitter(ParticleTypes.GLOW, new Vec3(0.2, 0.25, 0)),
                 4, 2);
 
