@@ -15,8 +15,8 @@ import org.antarcticgardens.cna.content.heat.HeatBlockEntity;
 
 public class StirlingEngineBlockEntity extends GeneratingKineticBlockEntity implements HeatBlockEntity {
 
-    LerpedFloat visualSpeed = LerpedFloat.linear();
-    float angle;
+    public LerpedFloat visualSpeed = LerpedFloat.linear();
+    public float angle;
     private float heat = 0;
 
     public StirlingEngineBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {

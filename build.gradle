@@ -37,17 +37,9 @@ sourceSets.main.java {
     // Phase 5 of the port (see PORTING.md): re-enabled once the core runs.
     exclude 'org/antarcticgardens/cna/compat/computercraft/**'
     exclude 'org/antarcticgardens/cna/compat/jei/**'
+    exclude 'org/antarcticgardens/cna/compat/RecipeViewerEnergiserRenderer.java'
     exclude 'org/antarcticgardens/cna/content/ponders/**'
 
-    // Phase 3 (rendering): excluded while the common code is brought to compile.
-    exclude 'org/antarcticgardens/cna/**/*Renderer.java'
-    exclude 'org/antarcticgardens/cna/**/*Visual.java'
-    exclude 'org/antarcticgardens/cna/rendering/**'
-    exclude 'org/antarcticgardens/cna/CNARenderTypes.java'
-    exclude 'org/antarcticgardens/cna/CNAPartialModels.java'
-    exclude 'org/antarcticgardens/cna/CNASpriteShifts.java'
-    exclude 'org/antarcticgardens/cna/content/electricity/connector/Wire.java'
-    exclude 'org/antarcticgardens/cna/compat/RenderingUtil.java'
 }
 
 repositories {
@@ -97,6 +89,7 @@ dependencies {
     implementation fabricApi.module("fabric-transfer-api-v1", project.fabric_version)
     implementation fabricApi.module("fabric-biome-api-v1", project.fabric_version)
     implementation fabricApi.module("fabric-rendering-v1", project.fabric_version)
+    implementation fabricApi.module("fabric-model-loading-api-v1", project.fabric_version)
     runtimeOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     implementation "maven.modrinth:create-fly:${project.create_fly_version}"

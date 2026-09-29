@@ -1,1 +1,5 @@
 classTweaker v1 official
+
+# Create Fly opens this in its own classtweaker, but access wideners are not transitive: every
+# render state CNA extracts reads it (Create Fly's SingleKineticRenderState, SmartBlockEntityRenderer).
+accessible field net/minecraft/client/renderer/blockentity/state/BlockEntityRenderState blockState Lnet/minecraft/world/level/block/state/BlockState;

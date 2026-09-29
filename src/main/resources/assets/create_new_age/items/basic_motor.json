@@ -1,0 +1,44 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "create_new_age:item/basic_motor"
+      },
+      {
+        "type": "minecraft:composite",
+        "transformation": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "left_rotation": [
+            0.620545,
+            0.339005,
+            0.339005,
+            0.620545
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "right_rotation": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "models": [
+          {
+            "type": "minecraft:model",
+            "model": "create:block/shaft"
+          }
+        ]
+      }
+    ]
+  }
+}
