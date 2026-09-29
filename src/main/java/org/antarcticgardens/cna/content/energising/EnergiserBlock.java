@@ -3,15 +3,9 @@ package org.antarcticgardens.cna.content.energising;
 import com.zurrtum.create.AllShapes;
 import com.zurrtum.create.content.kinetics.base.HorizontalKineticBlock;
 import com.zurrtum.create.foundation.block.IBE;
-import com.zurrtum.create.client.foundation.utility.CreateLang;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
@@ -22,10 +16,8 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.antarcticgardens.cna.CNABlockEntityTypes;
 import org.antarcticgardens.cna.config.CNAConfig;
-import org.antarcticgardens.cna.util.StringFormatUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 
 public class EnergiserBlock extends HorizontalKineticBlock implements IBE<EnergiserBlockEntity> {
     private final int tier;
@@ -81,16 +73,6 @@ public class EnergiserBlock extends HorizontalKineticBlock implements IBE<Energi
     }
 
 
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(CreateLang.translate("tooltip.create_new_age.speed").style(ChatFormatting.GRAY).component());
-        tooltipComponents.add(CreateLang.text(" ").translate("tooltip.create_new_age.energy_per_tick",
-                        StringFormatUtil.formatLong(getStrength(tier))).style(ChatFormatting.AQUA)
-                .add(CreateLang.text(" ").translate("tooltip.create_new_age.per_rpm", 10).style(ChatFormatting.GRAY)).component());
-        tooltipComponents.add(CreateLang.translate("tooltip.create_new_age.stores").style(ChatFormatting.GRAY).component());
-        tooltipComponents.add(CreateLang.text(" ").translate("tooltip.create_new_age.energy",
-                StringFormatUtil.formatLong(getCapacity(tier))).style(ChatFormatting.AQUA).component());
-    }
 
     public static EnergiserBlock newBasic(Properties properties) {
         return new EnergiserBlock(properties, 1);
@@ -102,5 +84,8 @@ public class EnergiserBlock extends HorizontalKineticBlock implements IBE<Energi
 
     public static EnergiserBlock newReinforced(Properties properties) {
         return new EnergiserBlock(properties, 3);
+    }
+    public int getTier() {
+        return tier;
     }
 }

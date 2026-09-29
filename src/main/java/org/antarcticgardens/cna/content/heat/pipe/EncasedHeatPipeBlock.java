@@ -1,5 +1,7 @@
 package org.antarcticgardens.cna.content.heat.pipe;
 
+import org.antarcticgardens.cna.util.SmartTicker;
+import net.minecraft.world.level.redstone.Orientation;
 import com.zurrtum.create.api.boiler.BoilerHeater;
 import com.zurrtum.create.content.decoration.encasing.EncasedBlock;
 import com.zurrtum.create.content.equipment.wrench.IWrenchable;
@@ -23,7 +25,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import org.antarcticgardens.cna.CNABlockEntityTypes;
 import org.antarcticgardens.cna.CNABlocks;
 import org.antarcticgardens.cna.config.CNAConfig;
@@ -65,7 +66,7 @@ public class EncasedHeatPipeBlock extends Block implements EntityBlock, IWrencha
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+    protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
         return new ItemStack(CNABlocks.HEAT_PIPE);
     }
 
@@ -88,8 +89,8 @@ public class EncasedHeatPipeBlock extends Block implements EntityBlock, IWrencha
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
-        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, orientation, movedByPiston);
         level.scheduleTick(pos, this, 1);
     }
 
@@ -128,7 +129,7 @@ public class EncasedHeatPipeBlock extends Block implements EntityBlock, IWrencha
         if (massPipe >= 20) {
             massPipe = 0;
         }
-        return (world, blockPos, blockState, self) -> {
+        return SmartTicker.wrap((world, blockPos, blockState, self) -> {
             if ((world.getGameTime() + on) % 20 != 0 || !(self instanceof HeatPipeBlockEntity selfC)) return;
 
             BlockPos heatPos = blockPos.below();
@@ -152,6 +153,6 @@ public class EncasedHeatPipeBlock extends Block implements EntityBlock, IWrencha
             HeatBlockEntity.transferAround(selfC);
             HeatBlockEntity.handleOverheat(selfC);
             HeatBlockEntity.trySync(selfC);
-        };
+        });
     }
 }

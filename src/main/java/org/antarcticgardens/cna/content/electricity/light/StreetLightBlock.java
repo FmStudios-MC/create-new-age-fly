@@ -1,14 +1,11 @@
 package org.antarcticgardens.cna.content.electricity.light;
 
+import org.antarcticgardens.cna.util.SmartTicker;
+import org.jspecify.annotations.Nullable;
+import net.minecraft.world.level.redstone.Orientation;
 import com.zurrtum.create.content.equipment.wrench.IWrenchable;
 import com.zurrtum.create.foundation.block.IBE;
-import com.zurrtum.create.client.foundation.utility.CreateLang;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -22,13 +19,9 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.antarcticgardens.cna.CNABlockEntityTypes;
-import org.antarcticgardens.cna.CNABlocks;
-import org.antarcticgardens.cna.config.CNAConfig;
 import org.antarcticgardens.cna.content.electricity.connector.ElectricalConnectorBlock;
 import org.antarcticgardens.cna.content.electricity.connector.ElectricalConnectorMode;
-import org.antarcticgardens.cna.util.StringFormatUtil;
 
-import java.util.List;
 
 public class StreetLightBlock extends Block implements IBE<StreetLightBlockEntity>, IWrenchable {
 
@@ -41,10 +34,10 @@ public class StreetLightBlock extends Block implements IBE<StreetLightBlockEntit
 
     @Override
     public <S extends BlockEntity> BlockEntityTicker<S> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<S> p_153214_) {
-        return (level, blockPos, blockState, blockEntity) -> {
+        return SmartTicker.wrap((level, blockPos, blockState, blockEntity) -> {
             if (blockEntity instanceof StreetLightBlockEntity streetLightBlock && !level.isClientSide())
                 streetLightBlock.serverTick();
-        };
+        });
     }
 
     @Override
@@ -73,31 +66,10 @@ public class StreetLightBlock extends Block implements IBE<StreetLightBlockEntit
         return CNABlockEntityTypes.STREET_LIGHT;
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(CreateLang.translate("tooltip.create_new_age.speed").style(ChatFormatting.GRAY).component());
-        tooltipComponents.add(CreateLang.text(" ").translate("tooltip.create_new_age.energy_per_tick",
-                        StringFormatUtil.formatLong(CNAConfig.getServer().streetLightLevelExtraction.get())).style(ChatFormatting.AQUA)
-                .add(CreateLang.text(" ").translate("tooltip.create_new_age.per_light_level").style(ChatFormatting.GRAY)).component());
-        tooltipComponents.add(CreateLang.translate("tooltip.create_new_age.stores").style(ChatFormatting.GRAY).component());
-        tooltipComponents.add(CreateLang.text(" ").translate("tooltip.create_new_age.energy",
-                StringFormatUtil.formatLong(CNAConfig.getServer().streetLightCapacity.get())).style(ChatFormatting.AQUA).component());
-    }
+
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if (newState.is(CNABlocks.STREET_LIGHT))
-            return;
-
-        if (level.getBlockEntity(pos) instanceof StreetLightBlockEntity connector) {
-            connector.remove(level);
-        }
-
-        super.onRemove(state, level, pos, newState, movedByPiston);
-    }
-
-    @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
         if (level.getBlockEntity(pos) instanceof StreetLightBlockEntity connector)
             connector.neighborChanged();
     }

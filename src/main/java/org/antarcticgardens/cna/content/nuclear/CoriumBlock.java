@@ -1,5 +1,6 @@
 package org.antarcticgardens.cna.content.nuclear;
 
+import net.minecraft.world.level.BlockGetter;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,6 +24,12 @@ public class CoriumBlock extends FallingBlock {
     @Override
     protected MapCodec<? extends FallingBlock> codec() {
         return CODEC;
+    }
+
+    // FallingBlock#getDustColor became abstract; this is the value its old default returned.
+    @Override
+    public int getDustColor(BlockState state, BlockGetter level, BlockPos pos) {
+        return -16777216;
     }
 
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {

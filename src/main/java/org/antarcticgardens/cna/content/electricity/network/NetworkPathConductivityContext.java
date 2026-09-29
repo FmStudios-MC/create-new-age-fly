@@ -1,6 +1,6 @@
 package org.antarcticgardens.cna.content.electricity.network;
 
-import net.minecraft.util.Tuple;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.antarcticgardens.cna.content.electricity.connector.AbstractElectricalConnector;
 import org.antarcticgardens.cna.util.HashSortedPair;
 
@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NetworkPathConductivityContext {
-    private final Map<HashSortedPair<AbstractElectricalConnector>, Tuple<Long, Long>> connections;
+    private final Map<HashSortedPair<AbstractElectricalConnector>, MutablePair<Long, Long>> connections;
     private final Map<HashSortedPair<AbstractElectricalConnector>, Long> updatedConnections;
     private long tick = 0;
 
@@ -22,14 +22,14 @@ public class NetworkPathConductivityContext {
         updatedConnections = new HashMap<>(context.updatedConnections);
         tick = context.tick;
 
-        for (Map.Entry<HashSortedPair<AbstractElectricalConnector>, Tuple<Long, Long>> e : context.connections.entrySet())
-            connections.put(e.getKey(), new Tuple<>(e.getValue().getA(), e.getValue().getB()));
+        for (Map.Entry<HashSortedPair<AbstractElectricalConnector>, MutablePair<Long, Long>> e : context.connections.entrySet())
+            connections.put(e.getKey(), MutablePair.of(e.getValue().getLeft(), e.getValue().getRight()));
     }
 
     public void addConnection(AbstractElectricalConnector node, AbstractElectricalConnector node1) {
         HashSortedPair<AbstractElectricalConnector> key = new HashSortedPair<>(node, node1);
         if (!node.equals(node1) && !connections.containsKey(key)) {
-            connections.put(key, new Tuple<>(node.getConnectedConnectors().get(node1).getConductivity(), 0L));
+            connections.put(key, MutablePair.of(node.getConnectedConnectors().get(node1).getConductivity(), 0L));
             updatedConnections.put(key, tick);
         }
     }
@@ -74,14 +74,14 @@ public class NetworkPathConductivityContext {
 
             HashSortedPair<AbstractElectricalConnector> key = new HashSortedPair<>(prevNode, node);
             long connectionConductivity = getConnectionConductivity(key);
-            connections.get(key).setB(connectionConductivity - amount);
+            connections.get(key).setRight(connectionConductivity - amount);
             prevNode = node;
         }
     }
 
     protected long getConnectionConductivity(HashSortedPair<AbstractElectricalConnector> key) {
         updateConnection(key);
-        return connections.get(key).getB();
+        return connections.get(key).getRight();
     }
 
     protected void updateConductivity() {
@@ -92,7 +92,7 @@ public class NetworkPathConductivityContext {
         if (updatedConnections.get(key) == tick)
             return;
 
-        connections.get(key).setB(connections.get(key).getA());
+        connections.get(key).setRight(connections.get(key).getLeft());
         updatedConnections.put(key, tick);
     }
 }

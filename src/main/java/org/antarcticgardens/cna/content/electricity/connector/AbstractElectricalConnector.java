@@ -1,20 +1,17 @@
 package org.antarcticgardens.cna.content.electricity.connector;
 
+import java.util.Optional;
 import net.minecraft.world.level.storage.ValueOutput;
 
 import net.minecraft.world.level.storage.ValueInput;
 
 import com.zurrtum.create.foundation.blockEntity.SmartBlockEntity;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
-import com.zurrtum.create.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
@@ -48,32 +45,25 @@ public abstract class AbstractElectricalConnector extends SmartBlockEntity {
 
     @Override
     protected void write(ValueOutput tag, boolean clientPacket) {
-        ListTag list = new ListTag();
+        ValueOutput.ValueOutputList list = tag.childrenList("connections");
 
         for (Map.Entry<BlockPos, WireType> e : connectorPositions.entrySet()) {
-            CompoundTag compound = new CompoundTag();
-            compound.put("position", NBTHelper.writeVec3i(e.getKey()));
-            compound.put("wire", StringTag.valueOf(e.getValue().name()));
-
-            list.add(compound);
+            ValueOutput compound = list.addChild();
+            compound.store("position", BlockPos.CODEC, e.getKey());
+            compound.putString("wire", e.getValue().name());
         }
-
-        tag.put("connections", list);
         super.write(tag, clientPacket);
     }
 
     @Override
     protected void read(ValueInput tag, boolean clientPacket) {
-        ListTag list = tag.getList("connections", Tag.TAG_COMPOUND);
         connectorPositions.clear();
 
-        for (Tag listTag : list.toArray(new Tag[0])) {
-            if (listTag instanceof CompoundTag ct && ct.contains("position") && ct.contains("wire")) {
-                BlockPos pos = new BlockPos(NBTHelper.readVec3i((ListTag) ct.get("position")));
-                WireType wire = WireType.valueOf(ct.getString("wire"));
-
-                connectorPositions.put(pos, wire);
-            }
+        for (ValueInput ct : tag.childrenListOrEmpty("connections")) {
+            Optional<BlockPos> pos = ct.read("position", BlockPos.CODEC);
+            String wire = ct.getStringOr("wire", "");
+            if (pos.isPresent() && !wire.isEmpty())
+                connectorPositions.put(pos.get(), WireType.valueOf(wire));
         }
 
         needsInstanceUpdate = true;
@@ -121,6 +111,17 @@ public abstract class AbstractElectricalConnector extends SmartBlockEntity {
         }
 
         needsInstanceUpdate = true;
+    }
+
+    /**
+     * Was the blocks' {@code onRemove}, which skipped replacement by the same block. 26.2 only calls
+     * this when the block entity really goes, and still while it is in the world.
+     */
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState oldState) {
+        if (level != null)
+            remove(level);
+        super.preRemoveSideEffects(pos, oldState);
     }
 
     public void remove(Level level) {

@@ -2,7 +2,6 @@ package org.antarcticgardens.cna.data.recipe;
 
 import com.zurrtum.create.AllBlocks;
 import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeBuilder;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.ItemLike;

@@ -5,21 +5,13 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 
 import com.zurrtum.create.content.kinetics.base.GeneratingKineticBlockEntity;
-import com.zurrtum.create.client.foundation.utility.CreateLang;
 import com.zurrtum.create.catnip.animation.LerpedFloat;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.antarcticgardens.cna.content.heat.HeatBlockEntity;
-import org.antarcticgardens.cna.util.StringFormatUtil;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 
 public class StirlingEngineBlockEntity extends GeneratingKineticBlockEntity implements HeatBlockEntity {
 

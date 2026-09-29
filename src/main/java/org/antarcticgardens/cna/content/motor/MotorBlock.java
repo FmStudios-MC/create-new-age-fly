@@ -1,22 +1,19 @@
 package org.antarcticgardens.cna.content.motor;
 
+import org.jspecify.annotations.Nullable;
+import net.minecraft.world.level.redstone.Orientation;
 import com.zurrtum.create.content.equipment.wrench.IWrenchable;
 import com.zurrtum.create.content.kinetics.base.DirectionalKineticBlock;
 import com.zurrtum.create.content.kinetics.base.IRotate;
 import com.zurrtum.create.foundation.block.IBE;
-import com.zurrtum.create.client.foundation.utility.CreateLang;
 import java.util.function.Supplier;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -29,11 +26,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.antarcticgardens.cna.config.CNAConfig;
 import org.antarcticgardens.cna.content.motor.variants.IMotorVariant;
-import org.antarcticgardens.cna.util.StringFormatUtil;
 
-import java.util.List;
 
 public class MotorBlock extends DirectionalKineticBlock implements IRotate, IBE<MotorBlockEntity> {
     protected static final VoxelShape Y_AXIS_AABB = Block.box(2.0, 0.0, 2.0, 14.0, 16.0, 14.0);
@@ -48,22 +42,6 @@ public class MotorBlock extends DirectionalKineticBlock implements IRotate, IBE<
         this.entry = entry;
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(CreateLang.translate("tooltip.create_new_age.generates").style(ChatFormatting.GRAY)
-                .component());
-        tooltipComponents.add(CreateLang.text(" ").add(CreateLang.number(variant.getStress() * CNAConfig.getServer().motorSUMultiplier.get()).text(" ")
-                .translate("generic.unit.stress").style(ChatFormatting.AQUA)).component());
-
-        tooltipComponents.add(CreateLang.translate("tooltip.create_new_age.stores").style(ChatFormatting.GRAY)
-                .component());
-        tooltipComponents.add(CreateLang.text(" ").translate("tooltip.create_new_age.energy",
-                                             StringFormatUtil.formatLong(variant.getMaxCapacity())).style(ChatFormatting.AQUA).component());
-
-        tooltipComponents.add(CreateLang.translate("tooltip.create_new_age.max_speed").style(ChatFormatting.GRAY)
-                .component());
-        tooltipComponents.add(CreateLang.text(" ").translate("tooltip.create_new_age.rpm", variant.getSpeed()).style(ChatFormatting.AQUA).component());
-    }
 
     @Override
     public SpeedLevel getMinimumRequiredSpeedLevel() {
@@ -75,7 +53,7 @@ public class MotorBlock extends DirectionalKineticBlock implements IRotate, IBE<
         if (arg3.hasBlockEntity()) {
             BlockEntity entity = arg.getBlockEntity(arg2);
             if (entity instanceof MotorBlockEntity en) {
-                en.speedBehavior.value = 0;
+                en.speedBehavior.setRawValue(0);
                 en.updateGeneratedRotation();
             }
         }
@@ -127,7 +105,7 @@ public class MotorBlock extends DirectionalKineticBlock implements IRotate, IBE<
     }
 
     @Override
-    public void neighborChanged(BlockState arg, Level arg2, BlockPos arg3, Block arg4, BlockPos arg5, boolean bl) {
+    public void neighborChanged(BlockState arg, Level arg2, BlockPos arg3, Block arg4, @Nullable Orientation orientation, boolean bl) {
         if (arg.hasBlockEntity() && !arg2.isClientSide()) {
             BlockEntity entity = arg2.getBlockEntity(arg3);
             if (entity instanceof MotorBlockEntity en) {
@@ -157,5 +135,8 @@ public class MotorBlock extends DirectionalKineticBlock implements IRotate, IBE<
     @Override
     public BlockEntityType<? extends MotorBlockEntity> getBlockEntityType() {
         return entry.get();
+    }
+    public IMotorVariant getVariant() {
+        return variant;
     }
 }

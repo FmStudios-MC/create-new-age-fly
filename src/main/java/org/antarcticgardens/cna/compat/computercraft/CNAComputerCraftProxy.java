@@ -5,8 +5,6 @@ import com.zurrtum.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.FallbackComputerBehaviour;
 import com.zurrtum.create.compat.computercraft.implementation.ComputerBehaviour;
 import com.zurrtum.create.foundation.blockEntity.SmartBlockEntity;
-import net.minecraft.core.registries.BuiltInRegistries;
-import org.antarcticgardens.cna.CreateNewAge;
 
 import java.util.function.Function;
 

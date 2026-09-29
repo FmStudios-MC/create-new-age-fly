@@ -24,7 +24,7 @@ public class RaycastUtil {
             return p.test(blockState) ? blockHitResult : null;
         }, (context) -> {
             Vec3 vec3 = from.subtract(to);
-            return BlockHitResult.miss(to, Direction.getNearest(vec3.x, vec3.y, vec3.z), BlockPos.containing(to));
+            return BlockHitResult.miss(to, Direction.getApproximateNearest(vec3.x, vec3.y, vec3.z), BlockPos.containing(to));
         });
     }
 }

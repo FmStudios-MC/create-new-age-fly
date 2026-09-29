@@ -1,8 +1,6 @@
 package org.antarcticgardens.cna.content.electricity.network;
 
 import org.antarcticgardens.cna.content.electricity.connector.AbstractElectricalConnector;
-import team.reborn.energy.api.EnergyStorage;
-import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
 

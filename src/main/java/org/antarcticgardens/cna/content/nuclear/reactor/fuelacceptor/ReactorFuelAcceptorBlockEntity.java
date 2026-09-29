@@ -1,18 +1,16 @@
 package org.antarcticgardens.cna.content.nuclear.reactor.fuelacceptor;
 
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.level.storage.ValueOutput;
 
 import net.minecraft.world.level.storage.ValueInput;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Containers;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.RodBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.antarcticgardens.cna.CreateNewAge;
@@ -34,13 +32,13 @@ public class ReactorFuelAcceptorBlockEntity extends RodFindingReactorBlockEntity
 
     @Override
     protected void write(ValueOutput compound, boolean clientPacket) {
-        compound.put("contents", container.createTag(registries));
+        ContainerHelper.saveAllItems(compound.child("contents"), container.getItems());
         super.write(compound, clientPacket);
     }
 
     @Override
     protected void read(ValueInput compound, boolean clientPacket) {
-        container.fromTag(compound.getList("contents", compound.TAG_COMPOUND), registries);
+        ContainerHelper.loadAllItems(compound.childOrEmpty("contents"), container.getItems());
         super.read(compound, clientPacket);
     }
 
@@ -75,7 +73,7 @@ public class ReactorFuelAcceptorBlockEntity extends RodFindingReactorBlockEntity
             for (int i = 0 ; i < container.getContainerSize() ; i++) {
                 ItemStack stack = container.getItem(i);
                 if (stack.is(CNATags.Item.NUCLEAR_FUEL.tag)) {
-                    stack.getTags().forEach(itemTagKey -> {
+                    stack.typeHolder().tags().forEach(itemTagKey -> {
                         if (itemTagKey.location().getNamespace().equals(CreateNewAge.MOD_ID)) {
                             String path = itemTagKey.location().getPath();
                             if (path.startsWith("nuclear/energy_")) {

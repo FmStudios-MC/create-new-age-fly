@@ -1,5 +1,6 @@
 package org.antarcticgardens.cna.content.nuclear;
 
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -12,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.common.Tags;
 import org.antarcticgardens.cna.CNAEffects;
 import org.antarcticgardens.cna.CNAItems;
 import org.antarcticgardens.cna.CNATags;
@@ -34,7 +34,7 @@ public class NuclearUtil {
                     if (world.getBlockState(pos.relative(dir)).is(CNATags.Block.STOPS_RADIATION.blockTag))
                         continue;
 
-                    Vec3 start = pos.getCenter().relative(dir, 0.5f);
+                    Vec3 start = Vec3.atCenterOf(pos).relative(dir, 0.5f);
                     double distance = le.getEyePosition().distanceTo(start);
 
                     if (distance > length)
@@ -73,7 +73,11 @@ public class NuclearUtil {
             return true;
 
         if (entity instanceof LivingEntity le) {
-            for (ItemStack piece : le.getArmorSlots()) {
+            // getArmorSlots() is gone; these are the same four slots, empty ones included.
+            for (EquipmentSlot slot : EquipmentSlot.values()) {
+                if (slot.getType() != EquipmentSlot.Type.HUMANOID_ARMOR)
+                    continue;
+                ItemStack piece = le.getItemBySlot(slot);
                 if (!piece.is(CNATags.Item.HAZMAT_SUIT.tag))
                     return false;
             }

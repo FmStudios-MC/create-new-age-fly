@@ -5,11 +5,9 @@ import com.zurrtum.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.antarcticgardens.cna.CNABlockEntityTypes;
-import org.jetbrains.annotations.Nullable;
 
 public class CarbonBrushesBlock extends DirectionalKineticBlock implements IBE<CarbonBrushesBlockEntity> {
     public CarbonBrushesBlock(Properties properties) {

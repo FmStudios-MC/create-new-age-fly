@@ -3,10 +3,7 @@ package org.antarcticgardens.cna.content.electricity.generation.coil;
 import com.google.common.collect.Lists;
 import com.zurrtum.create.content.kinetics.base.KineticBlockEntity;
 import com.zurrtum.create.content.kinetics.base.RotatedPillarKineticBlock;
-import com.zurrtum.create.client.foundation.utility.CreateLang;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -17,7 +14,6 @@ import org.antarcticgardens.cna.CreateNewAge;
 import org.antarcticgardens.cna.config.CNAConfig;
 import org.antarcticgardens.cna.content.electricity.generation.magnet.IMagneticBlock;
 import org.antarcticgardens.cna.util.RelativeBlockPos;
-import org.antarcticgardens.cna.util.StringFormatUtil;
 
 import java.util.List;
 
@@ -72,7 +68,7 @@ public class GeneratorCoilBlockEntity extends KineticBlockEntity {
                 if (state.getBlock() instanceof IMagneticBlock magneticBlock) {
                     stress += magneticBlock.getStrength();
                 } else {
-                    for (TagKey<Block> blockTagKey : state.getTags().toList()) {
+                    for (TagKey<Block> blockTagKey : state.getBlock().builtInRegistryHolder().tags().toList()) {
                         if (blockTagKey.location().getNamespace().equals(CreateNewAge.MOD_ID)) {
                             String path = blockTagKey.location().getPath();
                             if (path.startsWith("magnet/force_")) { 

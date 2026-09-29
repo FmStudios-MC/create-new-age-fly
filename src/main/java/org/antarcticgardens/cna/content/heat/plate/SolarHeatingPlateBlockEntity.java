@@ -1,32 +1,21 @@
 package org.antarcticgardens.cna.content.heat.plate;
 
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
 import com.zurrtum.create.foundation.blockEntity.SmartBlockEntity;
 import net.minecraft.world.level.storage.ValueOutput;
 
 import net.minecraft.world.level.storage.ValueInput;
 
-import com.zurrtum.create.client.api.goggles.IHaveGoggleInformation;
-import com.zurrtum.create.client.foundation.utility.CreateLang;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.antarcticgardens.cna.config.CNAConfig;
 import org.antarcticgardens.cna.content.heat.HeatBlockEntity;
-import org.antarcticgardens.cna.util.StringFormatUtil;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -89,17 +78,8 @@ public class SolarHeatingPlateBlockEntity extends SmartBlockEntity implements He
         setChanged();
     }
 
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
 
 
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return  saveWithoutMetadata(registries);
-    }
 
 
 
@@ -111,7 +91,7 @@ public class SolarHeatingPlateBlockEntity extends SmartBlockEntity implements He
             // update sky could also work but this feels more right.
             double d = 1.0 - (double)(world.getRainLevel(1.0F) * 5.0F) / 16.0;
             double e = 1.0 - (double)(world.getThunderLevel(1.0F) * 5.0F) / 16.0;
-            double f = 0.5 + 2.0 * Mth.clamp(Mth.cos(world.getTimeOfDay(1.0F) * 6.2831855F), -0.25, 0.25);
+            double f = 0.5 + 2.0 * Mth.clamp(Mth.cos(world.environmentAttributes().getValue(EnvironmentAttributes.SUN_ANGLE, blockPos) * Mth.DEG_TO_RAD), -0.25, 0.25);
             dark = (int)((1.0 - f * d * e) * 11.0);
         } else {
             dark = world.getSkyDarken();

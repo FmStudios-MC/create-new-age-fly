@@ -4,30 +4,16 @@ import net.minecraft.world.level.storage.ValueOutput;
 
 import net.minecraft.world.level.storage.ValueInput;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.zurrtum.create.client.api.goggles.IHaveGoggleInformation;
 import com.zurrtum.create.content.kinetics.KineticNetwork;
 import com.zurrtum.create.content.kinetics.base.DirectionalKineticBlock;
 import com.zurrtum.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.zurrtum.create.content.kinetics.base.IRotate;
-import com.zurrtum.create.content.kinetics.motor.CreativeMotorBlock;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
-import com.zurrtum.create.client.foundation.blockEntity.behaviour.ValueBoxTransform;
-import com.zurrtum.create.client.foundation.utility.CreateLang;
 import org.antarcticgardens.cna.CNABlockEntityTypes;
-import com.zurrtum.create.client.flywheel.lib.transform.TransformStack;
-import com.zurrtum.create.catnip.math.AngleHelper;
-import com.zurrtum.create.catnip.math.VecHelper;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import org.antarcticgardens.cna.CNABlockEntityTypes;
 import org.antarcticgardens.cna.config.CNAConfig;
 import org.antarcticgardens.cna.content.motor.extension.MotorExtensionBlockEntity;
@@ -36,7 +22,6 @@ import org.antarcticgardens.cna.content.motor.variants.BasicMotorVariant;
 import org.antarcticgardens.cna.content.motor.variants.IMotorVariant;
 import org.antarcticgardens.cna.content.motor.variants.ReinforcedMotorVariant;
 import org.antarcticgardens.cna.util.RunnableUtil;
-import org.antarcticgardens.cna.util.StringFormatUtil;
 import team.reborn.energy.api.EnergyStorage;
 import org.antarcticgardens.cna.energy.SimpleEnergyStorage;
 
@@ -88,7 +73,7 @@ public class MotorBlockEntity extends GeneratingKineticBlockEntity {
     public void addBehaviours(List<BlockEntityBehaviour<?>> behaviours) {
         super.addBehaviours(behaviours);
         speedBehavior = new MotorScrollValueBehaviour(this);
-        speedBehavior.setInitialValue(getDefaultSpeed());
+        speedBehavior.setRawValue(getDefaultSpeed());
         speedBehavior.withCallback(i -> this.updateGeneratedRotation());
         behaviours.add(speedBehavior);
     }

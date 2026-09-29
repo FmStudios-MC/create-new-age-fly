@@ -46,6 +46,8 @@ sourceSets.main.java {
     exclude 'org/antarcticgardens/cna/CNARenderTypes.java'
     exclude 'org/antarcticgardens/cna/CNAPartialModels.java'
     exclude 'org/antarcticgardens/cna/CNASpriteShifts.java'
+    exclude 'org/antarcticgardens/cna/content/electricity/connector/Wire.java'
+    exclude 'org/antarcticgardens/cna/compat/RenderingUtil.java'
 }
 
 repositories {

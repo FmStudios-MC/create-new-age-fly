@@ -4,18 +4,10 @@ import net.minecraft.world.level.storage.ValueOutput;
 
 import net.minecraft.world.level.storage.ValueInput;
 
-import com.zurrtum.create.client.api.goggles.IHaveGoggleInformation;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
-import com.zurrtum.create.client.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.zurrtum.create.foundation.blockEntity.behaviour.scrollValue.ServerScrollValueBehaviour;
-import com.zurrtum.create.client.foundation.utility.CreateLang;
-import com.zurrtum.create.catnip.math.VecHelper;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -25,7 +17,6 @@ import org.antarcticgardens.cna.content.electricity.connector.AbstractElectrical
 import org.antarcticgardens.cna.content.electricity.network.ElectricalNetwork;
 import org.antarcticgardens.cna.content.electricity.network.SimpleNetworkEnergyStorage;
 import org.antarcticgardens.cna.util.RunnableUtil;
-import org.antarcticgardens.cna.util.StringFormatUtil;
 import team.reborn.energy.api.EnergyStorage;
 
 import java.util.List;
@@ -58,7 +49,7 @@ public class StreetLightBlockEntity extends AbstractElectricalConnector {
 
     @Override
     protected void write(ValueOutput tag, boolean clientPacket) {
-        tag.putLong("energy", storage.getStoredEnergy());
+        tag.putLong("energy", storage.getAmount());
         super.write(tag, clientPacket);
     }
 
@@ -67,7 +58,7 @@ public class StreetLightBlockEntity extends AbstractElectricalConnector {
         lightLevelBehaviour = new ServerScrollValueBehaviour(this).between(0, 15);
         lightLevelBehaviour.setValue(15);
         lightLevelBehaviour.withCallback( i -> {
-            if (getLevel() != null && storage.getStoredEnergy() > 0)
+            if (getLevel() != null && storage.getAmount() > 0)
                 getLevel().setBlock(getBlockPos(), getBlockState().setValue(StreetLightBlock.LIGHT_LEVEL, i), 3);
         });
         behaviours.add(lightLevelBehaviour);
@@ -82,16 +73,16 @@ public class StreetLightBlockEntity extends AbstractElectricalConnector {
             return;
         long needed = (long) lightLevelBehaviour.getValue() * CNAConfig.getServer().streetLightLevelExtraction.get();
         long e = storage.internalExtract(needed, false);
-        if (prvEnergy == storage.getStoredEnergy())
+        if (prvEnergy == storage.getAmount())
             return;
         if (e <= 0) {
             getLevel().setBlock(getBlockPos(), getBlockState().setValue(StreetLightBlock.LIGHT_LEVEL, 0), 3);
         } else {
             getLevel().setBlock(getBlockPos(), getBlockState().setValue(StreetLightBlock.LIGHT_LEVEL, lightLevelBehaviour.getValue()), 3);
         }
-        if (storage.getStoredEnergy() != prvEnergy && level.getGameTime() % 20 == 0) {
+        if (storage.getAmount() != prvEnergy && level.getGameTime() % 20 == 0) {
             this.sendData();
-            prvEnergy = storage.getStoredEnergy();
+            prvEnergy = storage.getAmount();
         }
     }
 

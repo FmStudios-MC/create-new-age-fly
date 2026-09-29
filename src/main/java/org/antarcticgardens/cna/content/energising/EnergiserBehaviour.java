@@ -1,5 +1,7 @@
 package org.antarcticgardens.cna.content.energising;
 
+import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.ValueOutput;
 
 import net.minecraft.world.level.storage.ValueInput;
@@ -8,10 +10,7 @@ import com.zurrtum.create.content.kinetics.belt.BeltHelper;
 import com.zurrtum.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour;
 import com.zurrtum.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
 import com.zurrtum.create.content.kinetics.belt.transport.TransportedItemStack;
-import com.zurrtum.create.content.processing.sequenced.SequencedAssemblyRecipe;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +24,6 @@ import org.antarcticgardens.cna.energy.ItemStackHolder;
 import org.joml.Math;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class EnergiserBehaviour extends BeltProcessingBehaviour {
@@ -41,27 +39,16 @@ public class EnergiserBehaviour extends BeltProcessingBehaviour {
     }
 
     public EnergisingRecipe getRecipe(ItemStack stack) {
-        if (be.getLevel() == null) {
+        // Create Fly expands sequenced assembly steps into ordinary recipes, so one lookup covers
+        // both of upstream's paths. Recipes only exist on the server in 26.2.
+        if (!(be.getLevel() instanceof ServerLevel level)) {
             return null;
         }
 
-        Optional<RecipeHolder<EnergisingRecipe>> assemblyRecipe =
-                SequencedAssemblyRecipe.getRecipe(getWorld(), stack, CNARecipeTypes.ENERGISING.getType(), EnergisingRecipe.class);
-
-
-        if (assemblyRecipe.isPresent()) {
-            return assemblyRecipe.get().value();
-        }
-
-        List<RecipeHolder<EnergisingRecipe>> recipes = be.getLevel().getRecipeManager().getAllRecipesFor(CNARecipeTypes.ENERGISING.getType());
-
-        for (RecipeHolder<EnergisingRecipe> recipe : recipes) {
-            if (recipe.value().test(stack)) {
-                return recipe.value();
-            }
-        }
-        return null;
-    
+        return level.recipeAccess()
+                .getRecipeFor(CNARecipeTypes.ENERGISING, new SingleRecipeInput(stack), level)
+                .map(RecipeHolder::value)
+                .orElse(null);
     }
 
     public EnergisingRecipe currentRecipe;
@@ -132,6 +119,7 @@ public class EnergiserBehaviour extends BeltProcessingBehaviour {
                 for (int i = 0 ; i < 6 ; i++) {
                     be.getLevel().addParticle(ParticleTypes.GLOW,
                             false,
+                            false,
                             be.getBlockPos().getX() + 0.5 + (rand.nextFloat() - 0.5) * 0.4,
                             be.getBlockPos().getY() - 1.4 + (rand.nextFloat() - 0.5) * 0.4,
                             be.getBlockPos().getZ() + 0.5 + (rand.nextFloat() - 0.5) * 0.4,
@@ -192,7 +180,7 @@ public class EnergiserBehaviour extends BeltProcessingBehaviour {
         sinceUpdate = 10;
 
         if (charged >= needed) {
-            List<TransportedItemStack> out = currentRecipe.rollResults(handler.getWorld().getRandom()).stream()
+            List<TransportedItemStack> out = currentRecipe.assemble(new SingleRecipeInput(transportedItemStack.stack), handler.getLevel().getRandom()).stream()
                     .map(stack -> {
                         TransportedItemStack copy = transportedItemStack.copy();
                         boolean centered = BeltHelper.isItemUpright(stack);
@@ -248,7 +236,7 @@ public class EnergiserBehaviour extends BeltProcessingBehaviour {
 
         currentRecipe = getRecipe(transportedItemStack.stack);
         sinceUpdate = 10;
-        if (currentRecipe == null || currentRecipe.getIngredients().size() > 1)
+        if (currentRecipe == null)
             return ProcessingResult.PASS;
 
         return ProcessingResult.HOLD;

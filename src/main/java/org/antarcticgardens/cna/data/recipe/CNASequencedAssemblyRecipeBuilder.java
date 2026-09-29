@@ -1,9 +1,7 @@
 package org.antarcticgardens.cna.data.recipe;
 
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
-import com.zurrtum.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
-import com.simibubi.create.content.processing.sequenced.SequencedRecipe;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;

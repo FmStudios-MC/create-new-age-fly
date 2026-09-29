@@ -6,12 +6,7 @@ import net.minecraft.world.level.storage.ValueInput;
 
 import com.zurrtum.create.content.kinetics.base.KineticBlockEntity;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
-import com.zurrtum.create.client.foundation.utility.CreateLang;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -19,7 +14,6 @@ import net.minecraft.world.phys.Vec3;
 import org.antarcticgardens.cna.CNABlockEntityTypes;
 import org.antarcticgardens.cna.CNABlocks;
 import org.antarcticgardens.cna.util.RunnableUtil;
-import org.antarcticgardens.cna.util.StringFormatUtil;
 import team.reborn.energy.api.EnergyStorage;
 import org.antarcticgardens.cna.energy.SimpleEnergyStorage;
 

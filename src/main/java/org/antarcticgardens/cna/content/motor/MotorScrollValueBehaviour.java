@@ -13,8 +13,8 @@ public class MotorScrollValueBehaviour extends ServerKineticScrollValueBehaviour
         super(be);
     }
 
-    /** Sets the value before a range exists, where {@link #setValue} would clamp it to [0, 1]. */
-    public void setInitialValue(int value) {
+    /** Sets the value without clamping or the callback, as upstream wrote the field directly. */
+    public void setRawValue(int value) {
         this.value = value;
     }
 

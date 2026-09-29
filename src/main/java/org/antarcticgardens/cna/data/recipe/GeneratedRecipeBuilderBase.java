@@ -1,10 +1,8 @@
 package org.antarcticgardens.cna.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import net.createmod.catnip.platform.CatnipServices;
 import com.zurrtum.create.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.recipes.RecipeCategory;

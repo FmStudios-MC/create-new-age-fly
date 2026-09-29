@@ -2,19 +2,14 @@ package org.antarcticgardens.cna.content.motor.extension;
 
 import com.zurrtum.create.content.equipment.wrench.IWrenchable;
 import com.zurrtum.create.foundation.block.IBE;
-import com.zurrtum.create.client.foundation.utility.CreateLang;
 import java.util.function.Supplier;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -27,13 +22,11 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.antarcticgardens.cna.CNABlockEntityTypes;
 import org.antarcticgardens.cna.content.motor.MotorBlock;
 import org.antarcticgardens.cna.content.motor.MotorBlockEntity;
 import org.antarcticgardens.cna.content.motor.extension.variants.IMotorExtensionVariant;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 
 public class MotorExtensionBlock extends Block implements IBE<MotorExtensionBlockEntity>, IWrenchable {
     protected static final VoxelShape DOWN_AABB = Block.box(2.0, 0.0, 2.0, 14.0, 12.0, 14.0);
@@ -56,17 +49,6 @@ public class MotorExtensionBlock extends Block implements IBE<MotorExtensionBloc
         builder.add(BlockStateProperties.FACING);
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("tooltip.create_new_age.motor_extension").withStyle(ChatFormatting.DARK_GRAY));
-        tooltipComponents.add(CreateLang.translate("tooltip.create_new_age.stress_limit_multiplier").style(ChatFormatting.GRAY)
-                .component());
-        tooltipComponents.add(CreateLang.text(" ").add(CreateLang.number((int)(variant.getMultiplier() * 100)).text("%").style(ChatFormatting.AQUA)).component());
-
-        tooltipComponents.add(CreateLang.translate("tooltip.create_new_age.additional_capacity").style(ChatFormatting.GRAY)
-                .component());
-        tooltipComponents.add(CreateLang.text(" ").add(CreateLang.number(variant.getExtraCapacity()).text("⚡").style(ChatFormatting.AQUA)).component());
-    }
 
     @Nullable
     @Override
@@ -139,5 +121,8 @@ public class MotorExtensionBlock extends Block implements IBE<MotorExtensionBloc
     @Override
     public BlockEntityType<? extends MotorExtensionBlockEntity> getBlockEntityType() {
         return entry.get();
+    }
+    public IMotorExtensionVariant getVariant() {
+        return variant;
     }
 }
