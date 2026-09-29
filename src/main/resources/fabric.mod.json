@@ -12,7 +12,9 @@
     "ZurrTum (Create Fly)"
   ],
   "contact": {
-    "sources": "https://gitlab.com/antarcticgardens/create-new-age"
+    "homepage": "https://github.com/FmStudios-MC/create-new-age-fly",
+    "sources": "https://github.com/FmStudios-MC/create-new-age-fly",
+    "issues": "https://github.com/FmStudios-MC/create-new-age-fly/issues"
   },
   "license": "BSD-3-Clause",
   "icon": "assets/create_new_age/icon.png",

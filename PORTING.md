@@ -24,7 +24,7 @@ through Team Reborn Energy, and long sessions.
 | | |
 |---|---|
 | Upstream | https://gitlab.com/antarcticgardens/create-new-age, branch `1.21.1` (NeoForge) |
-| Port branch | `fly/26.2` |
+| Port repo | https://github.com/FmStudios-MC/create-new-age-fly, branch `main` (was `fly/26.2`). Upstream is not a remote; fetch it by URL when merging upstream changes |
 | Target | Minecraft 26.2, Fabric Loader 0.19.3, Fabric API 0.160.0+26.2 (CC: Tweaked 1.120.2 needs >= 0.156) |
 | Optional | JEI 30.26.0.182 (Modrinth id `x6nG9OT2`), CC: Tweaked 1.120.2 |
 | Create Fly | `maven.modrinth:create-fly:26.2-rc-2-6.0.9-1` (latest 26.2 release on Modrinth) |
