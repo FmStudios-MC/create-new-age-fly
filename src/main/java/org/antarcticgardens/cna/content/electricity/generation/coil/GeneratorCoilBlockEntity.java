@@ -102,7 +102,7 @@ public class GeneratorCoilBlockEntity extends KineticBlockEntity {
 
     @Override
     public void lazyTick() {
-        if (level == null || level.isClientSide)
+        if (level == null || level.isClientSide())
             return;
         float stress = calculateStressApplied();
         var network = getOrCreateNetwork();
@@ -116,18 +116,14 @@ public class GeneratorCoilBlockEntity extends KineticBlockEntity {
         }
     }
 
-    @Override
-    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        CreateLang.translate("tooltip.create_new_age.efficiency").style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
-        CreateLang.translate("tooltip.create_new_age.percent", StringFormatUtil.formatPercentFloat(
-                (lastStressApplied-plainStress)/lastStressApplied
-        )).style(ChatFormatting.AQUA).forGoggles(tooltip, 2);
-        return super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-    }
 
     public int takeGeneratedEnergy() {
         int energy = generatedEnergy;
         generatedEnergy = 0;
         return energy;
+    }
+    /** Share of the applied stress that went into generating energy, for the goggle tooltip. */
+    public float getEfficiency() {
+        return (lastStressApplied - plainStress) / lastStressApplied;
     }
 }

@@ -1,5 +1,6 @@
 package org.antarcticgardens.cna.content.heat.plate;
 
+import org.antarcticgardens.cna.util.SmartTicker;
 import com.zurrtum.create.content.equipment.wrench.IWrenchable;
 import com.zurrtum.create.client.foundation.utility.CreateLang;
 import java.util.function.Supplier;
@@ -49,10 +50,10 @@ public class SolarHeatingPlateBlock extends Block implements EntityBlock, IWrenc
         if (massPipe >= 20) {
             massPipe = 0;
         }
-        return (level1, blockPos, blockState, blockEntity) -> {
+        return SmartTicker.wrap((level1, blockPos, blockState, blockEntity) -> {
             if ((level1.getGameTime() + on) % 20 != 0 || !(blockEntity instanceof SolarHeatingPlateBlockEntity ent)) return;
             ent.tick(blockPos, level1, blockState);
-        };
+        });
     }
 
     public static SolarHeatingPlateBlock createAdvanced(Properties properties) {

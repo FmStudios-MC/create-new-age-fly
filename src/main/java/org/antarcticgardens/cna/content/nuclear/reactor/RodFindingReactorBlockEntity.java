@@ -18,7 +18,7 @@ public abstract class RodFindingReactorBlockEntity extends SmartBlockEntity {
     }
 
     @Override
-    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {}
+    public void addBehaviours(List<BlockEntityBehaviour<?>> behaviours) {}
 
     public void findRods(List<ReactorRodBlockEntity> list, Direction dir) {
         if (level == null)

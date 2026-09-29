@@ -12,35 +12,18 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.antarcticgardens.cna.CNABlockEntityTypes;
 import org.antarcticgardens.cna.content.electricity.network.ElectricalNetwork;
 import org.antarcticgardens.cna.content.electricity.network.NetworkEnergyStorage;
-import org.antarcticgardens.esl.energy.EnergyStorage;
+import team.reborn.energy.api.EnergyStorage;
 
 import java.util.*;
 
-public class ElectricalConnectorBlockEntity extends AbstractElectricalConnector implements IHaveGoggleInformation {
+public class ElectricalConnectorBlockEntity extends AbstractElectricalConnector {
     private final NetworkEnergyStorage storage;
 
     public ElectricalConnectorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
         storage = new NetworkEnergyStorage(this, null);
-        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.ELECTRICAL_CONNECTOR);
     }
 
-    @Override
-    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        CreateLang.translate("tooltip.create_new_age.connector_info")
-                .style(ChatFormatting.WHITE).forGoggles(tooltip);
-
-        CreateLang.translate("tooltip.create_new_age.mode")
-                .style(ChatFormatting.GRAY)
-                .forGoggles(tooltip);
-
-        ElectricalConnectorMode mode = getBlockState().getValue(ElectricalConnectorBlock.MODE);
-        CreateLang.translate("tooltip.create_new_age.connector_mode." + mode.getSerializedName())
-                .style(ChatFormatting.AQUA)
-                .forGoggles(tooltip, 1);
-
-        return true;
-    }
 
     @Override
     public BlockPos getSupportingBlockPos() {
@@ -57,4 +40,7 @@ public class ElectricalConnectorBlockEntity extends AbstractElectricalConnector 
     public Direction getFacing() {
         return getBlockState().getValue(BlockStateProperties.FACING);
     }
-}
+    /** Exposes the storage to Team Reborn Energy. Was re-registered from every constructor under ESL. */
+    public static void registerEnergyStorage() {
+        EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> ((ElectricalConnectorBlockEntity) blockEntity).storage, CNABlockEntityTypes.ELECTRICAL_CONNECTOR);
+    }}

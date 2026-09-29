@@ -1,5 +1,9 @@
 package org.antarcticgardens.cna.content.energising;
 
+import net.minecraft.world.level.storage.ValueOutput;
+
+import net.minecraft.world.level.storage.ValueInput;
+
 import com.zurrtum.create.content.kinetics.belt.BeltHelper;
 import com.zurrtum.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour;
 import com.zurrtum.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
@@ -14,11 +18,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.antarcticgardens.cna.CNARecipeTypes;
 import org.antarcticgardens.cna.content.energising.recipe.EnergisingRecipe;
-import org.antarcticgardens.esl.energy.EnergyHelper;
-import org.antarcticgardens.esl.energy.EnergyStorage;
-import org.antarcticgardens.esl.transaction.Transaction;
-import org.antarcticgardens.esl.transaction.TransactionStack;
-import org.antarcticgardens.esl.util.ItemStackHolder;
+import org.antarcticgardens.cna.energy.EnergyHelper;
+import team.reborn.energy.api.EnergyStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import org.antarcticgardens.cna.energy.ItemStackHolder;
 import org.joml.Math;
 
 import java.util.List;
@@ -68,23 +71,23 @@ public class EnergiserBehaviour extends BeltProcessingBehaviour {
     private boolean shouldCreateParticles = false;
 
     @Override
-    public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
-        charged = nbt.getLong("charged");
-        needed = nbt.getLong("needed");
-        shouldCreateParticles = nbt.getBoolean("shouldCreateParticles");
-        capacitorMode = nbt.getBoolean("capacitorModer");
-        super.read(nbt, registries, clientPacket);
+    public void read(ValueInput nbt, boolean clientPacket) {
+        charged = nbt.getLongOr("charged", 0L);
+        needed = nbt.getLongOr("needed", 0L);
+        shouldCreateParticles = nbt.getBooleanOr("shouldCreateParticles", false);
+        capacitorMode = nbt.getBooleanOr("capacitorModer", false);
+        super.read(nbt, clientPacket);
     }
 
     @Override
-    public void write(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
+    public void write(ValueOutput nbt, boolean clientPacket) {
         nbt.putLong("charged", charged);
         nbt.putLong("needed", needed);
         nbt.putBoolean("shouldCreateParticles",shouldCreateParticles);
         nbt.putBoolean("capacitorMode", capacitorMode);
         if (clientPacket)
             shouldCreateParticles = false;
-        super.write(nbt, registries, clientPacket);
+        super.write(nbt, clientPacket);
     }
 
     public long sinceUpdate = 0;
@@ -152,13 +155,13 @@ public class EnergiserBehaviour extends BeltProcessingBehaviour {
         }
         if (capacitorMode) {
             ItemStackHolder holder = new ItemStackHolder(transportedItemStack.stack);
-            EnergyStorage itemStorage = EnergyStorage.findForItem(holder);
+            EnergyStorage itemStorage = holder.findEnergyStorage();
             
             if (itemStorage != null) {
-                try (Transaction t = TransactionStack.get().openOuter()) {
+                try (Transaction t = Transaction.openOuter()) {
                     be.lastCharged = EnergyHelper.moveEnergy(be.getEnergyStorage(), itemStorage, eSpeed(), t);
 
-                    charged = itemStorage.getStoredEnergy();
+                    charged = itemStorage.getAmount();
                     needed = itemStorage.getCapacity();
                     sinceUpdate = 10;
                     transportedItemStack.stack = holder.toItemStack();
@@ -231,11 +234,11 @@ public class EnergiserBehaviour extends BeltProcessingBehaviour {
             return ProcessingResult.PASS;
         }
 
-        EnergyStorage itemStorage = EnergyStorage.findForItem(new ItemStackHolder(transportedItemStack.stack));
+        EnergyStorage itemStorage = new ItemStackHolder(transportedItemStack.stack).findEnergyStorage();
 
-        if (itemStorage != null && itemStorage.getStoredEnergy() < itemStorage.getCapacity()) {
+        if (itemStorage != null && itemStorage.getAmount() < itemStorage.getCapacity()) {
             capacitorMode = true;
-            charged = itemStorage.getStoredEnergy();
+            charged = itemStorage.getAmount();
             needed = itemStorage.getCapacity();
             sinceUpdate = 10;
             return ProcessingResult.HOLD;

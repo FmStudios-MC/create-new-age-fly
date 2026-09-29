@@ -1,5 +1,6 @@
 package org.antarcticgardens.cna.content.heat.heater;
 
+import org.antarcticgardens.cna.util.SmartTicker;
 import com.zurrtum.create.content.equipment.wrench.IWrenchable;
 import com.zurrtum.create.content.processing.burner.BlazeBurnerBlock;
 import net.minecraft.core.BlockPos;
@@ -39,7 +40,7 @@ public class HeaterBlock extends Block implements EntityBlock, IWrenchable {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return (world, blockPos, blockState, sel) -> {
+        return SmartTicker.wrap((world, blockPos, blockState, sel) -> {
             if (world.getGameTime() % 20 != 0 || !(sel instanceof HeaterBlockEntity self) || self.getLevel() == null) return;
             HeatBlockEntity.transferAround(self);
             Double mult = CNAConfig.getServer().heaterRequiredHeatMultiplier.get();
@@ -61,6 +62,6 @@ public class HeaterBlock extends Block implements EntityBlock, IWrenchable {
             }
             self.setChanged();
             HeatBlockEntity.trySync(self);
-        };
+        });
     }
 }

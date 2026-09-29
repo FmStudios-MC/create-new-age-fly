@@ -16,6 +16,11 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import org.antarcticgardens.cna.config.CNAConfig;
+import org.antarcticgardens.cna.content.electricity.connector.ElectricalConnectorBlockEntity;
+import org.antarcticgardens.cna.content.electricity.generation.brushes.CarbonBrushesBlockEntity;
+import org.antarcticgardens.cna.content.electricity.light.StreetLightBlockEntity;
+import org.antarcticgardens.cna.content.energising.EnergiserBlockEntity;
+import org.antarcticgardens.cna.content.motor.MotorBlockEntity;
 import org.antarcticgardens.cna.content.electricity.generation.magnet.MagnetPlacementHelper;
 import org.antarcticgardens.cna.content.electricity.network.NetworkTicker;
 import org.antarcticgardens.cna.content.heat.heater.HeaterBlock;
@@ -43,6 +48,12 @@ public class CreateNewAge implements ModInitializer {
         CNABlockEntityTypes.init();
         CNAItems.init();
         CNARecipeTypes.init();
+
+        MotorBlockEntity.registerEnergyStorage();
+        ElectricalConnectorBlockEntity.registerEnergyStorage();
+        CarbonBrushesBlockEntity.registerEnergyStorage();
+        EnergiserBlockEntity.registerEnergyStorage();
+        StreetLightBlockEntity.registerEnergyStorage();
 
         magnetPlacementHelperId = PlacementHelpers.register(new MagnetPlacementHelper());
 

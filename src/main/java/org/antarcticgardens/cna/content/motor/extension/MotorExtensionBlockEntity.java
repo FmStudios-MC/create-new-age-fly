@@ -1,5 +1,9 @@
 package org.antarcticgardens.cna.content.motor.extension;
 
+import net.minecraft.world.level.storage.ValueOutput;
+
+import net.minecraft.world.level.storage.ValueInput;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.zurrtum.create.content.kinetics.motor.CreativeMotorBlock;
 import com.zurrtum.create.foundation.blockEntity.SmartBlockEntity;
@@ -50,12 +54,11 @@ public class MotorExtensionBlockEntity extends SmartBlockEntity {
     }
 
     @Override
-    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-        stressBehavior = new MotorExtensionScrollValueBehaviour(CreateLang.translateDirect("scroll.create_new_age.motor.stress_multiplier"), this, new MotorValueBox(), 1);
-        stressBehavior.value = 100;
+    public void addBehaviours(List<BlockEntityBehaviour<?>> behaviours) {
+        stressBehavior = new MotorExtensionScrollValueBehaviour(this, 1);
+        stressBehavior.setInitialValue(100);
         stressBehavior.withCallback(i -> {
             multiplier = i/100f;
-            stressBehavior.value = i;
             this.notifyUpdate();
         });
         behaviours.add(stressBehavior);
@@ -69,51 +72,17 @@ public class MotorExtensionBlockEntity extends SmartBlockEntity {
         return variant;
     }
 
-    static class MotorValueBox extends ValueBoxTransform.Sided {
-        @Override
-        protected Vec3 getSouthLocation() {
-            return VecHelper.voxelSpace(8, 8, 13.5);
-        }
 
-        @Override
-        public Vec3 getLocalOffset(LevelAccessor level, BlockPos pos, BlockState state) {
-            Direction facing = state.getValue(CreativeMotorBlock.FACING);
-            return super.getLocalOffset(level, pos, state)
-                    .add(Vec3.atLowerCornerOf(facing.getNormal()).scale(-1 / 16f))
-                    .add(new Vec3(facing.step()).scale(2 / 16f));
-        }
-
-        @Override
-        public void rotate(LevelAccessor level, BlockPos pos, BlockState state, PoseStack ms) {
-            super.rotate(level, pos, state, ms);
-            Direction facing = state.getValue(CreativeMotorBlock.FACING);
-            if (facing.getAxis() == Direction.Axis.Y)
-                return;
-            if (getSide() != Direction.UP)
-                return;
-            TransformStack.of(ms)
-                    .rotateZDegrees(-AngleHelper.horizontalAngle(facing) + 180);
-        }
-
-        @Override
-        protected boolean isSideActive(BlockState state, Direction direction) {
-            Direction facing = state.getValue(CreativeMotorBlock.FACING);
-            if (facing.getAxis() != Direction.Axis.Y && direction == Direction.DOWN)
-                return false;
-            return direction.getAxis() != facing.getAxis();
-        }
+    @Override
+    protected void read(ValueInput tag, boolean clientPacket) {
+        multiplier = tag.getFloatOr("stressMultiplier", 0f);
+        stressBehavior.setInitialValue((int) multiplier * 100);
+        super.read(tag, clientPacket);
     }
 
     @Override
-    protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
-        multiplier = tag.getFloat("stressMultiplier");
-        stressBehavior.value = (int)multiplier*100;
-        super.read(tag, registries, clientPacket);
-    }
-
-    @Override
-    protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+    protected void write(ValueOutput tag, boolean clientPacket) {
         tag.putFloat("stressMultiplier", multiplier);
-        super.write(tag, registries, clientPacket);
+        super.write(tag, clientPacket);
     }
 }

@@ -1,5 +1,6 @@
 package org.antarcticgardens.cna.content.heat.pipe;
 
+import org.antarcticgardens.cna.util.SmartTicker;
 import com.zurrtum.create.api.boiler.BoilerHeater;
 import com.zurrtum.create.content.decoration.encasing.EncasableBlock;
 import com.zurrtum.create.content.equipment.wrench.IWrenchable;
@@ -164,7 +165,7 @@ public class HeatPipeBlock extends Block implements EntityBlock, IWrenchable, En
         if (massPipe >= 20) {
             massPipe = 0;
         }
-        return (world, blockPos, blockState, self) -> {
+        return SmartTicker.wrap((world, blockPos, blockState, self) -> {
             if ((world.getGameTime() + on) % 20 != 0 || !(self instanceof HeatPipeBlockEntity selfC)) return;
 
             BlockPos heatPos = blockPos.below();
@@ -188,6 +189,6 @@ public class HeatPipeBlock extends Block implements EntityBlock, IWrenchable, En
             HeatBlockEntity.transferAround(selfC);
             HeatBlockEntity.handleOverheat(selfC);
             HeatBlockEntity.trySync(selfC);
-        };
+        });
     }
 }

@@ -1,12 +1,10 @@
 package org.antarcticgardens.cna.content.electricity.network;
 
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.antarcticgardens.cna.content.electricity.connector.AbstractElectricalConnector;
-import org.antarcticgardens.esl.energy.EnergyStorage;
-import org.antarcticgardens.esl.transaction.SnapshotParticipant;
-import org.antarcticgardens.esl.transaction.TransactionContext;
+import team.reborn.energy.api.EnergyStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
-import java.util.Map;
 
 public class SimpleNetworkEnergyStorage extends NetworkEnergyStorage {
     private long capacity;
@@ -64,6 +62,24 @@ public class SimpleNetworkEnergyStorage extends NetworkEnergyStorage {
         return this;
     }
 
+    // The stored amount is snapshotted alongside the network's state. Under ESL it was not, so an
+    // aborted transaction (the network tick aborts one on purpose) kept whatever it had moved.
+    private record Snapshot(Object network, long stored) {
+    }
+
+    @Override
+    protected Object createSnapshot() {
+        return new Snapshot(super.createSnapshot(), stored);
+    }
+
+    @Override
+    protected void readSnapshot(Object object) {
+        if (object instanceof Snapshot snapshot) {
+            stored = snapshot.stored();
+            super.readSnapshot(snapshot.network());
+        }
+    }
+
     @Override
     protected void onFinalCommit() {
         finalCommitCallback.run();
@@ -75,7 +91,7 @@ public class SimpleNetworkEnergyStorage extends NetworkEnergyStorage {
     }
 
     @Override
-    public long getStoredEnergy() {
+    public long getAmount() {
         return stored;
     }
 

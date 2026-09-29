@@ -1,6 +1,7 @@
 package org.antarcticgardens.cna;
 
 import net.fabricmc.api.ClientModInitializer;
+import org.antarcticgardens.cna.client.CNABlockEntityBehaviours;
 
 /**
  * Client entrypoint. Renderers, Flywheel visuals, connected textures, casing connectivity and the
@@ -10,5 +11,6 @@ import net.fabricmc.api.ClientModInitializer;
 public class CreateNewAgeClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        CNABlockEntityBehaviours.register();
     }
 }

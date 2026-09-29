@@ -1,5 +1,9 @@
 package org.antarcticgardens.cna.content.energising;
 
+import net.minecraft.world.level.storage.ValueOutput;
+
+import net.minecraft.world.level.storage.ValueInput;
+
 import com.zurrtum.create.content.kinetics.base.KineticBlockEntity;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
 import com.zurrtum.create.client.foundation.utility.CreateLang;
@@ -16,8 +20,8 @@ import org.antarcticgardens.cna.CNABlockEntityTypes;
 import org.antarcticgardens.cna.CNABlocks;
 import org.antarcticgardens.cna.util.RunnableUtil;
 import org.antarcticgardens.cna.util.StringFormatUtil;
-import org.antarcticgardens.esl.energy.EnergyStorage;
-import org.antarcticgardens.esl.energy.SimpleEnergyStorage;
+import team.reborn.energy.api.EnergyStorage;
+import org.antarcticgardens.cna.energy.SimpleEnergyStorage;
 
 import java.util.List;
 
@@ -43,21 +47,20 @@ public class EnergiserBlockEntity extends KineticBlockEntity {
         storage = new SimpleEnergyStorage(EnergiserBlock.getCapacity(tier))
                 .onFinalCommit(RunnableUtil.createBlockEntityUpdater(this));
         
-        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.ENERGISER);
         
         this.energisingBehaviour.tier = tier;
     }
 
     @Override
-    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+    protected void write(ValueOutput compound, boolean clientPacket) {
         compound.putLong("Energy", storage.getStoredEnergy());
-        super.write(compound, registries, clientPacket);
+        super.write(compound, clientPacket);
     }
 
     @Override
-    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-        storage.setStoredEnergy(compound.getLong("Energy"));
-        super.read(compound, registries, clientPacket);
+    protected void read(ValueInput compound, boolean clientPacket) {
+        storage.setStoredEnergy(compound.getLongOr("Energy", 0L));
+        super.read(compound, clientPacket);
     }
 
     protected AABB createRenderBoundingBox() {
@@ -66,7 +69,7 @@ public class EnergiserBlockEntity extends KineticBlockEntity {
     }
 
     @Override
-    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+    public void addBehaviours(List<BlockEntityBehaviour<?>> behaviours) {
         super.addBehaviours(behaviours);
         energisingBehaviour = new EnergiserBehaviour(this);
         behaviours.add(energisingBehaviour);
@@ -78,27 +81,6 @@ public class EnergiserBlockEntity extends KineticBlockEntity {
     }
 
     public long lastCharged = -1;
-    @Override
-    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        CreateLang.translate("tooltip.create_new_age.energy_stats")
-                .style(ChatFormatting.WHITE).forGoggles(tooltip);
-
-        CreateLang.translate("tooltip.create_new_age.energy_stored")
-                .style(ChatFormatting.GRAY)
-                .forGoggles(tooltip);
-        CreateLang.translate("tooltip.create_new_age.energy_storage", StringFormatUtil.formatLong(storage.getStoredEnergy()), StringFormatUtil.formatLong(storage.getCapacity()))
-                .style(ChatFormatting.AQUA).forGoggles(tooltip, 1);
-
-        if (lastCharged != -1) {
-            CreateLang.translate("tooltip.create_new_age.energy_usage")
-                    .style(ChatFormatting.GRAY)
-                    .forGoggles(tooltip);
-            CreateLang.translate("tooltip.create_new_age.energy_per_tick", StringFormatUtil.formatLong(lastCharged))
-                    .style(ChatFormatting.AQUA).forGoggles(tooltip, 1);
-        }
-
-        return super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-    }
     
     public SimpleEnergyStorage getEnergyStorage() {
         return storage;
@@ -118,4 +100,7 @@ public class EnergiserBlockEntity extends KineticBlockEntity {
         return impact;
     }
 
-}
+    /** Exposes the storage to Team Reborn Energy. Was re-registered from every constructor under ESL. */
+    public static void registerEnergyStorage() {
+        EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> ((EnergiserBlockEntity) blockEntity).storage, CNABlockEntityTypes.ENERGISER);
+    }}

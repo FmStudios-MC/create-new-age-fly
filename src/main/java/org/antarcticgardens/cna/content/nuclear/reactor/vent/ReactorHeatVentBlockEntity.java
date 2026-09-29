@@ -1,5 +1,9 @@
 package org.antarcticgardens.cna.content.nuclear.reactor.vent;
 
+import net.minecraft.world.level.storage.ValueOutput;
+
+import net.minecraft.world.level.storage.ValueInput;
+
 import com.zurrtum.create.client.api.goggles.IHaveGoggleInformation;
 import com.zurrtum.create.client.foundation.utility.CreateLang;
 import net.minecraft.ChatFormatting;
@@ -22,7 +26,7 @@ import org.antarcticgardens.cna.util.StringFormatUtil;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ReactorHeatVentBlockEntity extends RodFindingReactorBlockEntity implements HeatBlockEntity, IHaveGoggleInformation {
+public class ReactorHeatVentBlockEntity extends RodFindingReactorBlockEntity implements HeatBlockEntity {
 
     private float extract;
 
@@ -33,17 +37,17 @@ public class ReactorHeatVentBlockEntity extends RodFindingReactorBlockEntity imp
     public float heat = 0;
 
     @Override
-    protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
-        heat = tag.getFloat("heat");
-        extract = tag.getFloat("extract");
-        super.read(tag, registries, clientPacket);
+    protected void read(ValueInput tag, boolean clientPacket) {
+        heat = tag.getFloatOr("heat", 0f);
+        extract = tag.getFloatOr("extract", 0f);
+        super.read(tag, clientPacket);
     }
 
     @Override
-    protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+    protected void write(ValueOutput tag, boolean clientPacket) {
         tag.putFloat("heat", heat);
         tag.putFloat("extract", extract);
-        super.write(tag, registries, clientPacket);
+        super.write(tag, clientPacket);
     }
 
     @Override
@@ -122,14 +126,7 @@ public class ReactorHeatVentBlockEntity extends RodFindingReactorBlockEntity imp
         HeatBlockEntity.average(self, totalToAverage, totalBlocks, setters);
     }
 
-    @Override
-    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        HeatBlockEntity.addToolTips(this, tooltip);
-
-        CreateLang.translate("tooltip.create_new_age.extracting")
-                .style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
-        CreateLang.translate("tooltip.create_new_age.temperature", StringFormatUtil.formatFloat(extract))
-                .style(ChatFormatting.AQUA).forGoggles(tooltip, 2);
-        return true;
+    public float getLastExtracted() {
+        return extract;
     }
 }

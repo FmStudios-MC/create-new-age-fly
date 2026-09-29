@@ -1,5 +1,9 @@
 package org.antarcticgardens.cna.content.heat.stirling;
 
+import net.minecraft.world.level.storage.ValueOutput;
+
+import net.minecraft.world.level.storage.ValueInput;
+
 import com.zurrtum.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.zurrtum.create.client.foundation.utility.CreateLang;
 import com.zurrtum.create.catnip.animation.LerpedFloat;
@@ -28,8 +32,8 @@ public class StirlingEngineBlockEntity extends GeneratingKineticBlockEntity impl
     }
 
     @Override
-    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-        super.write(compound, registries, clientPacket);
+    protected void write(ValueOutput compound, boolean clientPacket) {
+        super.write(compound, clientPacket);
         compound.putFloat("heat", heat);
         compound.putFloat("gSpeed", speed);
     }
@@ -47,26 +51,15 @@ public class StirlingEngineBlockEntity extends GeneratingKineticBlockEntity impl
         };
     }
 
-    @Override
-    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        HeatBlockEntity.addToolTips(this, tooltip);
-
-        CreateLang.translate("tooltip.create_new_age.using")
-                .style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
-        CreateLang.translate("tooltip.create_new_age.temperature.ps", StringFormatUtil.formatFloat(speed * 3.125f)) // 3.125 is is 50/16
-                .style(ChatFormatting.AQUA).forGoggles(tooltip, 2);
-
-        return super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-    }
 
     @Override
-    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-        super.read(compound, registries, clientPacket);
+    protected void read(ValueInput compound, boolean clientPacket) {
+        super.read(compound, clientPacket);
         if (clientPacket)
             visualSpeed.chase(getGeneratedSpeed(), 1 / 64f, LerpedFloat.Chaser.EXP);
 
-        heat = compound.getFloat("heat");
-        speed = compound.getFloat("gSpeed");
+        heat = compound.getFloatOr("heat", 0f);
+        speed = compound.getFloatOr("gSpeed", 0f);
     }
 
     public float speed = 0;
@@ -107,7 +100,7 @@ public class StirlingEngineBlockEntity extends GeneratingKineticBlockEntity impl
             }
         }
 
-        if (!getLevel().isClientSide) {
+        if (!getLevel().isClientSide()) {
             HeatBlockEntity.trySync(this);
             return;
         }
@@ -146,5 +139,4 @@ public class StirlingEngineBlockEntity extends GeneratingKineticBlockEntity impl
         float impact = 32.0f;
         this.lastStressApplied = impact;
         return impact;
-    }
-}
+    }}

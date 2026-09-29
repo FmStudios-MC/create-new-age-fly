@@ -1,12 +1,11 @@
 package org.antarcticgardens.cna.content.electricity.network;
 
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import org.antarcticgardens.cna.content.electricity.connector.AbstractElectricalConnector;
-import org.antarcticgardens.esl.energy.EnergyStorage;
-import org.antarcticgardens.esl.transaction.SnapshotParticipant;
-import org.antarcticgardens.esl.transaction.TransactionContext;
 
-import java.util.Map;
+import org.antarcticgardens.cna.content.electricity.connector.AbstractElectricalConnector;
+import team.reborn.energy.api.EnergyStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+
 
 public class NetworkEnergyStorage extends SnapshotParticipant<Object> implements EnergyStorage {
     private final AbstractElectricalConnector connector;
@@ -41,7 +40,7 @@ public class NetworkEnergyStorage extends SnapshotParticipant<Object> implements
     }
 
     @Override
-    public long getStoredEnergy() {
+    public long getAmount() {
         return 0;
     }
 
@@ -51,27 +50,16 @@ public class NetworkEnergyStorage extends SnapshotParticipant<Object> implements
     }
 
     @Override
-    public Object createSnapshot() {
+    protected Object createSnapshot() {
         if (network == null)
             return null;
-        
+
         return new NetworkSnapshot(network);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public void restoreSnapshot(Object object) {
-        if (object instanceof NetworkSnapshot snapshot) {
+    protected void readSnapshot(Object object) {
+        if (object instanceof NetworkSnapshot snapshot)
             getNetwork().getPathManager().setConductivityContext(new NetworkPathConductivityContext(snapshot.getContext()));
-
-            for (Map.Entry<AbstractElectricalConnector, Object> e : snapshot.getSnapshots().entrySet()) {
-                EnergyStorage storage = EnergyStorage.findForBlock(e.getKey().getLevel(), e.getKey().getSupportingBlockPos(),
-                        e.getKey().getBlockState().getValue(BlockStateProperties.FACING));
-                
-                if (storage instanceof SnapshotParticipant sp) {
-                    sp.restoreSnapshot(e.getValue());
-                }
-            }
-        }
     }
 }

@@ -1,5 +1,9 @@
 package org.antarcticgardens.cna.content.nuclear.reactor.fuelacceptor;
 
+import net.minecraft.world.level.storage.ValueOutput;
+
+import net.minecraft.world.level.storage.ValueInput;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -29,15 +33,15 @@ public class ReactorFuelAcceptorBlockEntity extends RodFindingReactorBlockEntity
     }
 
     @Override
-    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+    protected void write(ValueOutput compound, boolean clientPacket) {
         compound.put("contents", container.createTag(registries));
-        super.write(compound, registries, clientPacket);
+        super.write(compound, clientPacket);
     }
 
     @Override
-    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+    protected void read(ValueInput compound, boolean clientPacket) {
         container.fromTag(compound.getList("contents", compound.TAG_COMPOUND), registries);
-        super.read(compound, registries, clientPacket);
+        super.read(compound, clientPacket);
     }
 
     @Override

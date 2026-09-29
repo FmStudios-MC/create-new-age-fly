@@ -1,19 +1,13 @@
 package org.antarcticgardens.cna.content.heat;
 
-import com.zurrtum.create.client.foundation.utility.CreateLang;
-import com.zurrtum.create.client.catnip.lang.LangBuilder;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.antarcticgardens.cna.config.CNAConfig;
-import org.antarcticgardens.cna.util.StringFormatUtil;
 
-import javax.annotation.Nullable;
-import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 public interface HeatBlockEntity {
     float getHeat();
@@ -40,63 +34,12 @@ public interface HeatBlockEntity {
         return getHeat();
     }
 
-    @Nullable
-    default float[] getHeatTiers() {
+    default float @Nullable [] getHeatTiers() {
         return new float[] {};
     }
 
     default double getHeatTierMultiplier() {
         return 1.0f;
-    }
-
-    static <T extends  BlockEntity & HeatBlockEntity> void addToolTips(T self, List<Component> tooltip) {
-        LangBuilder builder = CreateLang.translate("tooltip.create_new_age.temperature", StringFormatUtil.formatFloat(self.getHeat()));
-        float max = self.maxHeat() * CNAConfig.getServer().overheatingMultiplier.get().floatValue();
-        if (max < 0) {
-            builder.style(ChatFormatting.AQUA);
-        } else if (self.getHeat() >= max) {
-            builder.style(ChatFormatting.DARK_RED);
-        } else if (self.getHeat() >= max * 0.9) {
-            builder.style(ChatFormatting.RED);
-        } else if (self.getHeat() >= max * 0.75) {
-            builder.style(ChatFormatting.GOLD);
-        } else if (self.getHeat() >= max * 0.65) {
-            builder.style(ChatFormatting.YELLOW);
-        } else {
-            builder.style(ChatFormatting.AQUA);
-        }
-
-
-        builder.add(CreateLang.text(" / ")
-                .add(CreateLang.translate("tooltip.create_new_age.temperature", max > 0 ? StringFormatUtil.formatFloat(max) : "∞")).style(ChatFormatting.DARK_GRAY)
-        );
-
-        builder.forGoggles(tooltip, 1);
-
-        float[] tiers = self.getHeatTiers();
-
-        if (tiers == null)
-            return;
-
-        float mult = (float) self.getHeatTierMultiplier();
-        float tierHeat = self.getTierHeat();
-        for (int i = 0 ; i < tiers.length ; i++) {
-            float tis = tiers[i] * mult;
-            float next = Float.MAX_VALUE;
-            if (tiers.length > i + 1) {
-                next = tiers[i + 1] * mult;
-            }
-            if (tis <= tierHeat && next > tierHeat) {
-                builder = CreateLang.text("> ").add(CreateLang.translate("tooltip.create_new_age.temperature", StringFormatUtil.formatFloat(tis)));
-                builder.style(ChatFormatting.GRAY);
-                builder.forGoggles(tooltip, 0);
-            } else {
-                builder = CreateLang.text("").add(CreateLang.translate("tooltip.create_new_age.temperature", StringFormatUtil.formatFloat(tis)));
-                builder.style(ChatFormatting.DARK_GRAY);
-                builder.forGoggles(tooltip, 2);
-            }
-        }
-
     }
 
     static <T extends  BlockEntity & HeatBlockEntity> void handleOverheat(T self, Runnable onOverHeat) {

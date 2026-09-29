@@ -1,5 +1,9 @@
 package org.antarcticgardens.cna.content.electricity.connector;
 
+import net.minecraft.world.level.storage.ValueOutput;
+
+import net.minecraft.world.level.storage.ValueInput;
+
 import com.zurrtum.create.foundation.blockEntity.SmartBlockEntity;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
 import com.zurrtum.create.catnip.nbt.NBTHelper;
@@ -40,10 +44,10 @@ public abstract class AbstractElectricalConnector extends SmartBlockEntity {
     }
 
     @Override
-    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {}
+    public void addBehaviours(List<BlockEntityBehaviour<?>> behaviours) {}
 
     @Override
-    protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+    protected void write(ValueOutput tag, boolean clientPacket) {
         ListTag list = new ListTag();
 
         for (Map.Entry<BlockPos, WireType> e : connectorPositions.entrySet()) {
@@ -55,11 +59,11 @@ public abstract class AbstractElectricalConnector extends SmartBlockEntity {
         }
 
         tag.put("connections", list);
-        super.write(tag, registries, clientPacket);
+        super.write(tag, clientPacket);
     }
 
     @Override
-    protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+    protected void read(ValueInput tag, boolean clientPacket) {
         ListTag list = tag.getList("connections", Tag.TAG_COMPOUND);
         connectorPositions.clear();
 
@@ -73,7 +77,7 @@ public abstract class AbstractElectricalConnector extends SmartBlockEntity {
         }
 
         needsInstanceUpdate = true;
-        super.read(tag, registries, clientPacket);
+        super.read(tag, clientPacket);
     }
 
     @Override

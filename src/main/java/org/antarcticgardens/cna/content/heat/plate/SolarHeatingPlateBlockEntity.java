@@ -1,5 +1,11 @@
 package org.antarcticgardens.cna.content.heat.plate;
 
+import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
+import com.zurrtum.create.foundation.blockEntity.SmartBlockEntity;
+import net.minecraft.world.level.storage.ValueOutput;
+
+import net.minecraft.world.level.storage.ValueInput;
+
 import com.zurrtum.create.client.api.goggles.IHaveGoggleInformation;
 import com.zurrtum.create.client.foundation.utility.CreateLang;
 import net.minecraft.ChatFormatting;
@@ -24,13 +30,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SolarHeatingPlateBlockEntity extends BlockEntity implements HeatBlockEntity, IHaveGoggleInformation {
+public class SolarHeatingPlateBlockEntity extends SmartBlockEntity implements HeatBlockEntity {
     private final int energyPerSecond;
     private float last;
 
     public SolarHeatingPlateBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState, int energyPerSecond) {
         super(type, pos, blockState);
         this.energyPerSecond = energyPerSecond;
+    }
+
+    @Override
+    public void addBehaviours(List<BlockEntityBehaviour<?>> behaviours) {
     }
 
     public static SolarHeatingPlateBlockEntity createBasic(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -44,15 +54,15 @@ public class SolarHeatingPlateBlockEntity extends BlockEntity implements HeatBlo
     public float heat = 0;
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        heat = tag.getFloat("heat");
-        last = tag.getFloat("last");
+    protected void read(ValueInput tag, boolean clientPacket) {
+        super.read(tag, clientPacket);
+        heat = tag.getFloatOr("heat", 0f);
+        last = tag.getFloatOr("last", 0f);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void write(ValueOutput tag, boolean clientPacket) {
+        super.write(tag, clientPacket);
         tag.putFloat("heat", heat);
         tag.putFloat("last", last);
     }
@@ -91,17 +101,6 @@ public class SolarHeatingPlateBlockEntity extends BlockEntity implements HeatBlo
         return  saveWithoutMetadata(registries);
     }
 
-    @Override
-    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        HeatBlockEntity.addToolTips(this, tooltip);
-
-        CreateLang.translate("tooltip.create_new_age.generating")
-                .style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
-        CreateLang.translate("tooltip.create_new_age.temperature.ps", StringFormatUtil.formatFloat(last))
-                .style(ChatFormatting.AQUA).forGoggles(tooltip, 2);
-
-        return true;
-    }
 
 
     public void tick(BlockPos blockPos, Level world, BlockState blockState) {
@@ -125,5 +124,8 @@ public class SolarHeatingPlateBlockEntity extends BlockEntity implements HeatBlo
         last = (float) Math.max((light/15f)*energyPerSecond*generationMultiplier - Math.max(0, heat - (20 * energyPerSecond*generationMultiplier)), 0);
         addHeat(last);
         HeatBlockEntity.trySync(this);
+    }
+    public float getLastGenerated() {
+        return last;
     }
 }

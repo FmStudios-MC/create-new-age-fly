@@ -1,67 +1,30 @@
 package org.antarcticgardens.cna.content.motor;
 
-import com.google.common.collect.ImmutableList;
 import com.zurrtum.create.foundation.blockEntity.SmartBlockEntity;
-import com.zurrtum.create.client.foundation.blockEntity.behaviour.ValueBoxTransform;
-import com.zurrtum.create.client.foundation.blockEntity.ValueSettingsBoard;
-import com.zurrtum.create.client.foundation.blockEntity.ValueSettingsFormatter;
-import com.zurrtum.create.client.foundation.blockEntity.behaviour.scrollValue.ScrollValueBehaviour;
-import com.zurrtum.create.client.foundation.utility.CreateLang;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.BlockHitResult;
+import com.zurrtum.create.foundation.blockEntity.behaviour.scrollValue.ServerKineticScrollValueBehaviour;
 
-public class MotorScrollValueBehaviour extends ScrollValueBehaviour {
-
-    public MotorScrollValueBehaviour(Component label, SmartBlockEntity be, ValueBoxTransform slot) {
-        super(label, be, slot);
-        withFormatter(v -> String.valueOf(Math.abs(v)));
+/**
+ * Server half of the motor's speed setting. Create Fly's kinetic scroll value already maps the two
+ * board rows to the two rotation directions, exactly as upstream's copy did. The value box and
+ * board are in {@code client.behaviour.MotorScrollBehaviour}.
+ */
+public class MotorScrollValueBehaviour extends ServerKineticScrollValueBehaviour {
+    public MotorScrollValueBehaviour(SmartBlockEntity be) {
+        super(be);
     }
 
-    @Override
-    public ValueSettingsBoard createBoard(Player player, BlockHitResult hitResult) {
-        ImmutableList<Component> rows = ImmutableList.of(Component.literal("⟳")
-                        .withStyle(ChatFormatting.BOLD),
-                Component.literal("⟲")
-                        .withStyle(ChatFormatting.BOLD));
-        ValueSettingsFormatter formatter = new ValueSettingsFormatter(this::formatSettings);
-        return new ValueSettingsBoard(label, max, max/8, rows, formatter);
+    /** Sets the value before a range exists, where {@link #setValue} would clamp it to [0, 1]. */
+    public void setInitialValue(int value) {
+        this.value = value;
     }
 
-    @Override
-    public void setValueSettings(Player player, ValueSettings valueSetting, boolean ctrlHeld) {
-        int value = Math.max(1, valueSetting.value());
-        if (!valueSetting.equals(getValueSettings()))
-            playFeedbackSound(this);
-        setValue(valueSetting.row() == 0 ? -value : value);
-    }
-
-    @Override
-    public ValueSettings getValueSettings() {
-        return new ValueSettings(value < 0 ? 0 : 1, Math.abs(value));
-    }
-
-    public MutableComponent formatSettings(ValueSettings settings) {
-        return CreateLang.number(Math.max(1, Math.abs(settings.value())))
-                .add(CreateLang.text(settings.row() == 0 ? "⟳" : "⟲")
-                        .style(ChatFormatting.BOLD))
-                .component();
-    }
-    
     public void betweenValidated(int min, int max) {
         this.between(min, max);
-        
+
         if (value > max) {
             value = max;
         } else if (value < min) {
             value = min;
         }
-    }
-
-    @Override
-    public String getClipboardKey() {
-        return "Speed";
     }
 }

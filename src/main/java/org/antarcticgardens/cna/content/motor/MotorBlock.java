@@ -128,7 +128,7 @@ public class MotorBlock extends DirectionalKineticBlock implements IRotate, IBE<
 
     @Override
     public void neighborChanged(BlockState arg, Level arg2, BlockPos arg3, Block arg4, BlockPos arg5, boolean bl) {
-        if (arg.hasBlockEntity() && !arg2.isClientSide) {
+        if (arg.hasBlockEntity() && !arg2.isClientSide()) {
             BlockEntity entity = arg2.getBlockEntity(arg3);
             if (entity instanceof MotorBlockEntity en) {
                 en.powered = arg2.hasNeighborSignal(arg3);

@@ -1,5 +1,11 @@
 package org.antarcticgardens.cna.content.nuclear.reactor.rod;
 
+import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
+import com.zurrtum.create.foundation.blockEntity.SmartBlockEntity;
+import net.minecraft.world.level.storage.ValueOutput;
+
+import net.minecraft.world.level.storage.ValueInput;
+
 import com.zurrtum.create.client.api.goggles.IHaveGoggleInformation;
 import com.zurrtum.create.client.foundation.utility.CreateLang;
 import com.zurrtum.create.client.catnip.lang.LangBuilder;
@@ -24,13 +30,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ReactorRodBlockEntity extends BlockEntity implements HeatBlockEntity, IHaveGoggleInformation {
+public class ReactorRodBlockEntity extends SmartBlockEntity implements HeatBlockEntity {
 
     public static final int MAX_FUEL = 172800;
 
     public ReactorRodBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
         working = blockState.getValue(ReactorRodBlock.ACTIVE);
+    }
+
+    @Override
+    public void addBehaviours(List<BlockEntityBehaviour<?>> behaviours) {
     }
 
     int twoSeconds = 0;
@@ -76,23 +86,6 @@ public class ReactorRodBlockEntity extends BlockEntity implements HeatBlockEntit
         }
     }
 
-    @Override
-    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        HeatBlockEntity.addToolTips(this, tooltip);
-
-        CreateLang.translate("tooltip.create_new_age.generating")
-                .style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
-        CreateLang.translate("tooltip.create_new_age.temperature.ps", StringFormatUtil.formatFloat((float) (last*20)))
-                .style(ChatFormatting.AQUA).forGoggles(tooltip, 2);
-
-        CreateLang.translate("tooltip.create_new_age.fuel_ticks_left")
-                .style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
-
-        LangBuilder builder = CreateLang.text(StringFormatUtil.formatFloat(fuel));
-        builder.style(ChatFormatting.AQUA).forGoggles(tooltip, 2);
-
-        return true;
-    }
 
     static <T extends  BlockEntity & HeatBlockEntity> void transferAroundRodOnly(T self) {
         if (self.getLevel() == null) {
@@ -134,16 +127,16 @@ public class ReactorRodBlockEntity extends BlockEntity implements HeatBlockEntit
     public double last = 0;
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        heat = tag.getFloat("heat");
-        fuel = tag.getInt("fuel");
-        last = tag.getDouble("last");
+    protected void read(ValueInput tag, boolean clientPacket) {
+        super.read(tag, clientPacket);
+        heat = tag.getFloatOr("heat", 0f);
+        fuel = tag.getIntOr("fuel", 0);
+        last = tag.getDoubleOr("last", 0d);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void write(ValueOutput tag, boolean clientPacket) {
+        super.write(tag, clientPacket);
         tag.putFloat("heat", heat);
         tag.putInt("fuel", fuel);
         tag.putDouble("last", last);
@@ -166,5 +159,4 @@ public class ReactorRodBlockEntity extends BlockEntity implements HeatBlockEntit
         heat = amount;
         setChanged();
     }
-
 }

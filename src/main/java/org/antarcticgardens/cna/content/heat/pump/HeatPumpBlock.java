@@ -1,5 +1,6 @@
 package org.antarcticgardens.cna.content.heat.pump;
 
+import org.antarcticgardens.cna.util.SmartTicker;
 import com.zurrtum.create.content.equipment.wrench.IWrenchable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -132,7 +133,7 @@ public class HeatPumpBlock extends Block implements EntityBlock, IWrenchable {
         if (massPipe >= 20) {
             massPipe = 0;
         }
-        return (world, blockPos, blockState, sel) -> {
+        return SmartTicker.wrap((world, blockPos, blockState, sel) -> {
             if ((world.getGameTime() + on) % 20 != 0 || !(sel instanceof HeatPumpBlockEntity self) || self.getLevel() == null) return;
             self.lastPump = 0;
             Direction facing = state.getValue(FACING);
@@ -151,6 +152,6 @@ public class HeatPumpBlock extends Block implements EntityBlock, IWrenchable {
 
             HeatBlockEntity.handleOverheat(self);
             HeatBlockEntity.trySync(self);
-        };
+        });
     }
 }

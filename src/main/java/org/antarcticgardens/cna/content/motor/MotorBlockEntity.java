@@ -1,5 +1,9 @@
 package org.antarcticgardens.cna.content.motor;
 
+import net.minecraft.world.level.storage.ValueOutput;
+
+import net.minecraft.world.level.storage.ValueInput;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.zurrtum.create.client.api.goggles.IHaveGoggleInformation;
 import com.zurrtum.create.content.kinetics.KineticNetwork;
@@ -33,12 +37,12 @@ import org.antarcticgardens.cna.content.motor.variants.IMotorVariant;
 import org.antarcticgardens.cna.content.motor.variants.ReinforcedMotorVariant;
 import org.antarcticgardens.cna.util.RunnableUtil;
 import org.antarcticgardens.cna.util.StringFormatUtil;
-import org.antarcticgardens.esl.energy.EnergyStorage;
-import org.antarcticgardens.esl.energy.SimpleEnergyStorage;
+import team.reborn.energy.api.EnergyStorage;
+import org.antarcticgardens.cna.energy.SimpleEnergyStorage;
 
 import java.util.List;
 
-public class MotorBlockEntity extends GeneratingKineticBlockEntity implements IHaveGoggleInformation {
+public class MotorBlockEntity extends GeneratingKineticBlockEntity {
     private final SimpleEnergyStorage storage;
     
     public boolean needsPower = false;
@@ -68,9 +72,6 @@ public class MotorBlockEntity extends GeneratingKineticBlockEntity implements IH
                 .onFinalCommit(RunnableUtil.createBlockEntityUpdater(this))
                 .setSupportsExtraction(false);
 
-        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.BASIC_MOTOR);
-        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.ADVANCED_MOTOR);
-        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.REINFORCED_MOTOR);
     }
 
     public static CNABlockEntityTypes.Factory<MotorBlockEntity> create(IMotorVariant variant) {
@@ -84,11 +85,10 @@ public class MotorBlockEntity extends GeneratingKineticBlockEntity implements IH
     }
 
     @Override
-    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+    public void addBehaviours(List<BlockEntityBehaviour<?>> behaviours) {
         super.addBehaviours(behaviours);
-        speedBehavior = new MotorScrollValueBehaviour(CreateLang.translateDirect("kinetics.creative_motor.rotation_speed"), this, new MotorValueBox());
-        speedBehavior.requiresWrench();
-        speedBehavior.value = getDefaultSpeed();
+        speedBehavior = new MotorScrollValueBehaviour(this);
+        speedBehavior.setInitialValue(getDefaultSpeed());
         speedBehavior.withCallback(i -> this.updateGeneratedRotation());
         behaviours.add(speedBehavior);
     }
@@ -98,41 +98,6 @@ public class MotorBlockEntity extends GeneratingKineticBlockEntity implements IH
         super.invalidate();
     }
 
-    static class MotorValueBox extends ValueBoxTransform.Sided {
-
-        @Override
-        protected Vec3 getSouthLocation() {
-            return VecHelper.voxelSpace(8, 8, 12.5);
-        }
-
-        @Override
-        public Vec3 getLocalOffset(LevelAccessor level, BlockPos pos, BlockState state) {
-            Direction facing = state.getValue(CreativeMotorBlock.FACING);
-            return super.getLocalOffset(level, pos, state).add(Vec3.atLowerCornerOf(facing.getNormal())
-                    .scale(-1 / 16f));
-        }
-
-        @Override
-        public void rotate(LevelAccessor level, BlockPos pos, BlockState state, PoseStack ms) {
-            super.rotate(level, pos, state, ms);
-            Direction facing = state.getValue(CreativeMotorBlock.FACING);
-            if (facing.getAxis() == Direction.Axis.Y)
-                return;
-            if (getSide() != Direction.UP)
-                return;
-            TransformStack.of(ms)
-                    .rotateZDegrees(-AngleHelper.horizontalAngle(facing) + 180);
-        }
-
-        @Override
-        protected boolean isSideActive(BlockState state, Direction direction) {
-            Direction facing = state.getValue(CreativeMotorBlock.FACING);
-            if (facing.getAxis() != Direction.Axis.Y && direction == Direction.DOWN)
-                return false;
-            return direction.getAxis() != facing.getAxis();
-        }
-
-    }
 
 
     public int getDefaultSpeed() {
@@ -140,19 +105,19 @@ public class MotorBlockEntity extends GeneratingKineticBlockEntity implements IH
     }
 
     @Override
-    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-        storage.setStoredEnergy(compound.getLong("energy"));
-        actualSpeed = compound.getFloat("aSpeed");
-        needsPower = compound.getBoolean("needsPower");
-        stress = compound.getFloat("lastGeneratedStress");
-        speed = compound.getFloat("lastGeneratedSpeed");
-        e = compound.getLong("eUse");
-        actualStress = compound.getFloat("actualStress");
-        super.read(compound, registries, clientPacket);
+    protected void read(ValueInput compound, boolean clientPacket) {
+        storage.setStoredEnergy(compound.getLongOr("energy", 0L));
+        actualSpeed = compound.getFloatOr("aSpeed", 0f);
+        needsPower = compound.getBooleanOr("needsPower", false);
+        stress = compound.getFloatOr("lastGeneratedStress", 0f);
+        speed = compound.getFloatOr("lastGeneratedSpeed", 0f);
+        e = compound.getLongOr("eUse", 0L);
+        actualStress = compound.getFloatOr("actualStress", 0f);
+        super.read(compound, clientPacket);
     }
 
     @Override
-    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+    protected void write(ValueOutput compound, boolean clientPacket) {
         compound.putLong("energy", storage.getStoredEnergy());
         compound.putFloat("aSpeed", actualSpeed);
         compound.putBoolean("needsPower", needsPower);
@@ -160,7 +125,7 @@ public class MotorBlockEntity extends GeneratingKineticBlockEntity implements IH
         compound.putFloat("lastGeneratedSpeed", speed);
         compound.putFloat("eUse", e);
         compound.putFloat("actualStress", actualStress);
-        super.write(compound, registries, clientPacket);
+        super.write(compound, clientPacket);
     }
 
     @Override
@@ -170,29 +135,6 @@ public class MotorBlockEntity extends GeneratingKineticBlockEntity implements IH
 
     private long e;
 
-    @Override
-    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        CreateLang.translate("tooltip.create_new_age.energy_stored")
-                .style(ChatFormatting.GRAY)
-                .forGoggles(tooltip);
-
-        CreateLang.translate("tooltip.create_new_age.energy_storage", StringFormatUtil.formatLong(storage.getStoredEnergy()),
-                        StringFormatUtil.formatLong(storage.getCapacity()))
-                .style(ChatFormatting.AQUA)
-                .forGoggles(tooltip, 1);
-
-        CreateLang.translate("tooltip.create_new_age.using")
-                .style(ChatFormatting.GRAY)
-                .forGoggles(tooltip);
-
-        CreateLang.translate("tooltip.create_new_age.energy_per_tick", StringFormatUtil.formatLong(e))
-                .style(ChatFormatting.AQUA)
-                .forGoggles(tooltip, 1);
-
-        super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-
-        return true;
-    }
 
     @Override
     public float calculateAddedStressCapacity() {
@@ -214,7 +156,7 @@ public class MotorBlockEntity extends GeneratingKineticBlockEntity implements IH
         float speed = getGeneratedSpeed();
         float prevSpeed = this.speed;
 
-        if (level == null || level.isClientSide)
+        if (level == null || level.isClientSide())
             return;
 
         if (prevSpeed != speed) {
@@ -267,7 +209,7 @@ public class MotorBlockEntity extends GeneratingKineticBlockEntity implements IH
                     * CNAConfig.getServer().suToEnergy.get());
             e = needsPower == powered ? storage.internalExtract(needed, false) : 0;
             if (e > 0) {
-                actualSpeed = speedBehavior.value;
+                actualSpeed = speedBehavior.getValue();
                 actualStress =
                         (float) Math.ceil((variant.getStress() * stressMultiplier
                                     * CNAConfig.getServer().motorSUMultiplier.get())
@@ -285,5 +227,18 @@ public class MotorBlockEntity extends GeneratingKineticBlockEntity implements IH
                 prvEnergy = storage.getStoredEnergy();
             }
         }
+    }
+    /** Exposes the storage to Team Reborn Energy. Was re-registered from every constructor under ESL. */
+    public static void registerEnergyStorage() {
+        EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> ((MotorBlockEntity) blockEntity).storage, CNABlockEntityTypes.BASIC_MOTOR);
+        EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> ((MotorBlockEntity) blockEntity).storage, CNABlockEntityTypes.ADVANCED_MOTOR);
+        EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> ((MotorBlockEntity) blockEntity).storage, CNABlockEntityTypes.REINFORCED_MOTOR);
+    }
+    public SimpleEnergyStorage getEnergyStorage() {
+        return storage;
+    }
+
+    public long getLastConsumed() {
+        return e;
     }
 }

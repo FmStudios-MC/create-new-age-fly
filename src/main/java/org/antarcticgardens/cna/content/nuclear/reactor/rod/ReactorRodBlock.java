@@ -1,5 +1,6 @@
 package org.antarcticgardens.cna.content.nuclear.reactor.rod;
 
+import org.antarcticgardens.cna.util.SmartTicker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -124,10 +125,10 @@ public class ReactorRodBlock extends ReactorBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
-        return (level1, blockPos, blockState, blockEntity) -> {
+        return SmartTicker.wrap((level1, blockPos, blockState, blockEntity) -> {
             if (!(blockEntity instanceof ReactorRodBlockEntity ent)) return;
             ent.tick(blockPos, level1, blockState);
-        };
+        });
     }
 
 }

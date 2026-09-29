@@ -16,7 +16,7 @@ public class RadiationPoisoningEffect extends MobEffect {
 
     @Override
     public boolean applyEffectTick(LivingEntity livingEntity, int amplifier) {
-        if (!livingEntity.level().isClientSide) {
+        if (!livingEntity.level().isClientSide()) {
             if (CNAConfig.getServer().geigerCounterSounds.get()) {
                 float clickChance = 0.15f + (amplifier * 0.10f);
                 if (livingEntity.getRandom().nextFloat() < clickChance && livingEntity.getType() == EntityType.PLAYER) {

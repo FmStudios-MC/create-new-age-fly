@@ -1,5 +1,9 @@
 package org.antarcticgardens.cna.content.electricity.generation.brushes;
 
+import net.minecraft.world.level.storage.ValueOutput;
+
+import net.minecraft.world.level.storage.ValueInput;
+
 import com.zurrtum.create.client.api.goggles.IHaveGoggleInformation;
 import com.zurrtum.create.content.kinetics.base.DirectionalKineticBlock;
 import com.zurrtum.create.content.kinetics.base.KineticBlockEntity;
@@ -18,15 +22,14 @@ import org.antarcticgardens.cna.config.CNAConfig;
 import org.antarcticgardens.cna.content.electricity.generation.coil.GeneratorCoilBlock;
 import org.antarcticgardens.cna.content.electricity.generation.coil.GeneratorCoilBlockEntity;
 import org.antarcticgardens.cna.util.StringFormatUtil;
-import org.antarcticgardens.esl.energy.EnergyHelper;
-import org.antarcticgardens.esl.energy.EnergyStorage;
-import org.antarcticgardens.esl.energy.SimpleEnergyStorage;
-import org.antarcticgardens.esl.transaction.Transaction;
-import org.antarcticgardens.esl.transaction.TransactionStack;
+import org.antarcticgardens.cna.energy.EnergyHelper;
+import team.reborn.energy.api.EnergyStorage;
+import org.antarcticgardens.cna.energy.SimpleEnergyStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 
 import java.util.List;
 
-public class CarbonBrushesBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation {
+public class CarbonBrushesBlockEntity extends KineticBlockEntity {
     private final SimpleEnergyStorage storage;
 
     private int lastOutput = 0;
@@ -38,25 +41,24 @@ public class CarbonBrushesBlockEntity extends KineticBlockEntity implements IHav
         storage = new SimpleEnergyStorage(0)
                 .setSupportsInsertion(false);
 
-        EnergyStorage.registerForBlockEntity((blockEntity, direction) -> blockEntity.storage, CNABlockEntityTypes.CARBON_BRUSHES);
 
         setLazyTickRate(20);
     }
 
     @Override
-    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+    protected void write(ValueOutput compound, boolean clientPacket) {
         compound.putInt("lastOutput", lastOutput);
-        super.write(compound, registries, clientPacket);
+        super.write(compound, clientPacket);
     }
 
     @Override
-    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-        lastOutput = compound.getInt("lastOutput");
-        super.read(compound, registries, clientPacket);
+    protected void read(ValueInput compound, boolean clientPacket) {
+        lastOutput = compound.getIntOr("lastOutput", 0);
+        super.read(compound, clientPacket);
     }
 
     @Override
-    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+    public void addBehaviours(List<BlockEntityBehaviour<?>> behaviours) {
         super.addBehaviours(behaviours);
     }
 
@@ -65,21 +67,6 @@ public class CarbonBrushesBlockEntity extends KineticBlockEntity implements IHav
         super.invalidate();
     }
 
-    @Override
-    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        CreateLang.translate("tooltip.create_new_age.energy_stats")
-                .style(ChatFormatting.WHITE).forGoggles(tooltip);
-
-        CreateLang.translate("tooltip.create_new_age.energy_output")
-                .style(ChatFormatting.GRAY)
-                .forGoggles(tooltip);
-
-        CreateLang.translate("tooltip.create_new_age.energy_per_tick", StringFormatUtil.formatLong(lastOutput))
-                .style(ChatFormatting.AQUA)
-                .forGoggles(tooltip, 1);
-
-        return true;
-    }
 
     public SimpleEnergyStorage getEnergyStorage() {
         return storage;
@@ -90,7 +77,7 @@ public class CarbonBrushesBlockEntity extends KineticBlockEntity implements IHav
     @Override
     public void tick() {
         super.tick();
-        if (level == null || level.isClientSide) return;
+        if (level == null || level.isClientSide()) return;
         Direction facing = getBlockState().getValue(DirectionalKineticBlock.FACING);
 
         storage.setCapacity(lastOutput * 20L);
@@ -100,7 +87,7 @@ public class CarbonBrushesBlockEntity extends KineticBlockEntity implements IHav
         coilsLeft = processCoil(worldPosition, facing, coilsLeft);
         processCoil(worldPosition, facing.getOpposite(), coilsLeft);
 
-        try (Transaction t = TransactionStack.get().openOuter()) {
+        try (Transaction t = Transaction.openOuter()) {
             EnergyHelper.insertToSurrounding(storage, getBlockPos(), getLevel(), storage.getStoredEnergy(), t);
             t.commit();
         }
@@ -108,7 +95,7 @@ public class CarbonBrushesBlockEntity extends KineticBlockEntity implements IHav
 
     @Override
     public void lazyTick() {
-        if (level == null || level.isClientSide) return;
+        if (level == null || level.isClientSide()) return;
         if (syncOut > 0) {
             syncOut = 0;
             setChanged();
@@ -130,5 +117,12 @@ public class CarbonBrushesBlockEntity extends KineticBlockEntity implements IHav
             return processCoil(pos, dir, left - 1);
         }
         return left;
+    }
+    /** Exposes the storage to Team Reborn Energy. Was re-registered from every constructor under ESL. */
+    public static void registerEnergyStorage() {
+        EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> ((CarbonBrushesBlockEntity) blockEntity).storage, CNABlockEntityTypes.CARBON_BRUSHES);
+    }
+    public int getLastOutput() {
+        return lastOutput;
     }
 }

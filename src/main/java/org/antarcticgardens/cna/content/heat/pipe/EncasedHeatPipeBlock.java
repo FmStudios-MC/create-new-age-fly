@@ -104,7 +104,7 @@ public class EncasedHeatPipeBlock extends Block implements EntityBlock, IWrencha
         Level world = context.getLevel();
         BlockPos pos = context.getClickedPos();
 
-        if (world.isClientSide)
+        if (world.isClientSide())
             return InteractionResult.SUCCESS;
 
         context.getLevel().levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, context.getClickedPos(), Block.getId(state));

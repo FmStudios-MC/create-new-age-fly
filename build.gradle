@@ -38,6 +38,14 @@ sourceSets.main.java {
     exclude 'org/antarcticgardens/cna/compat/computercraft/**'
     exclude 'org/antarcticgardens/cna/compat/jei/**'
     exclude 'org/antarcticgardens/cna/content/ponders/**'
+
+    // Phase 3 (rendering): excluded while the common code is brought to compile.
+    exclude 'org/antarcticgardens/cna/**/*Renderer.java'
+    exclude 'org/antarcticgardens/cna/**/*Visual.java'
+    exclude 'org/antarcticgardens/cna/rendering/**'
+    exclude 'org/antarcticgardens/cna/CNARenderTypes.java'
+    exclude 'org/antarcticgardens/cna/CNAPartialModels.java'
+    exclude 'org/antarcticgardens/cna/CNASpriteShifts.java'
 }
 
 repositories {
@@ -77,6 +85,7 @@ dependencies {
 
     // The fabric-api artifact only nests the module jars, so each module used must be named.
     implementation fabricApi.module("fabric-api-base", project.fabric_version)
+    implementation fabricApi.module("fabric-api-lookup-api-v1", project.fabric_version)
     implementation fabricApi.module("fabric-creative-tab-api-v1", project.fabric_version)
     implementation fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version)
     implementation fabricApi.module("fabric-networking-api-v1", project.fabric_version)
