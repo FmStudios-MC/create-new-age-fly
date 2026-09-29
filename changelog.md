@@ -1,5 +1,5 @@
 ------------------------------------------------------
-Version 1.2.1-fly.26.2-alpha.1 (unofficial Fabric port)
+Version 1.2.1-fly.26.2-beta.1 (unofficial Fabric port)
 ------------------------------------------------------
 First release of the unofficial port to Create Fly (Fabric, Minecraft 26.2). Not made or
 supported by Antarctic Gardens; please report problems with it to this port's issue tracker.
