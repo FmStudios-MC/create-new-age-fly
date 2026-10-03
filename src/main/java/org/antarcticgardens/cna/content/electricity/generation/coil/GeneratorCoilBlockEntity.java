@@ -120,6 +120,7 @@ public class GeneratorCoilBlockEntity extends KineticBlockEntity {
     }
     /** Share of the applied stress that went into generating energy, for the goggle tooltip. */
     public float getEfficiency() {
-        return (lastStressApplied - plainStress) / lastStressApplied;
+        // Upstream divided by zero here (shown as "NaN%") before the coil's first stress update.
+        return lastStressApplied == 0 ? 0 : (lastStressApplied - plainStress) / lastStressApplied;
     }
 }

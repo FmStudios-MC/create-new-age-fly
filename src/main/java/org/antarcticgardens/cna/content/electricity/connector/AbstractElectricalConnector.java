@@ -125,7 +125,9 @@ public abstract class AbstractElectricalConnector extends SmartBlockEntity {
     }
 
     public void remove(Level level) {
-        if (!level.isClientSide())
+        // No network yet when the block goes before its first tick (e.g. /fill in a chunk that does
+        // not tick); upstream crashed here.
+        if (!level.isClientSide() && network != null)
             network.destroy();
 
         for (Map.Entry<AbstractElectricalConnector, WireType> e : connectors.entrySet()) {
@@ -150,7 +152,9 @@ public abstract class AbstractElectricalConnector extends SmartBlockEntity {
         setChanged();
 
         if (level instanceof ServerLevel serverLevel) {
-            network.addNode(entity);
+            // A connector that has not ticked yet joins the network on its first tick.
+            if (network != null)
+                network.addNode(entity);
 
             serverLevel.getChunkSource().blockChanged(entity.getBlockPos());
             serverLevel.getChunkSource().blockChanged(getBlockPos());

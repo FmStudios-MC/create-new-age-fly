@@ -1,4 +1,17 @@
 ------------------------------------------------------
+Version 1.2.1-fly.26.2 (unofficial Fabric port)
+------------------------------------------------------
+First full release of the port.
+#### Bug Fixes
+- Charging an energy item on an energiser no longer creates energy
+- Taking a half-charged item off an energiser no longer refunds its charge to the energiser
+- An energiser charging an item keeps doing so after a reload
+- Fix a server crash when a connector or street light is removed before its first tick
+- Leaving a single player world no longer keeps it in memory
+- The generator coil's efficiency no longer shows "NaN%"
+- Declare the minimum Fabric API version (0.160.0)
+
+------------------------------------------------------
 Version 1.2.1-fly.26.2-beta.1 (unofficial Fabric port)
 ------------------------------------------------------
 First release of the unofficial port to Create Fly (Fabric, Minecraft 26.2). Not made or

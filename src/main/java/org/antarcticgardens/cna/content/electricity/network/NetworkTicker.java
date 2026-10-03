@@ -36,4 +36,12 @@ public class NetworkTicker {
         for (ElectricalNetwork network : networks.get(world))
             network.tick();
     }
+
+    /**
+     * Forgets every level's networks. Called when a server stops: the map is keyed by level, so in
+     * single player each world left behind kept its whole level alive until the game closed.
+     */
+    public static void clear() {
+        networks.clear();
+    }
 }

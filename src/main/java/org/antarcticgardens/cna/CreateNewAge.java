@@ -6,6 +6,7 @@ import com.zurrtum.create.compat.Mods;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
@@ -73,6 +74,7 @@ public class CreateNewAge implements ModInitializer {
         // Was LevelTickEvent.Pre on both sides. Networks only ever tick with a server level, since
         // the client never builds them.
         ServerTickEvents.START_LEVEL_TICK.register(NetworkTicker::tickWorld);
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> NetworkTicker.clear());
 
         // Replaces the NeoForge biome modifiers under data/create_new_age/neoforge/biome_modifier.
         BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Decoration.UNDERGROUND_ORES, CNAPlacedFeatures.THORIUM_ORE);

@@ -17,6 +17,15 @@ an energising recipe on a depot, lava heating a pipe and a heater, a reactor rod
 wires and energy surviving save/reload, and on a dedicated server with a connected client the same
 chain runs and the goggle overlay and motor value box show synced values.
 
+**Release review, 2026-10-03 → first full release `1.2.1-fly.26.2`.** Upstream `1.21.1` has no
+newer commits. Fixed (mostly upstream bugs): energiser capacitor mode returned from inside its
+transaction on the last step (item kept the charge, energiser was rolled back) and refunded an
+item's own charge to the energiser when the item left; `capacitorMode` was read under a misspelt
+key; `remove()`/`connect()` dereferenced a network a never-ticked connector does not have yet;
+`NetworkTicker` kept every left world's `ServerLevel` (now cleared on server stop); coil
+efficiency divided by zero. `GameplayCheck` covers the energiser and connector cases (test-only
+energy items: amethyst and echo shards).
+
 Still only checkable by playing: balance and feel, the energiser's beam and the stirling engine's
 flywheel in motion, placing wires by hand, reactor overheating and corium, other energy mods
 through Team Reborn Energy, and long sessions.

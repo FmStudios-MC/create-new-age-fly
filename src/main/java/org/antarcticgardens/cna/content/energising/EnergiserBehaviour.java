@@ -62,7 +62,8 @@ public class EnergiserBehaviour extends BeltProcessingBehaviour {
         charged = nbt.getLongOr("charged", 0L);
         needed = nbt.getLongOr("needed", 0L);
         shouldCreateParticles = nbt.getBooleanOr("shouldCreateParticles", false);
-        capacitorMode = nbt.getBooleanOr("capacitorModer", false);
+        // Upstream read "capacitorModer", so the flag never survived a reload.
+        capacitorMode = nbt.getBooleanOr("capacitorMode", false);
         super.read(nbt, clientPacket);
     }
 
@@ -89,7 +90,10 @@ public class EnergiserBehaviour extends BeltProcessingBehaviour {
             sinceUpdate--;
             if (sinceUpdate <= 0) {
                 needed = 0;
-                be.getEnergyStorage().internalInsert(charged, false);
+                // Refund what a recipe drew. In capacitor mode "charged" is the item's own energy,
+                // which never came out of this storage (upstream refunded it anyway).
+                if (!capacitorMode)
+                    be.getEnergyStorage().internalInsert(charged, false);
                 charged = 0;
                 currentRecipe = null;
                 capacitorMode = false;
@@ -146,26 +150,27 @@ public class EnergiserBehaviour extends BeltProcessingBehaviour {
             EnergyStorage itemStorage = holder.findEnergyStorage();
             
             if (itemStorage != null) {
+                // Committed before anything else: upstream returned from inside the transaction on
+                // the last step, which rolled the energiser's storage back while the item kept the
+                // charged stack.
                 try (Transaction t = Transaction.openOuter()) {
                     be.lastCharged = EnergyHelper.moveEnergy(be.getEnergyStorage(), itemStorage, eSpeed(), t);
-
-                    charged = itemStorage.getAmount();
-                    needed = itemStorage.getCapacity();
-                    sinceUpdate = 10;
-                    transportedItemStack.stack = holder.toItemStack();
-
-                    blockEntity.sendData();
-
-
-                    if (charged >= needed) {
-                        capacitorMode = false;
-                        charged = 0;
-                        needed = 0;
-                        shouldCreateParticles = true;
-                        return ProcessingResult.PASS;
-                    }
-                    
                     t.commit();
+                }
+
+                charged = itemStorage.getAmount();
+                needed = itemStorage.getCapacity();
+                sinceUpdate = 10;
+                transportedItemStack.stack = holder.toItemStack();
+
+                blockEntity.sendData();
+
+                if (charged >= needed) {
+                    capacitorMode = false;
+                    charged = 0;
+                    needed = 0;
+                    shouldCreateParticles = true;
+                    return ProcessingResult.PASS;
                 }
 
                 return ProcessingResult.HOLD;
