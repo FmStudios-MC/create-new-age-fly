@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.LightCoordsUtil;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -83,7 +83,7 @@ public class Wire {
                     .add(new Vector3f(direction).mul(sectionOffset))
                     .add(new Vector3f(up).mul(lastCatenary));
             BlockPos lightBlockPos = BlockPos.containing(new Vec3(lightPos));
-            int packedLight = LightCoordsUtil.pack(level.getBrightness(LightLayer.BLOCK, lightBlockPos),
+            int packedLight = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, lightBlockPos),
                     level.getBrightness(LightLayer.SKY, lightBlockPos));
 
             float catenary = catenary(sectionId, totalLength, sectionsAmount) * catenaryScalar;

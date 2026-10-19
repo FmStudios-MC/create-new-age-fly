@@ -79,7 +79,7 @@ public class GameplayCheck implements FabricClientGameTest {
 
         TestWorldSave save;
         try (TestSingleplayerContext singleplayer = context.worldBuilder().setUseConsistentSettings(true).create()) {
-            singleplayer.getConnection().waitForChunksRender();
+            singleplayer.getClientWorld().waitForChunksRender();
             TestServerContext server = singleplayer.getServer();
             save = singleplayer.getWorldSave();
 
@@ -184,7 +184,7 @@ public class GameplayCheck implements FabricClientGameTest {
 
         // reopen: saved state must come back
         try (TestSingleplayerContext singleplayer = save.open()) {
-            singleplayer.getConnection().waitForChunksRender();
+            singleplayer.getClientWorld().waitForChunksRender();
             TestServerContext server = singleplayer.getServer();
             context.waitTicks(20);
             check(server, "wire survives save and reload", level ->

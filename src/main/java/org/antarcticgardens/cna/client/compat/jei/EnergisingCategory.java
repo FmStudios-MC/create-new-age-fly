@@ -11,7 +11,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeMap;
@@ -63,16 +63,16 @@ public class EnergisingCategory extends CreateCategory<RecipeHolder<EnergisingRe
     }
 
     @Override
-    public void draw(RecipeHolder<EnergisingRecipe> entry, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
+    public void draw(RecipeHolder<EnergisingRecipe> entry, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics,
                      double mouseX, double mouseY) {
         AllGuiTextures.JEI_ARROW.render(graphics, 31, 8);
         drawEnergy(graphics, entry.value().getEnergyNeeded(), 50, 18);
     }
 
     /** Upstream drew this centred and without shadow, in 0x1166ff. */
-    static void drawEnergy(GuiGraphicsExtractor graphics, long energy, int centreX, int y) {
+    static void drawEnergy(GuiGraphics graphics, long energy, int centreX, int y) {
         Font font = Minecraft.getInstance().font;
         Component text = Component.literal(StringFormatUtil.formatLong(energy) + " ⚡");
-        graphics.text(font, text, centreX - font.width(text) / 2, y, 0xFF1166FF, false);
+        graphics.drawString(font, text, centreX - font.width(text) / 2, y, 0xFF1166FF, false);
     }
 }

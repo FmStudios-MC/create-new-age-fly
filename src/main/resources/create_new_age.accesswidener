@@ -1,0 +1,10 @@
+accessWidener v2 named
+
+# Create Fly opens this in its own access widener, but access wideners are not transitive: every
+# render state CNA extracts reads it (Create Fly's SingleKineticRenderState, SmartBlockEntityRenderer).
+accessible field net/minecraft/client/renderer/blockentity/state/BlockEntityRenderState blockState Lnet/minecraft/world/level/block/state/BlockState;
+
+# BlockEntityType's constructor and supplier are private (CNABlockEntityTypes.register); Create Fly
+# opens them in its own access widener as well.
+accessible class net/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier
+accessible method net/minecraft/world/level/block/entity/BlockEntityType <init> (Lnet/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier;Ljava/util/Set;)V

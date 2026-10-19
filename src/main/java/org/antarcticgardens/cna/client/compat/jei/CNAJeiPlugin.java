@@ -8,7 +8,7 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.common.Internal;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -55,8 +55,8 @@ public class CNAJeiPlugin implements IModPlugin {
         private static final ItemStack ENERGISER = new ItemStack(CNABlocks.BASIC_ENERGISER);
 
         @Override
-        public void render(GuiGraphicsExtractor graphics, int i, int x, int y, Optional<IRecipeSlotView> slot) {
-            graphics.item(ENERGISER, x + 1, y + 16);
+        public void render(GuiGraphics graphics, int i, int x, int y, Optional<IRecipeSlotView> slot) {
+            graphics.renderItem(ENERGISER, x + 1, y + 16);
         }
     }
 }

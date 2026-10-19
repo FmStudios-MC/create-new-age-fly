@@ -4,19 +4,17 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.blaze3d.platform.Transparency;
 import net.fabricmc.fabric.api.client.model.loading.v1.UnbakedModelDeserializer;
-import net.minecraft.client.renderer.block.dispatch.ModelState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.TextureSlots;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelDebugName;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.QuadCollection;
+import net.minecraft.client.resources.model.UnbakedGeometry;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.client.resources.model.cuboid.ItemTransforms;
-import net.minecraft.client.resources.model.geometry.BakedQuad;
-import net.minecraft.client.resources.model.geometry.QuadCollection;
-import net.minecraft.client.resources.model.geometry.UnbakedGeometry;
-import net.minecraft.client.resources.model.sprite.Material;
-import net.minecraft.client.resources.model.sprite.TextureSlots;
 import net.minecraft.client.model.geom.builders.UVPair;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -85,14 +83,12 @@ public record QuadListModel(@Nullable Identifier parent, TextureSlots.Data textu
     }
 
     private QuadCollection bake(TextureSlots textureSlots, ModelBaker baker, ModelState state, ModelDebugName name) {
-        ModelBaker.Interner interner = baker.interner();
         Matrix4fc transform = state.transformation().getMatrix();
         QuadCollection.Builder builder = new QuadCollection.Builder();
 
         for (Quad quad : quads) {
             String slot = quad.texture().startsWith("#") ? quad.texture().substring(1) : quad.texture();
-            Material.Baked material = baker.materials().resolveSlot(textureSlots, slot, name);
-            TextureAtlasSprite sprite = material.sprite();
+            TextureAtlasSprite sprite = baker.sprites().resolveSlot(textureSlots, slot, name);
 
             Vector3fc[] positions = new Vector3fc[4];
             long[] uvs = new long[4];
@@ -100,7 +96,7 @@ public record QuadListModel(@Nullable Identifier parent, TextureSlots.Data textu
                 // Rotated about the block centre, as vanilla's FaceBakery does with blockstate rotations.
                 Vector3f position = new Vector3f(quad.positions()[i]).sub(0.5f, 0.5f, 0.5f);
                 transform.transformPosition(position);
-                positions[i] = interner.vector(position.add(0.5f, 0.5f, 0.5f));
+                positions[i] = position.add(0.5f, 0.5f, 0.5f);
                 uvs[i] = UVPair.pack(sprite.getU(quad.u()[i]), sprite.getV(quad.v()[i]));
             }
 
@@ -108,9 +104,8 @@ public record QuadListModel(@Nullable Identifier parent, TextureSlots.Data textu
                     .cross(new Vector3f(positions[3]).sub(positions[0]));
             Direction direction = Direction.getApproximateNearest(normal.x, normal.y, normal.z);
 
-            BakedQuad.MaterialInfo info = interner.materialInfo(BakedQuad.MaterialInfo.of(material, Transparency.NONE, -1, true, 0));
             builder.addUnculledFace(new BakedQuad(positions[0], positions[1], positions[2], positions[3],
-                    uvs[0], uvs[1], uvs[2], uvs[3], direction, info));
+                    uvs[0], uvs[1], uvs[2], uvs[3], -1, direction, sprite, true, 0));
         }
         return builder.build();
     }

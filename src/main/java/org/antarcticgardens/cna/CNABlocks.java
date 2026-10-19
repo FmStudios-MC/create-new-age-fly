@@ -60,7 +60,7 @@ import java.util.function.Function;
  * Blockstates, block models, loot tables and tags that Registrate used to generate from the builder
  * chains live as JSON under {@code src/generated/resources}. Connected textures and casing
  * connectivity are client-side in Create Fly and are registered from {@code CNAClientBlocks}.
- * Render layers are no longer declared: 26.2 derives the chunk layer from the textures.
+ * Chunk layers are client-side as well, in {@code CNABlockLayers}.
  */
 public class CNABlocks {
     public static final EnergiserBlock BASIC_ENERGISER = register("basic_energiser", EnergiserBlock::newBasic,
@@ -173,7 +173,7 @@ public class CNABlocks {
             Properties.of().strength(3.5f).requiresCorrectToolForDrops(), AssemblyOperatorBlockItem::new);
 
     public static final RotatedPillarBlock COPPER_WIRE_BLOCK = register("copper_wire_block", RotatedPillarBlock::new,
-            Properties.ofFullCopy(Blocks.COPPER_BLOCK.weathering().unaffected()).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.COPPER));
+            Properties.ofFullCopy(Blocks.COPPER_BLOCK).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.COPPER));
 
     public static final RotatedPillarBlock OVERCHARGED_IRON_WIRE_BLOCK = register("overcharged_iron_wire_block", RotatedPillarBlock::new,
             Properties.ofFullCopy(Blocks.IRON_BLOCK).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.COPPER));

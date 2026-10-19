@@ -1,7 +1,6 @@
 package org.antarcticgardens.cna.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.zurrtum.create.client.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -10,7 +9,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
@@ -49,7 +48,7 @@ public class ElectricalConnectorRenderer implements BlockEntityRenderer<Abstract
     @Override
     public void extractRenderState(AbstractElectricalConnector blockEntity, State state, float partialTick, Vec3 cameraPosition,
                                    @Nullable CrumblingOverlay breakProgress) {
-        Level level = SmartBlockEntityRenderer.extractBase(blockEntity, state, breakProgress);
+        Level level = KineticRenderSupport.extractBase(blockEntity, state, breakProgress);
         state.wires.clear();
         if (level == null)
             return;
@@ -93,7 +92,7 @@ public class ElectricalConnectorRenderer implements BlockEntityRenderer<Abstract
         if (bound == null || !bound.equals(blockEntity.getBlockPos()))
             return;
 
-        Vec3 eyePos = minecraft.gameRenderer.mainCamera().position();
+        Vec3 eyePos = minecraft.gameRenderer.getMainCamera().position();
         Vec3 viewVector = player.getViewVector(partialTick);
         Vec3 wireEnd = eyePos.add(viewVector.scale(player.blockInteractionRange()));
         Vec3 wireStart = blockEntity.getConnectionPoint().add(Vec3.atLowerCornerOf(bound));

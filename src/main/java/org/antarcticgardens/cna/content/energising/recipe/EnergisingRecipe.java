@@ -39,7 +39,17 @@ public record EnergisingRecipe(List<ProcessingOutput> results, Ingredient ingred
             EnergisingRecipe::new
     );
 
-    public static final RecipeSerializer<EnergisingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+    public static final RecipeSerializer<EnergisingRecipe> SERIALIZER = new RecipeSerializer<>() {
+        @Override
+        public MapCodec<EnergisingRecipe> codec() {
+            return MAP_CODEC;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, EnergisingRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
+    };
 
     public int getEnergyNeeded() {
         return energyNeeded;

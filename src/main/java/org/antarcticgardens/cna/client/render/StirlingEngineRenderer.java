@@ -4,15 +4,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.zurrtum.create.AllBlocks;
 import com.zurrtum.create.catnip.math.AngleHelper;
 import com.zurrtum.create.client.catnip.render.CachedBuffers;
-import com.zurrtum.create.client.catnip.render.SuperByteBufferRenderState;
 import com.zurrtum.create.client.flywheel.api.visualization.VisualizationManager;
-import com.zurrtum.create.client.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,7 +21,9 @@ import org.antarcticgardens.cna.content.heat.stirling.StirlingEngineBlockEntity;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
-import static com.zurrtum.create.client.content.kinetics.base.KineticBlockEntityRenderer.*;
+import static com.zurrtum.create.client.content.kinetics.base.KineticBlockEntityRenderer.KINETIC_BLOCK;
+import static com.zurrtum.create.client.content.kinetics.base.KineticBlockEntityRenderer.shaft;
+import static org.antarcticgardens.cna.client.render.KineticRenderSupport.*;
 
 /**
  * The miniature flywheel, and the shaft when Flywheel is off (the visual draws it otherwise).
@@ -42,24 +43,22 @@ public class StirlingEngineRenderer implements BlockEntityRenderer<StirlingEngin
     @Override
     public void extractRenderState(StirlingEngineBlockEntity be, State state, float partialTicks, Vec3 cameraPosition,
                                    @Nullable CrumblingOverlay breakProgress) {
-        Level level = SmartBlockEntityRenderer.extractBase(be, state, breakProgress);
+        Level level = extractBase(be, state, breakProgress);
         Direction.Axis axis = state.blockState.getValue(BlockStateProperties.AXIS);
-        int color = getTintColor(be);
+        int color = tintColor(be);
 
         state.shaft = null;
         if (!VisualizationManager.supportsVisualization(level)) {
-            state.shaft = CachedBuffers.block(KINETIC_BLOCK, shaft(axis)).cardinalLighting(level).light(state.lightCoords)
-                    .color(color).extractRenderState();
-            state.shaftAngle = getRotateAngleWithoutBeOffset(axis, be, state, level);
+            state.shaft = new Part(CachedBuffers.block(KINETIC_BLOCK, shaft(axis)), RenderTypes.solidMovingBlock(), state.lightCoords, color);
+            state.shaftAngle = rotationWithoutBeOffset(axis, be, state, level);
         }
 
         BlockState wheelState = AllBlocks.FLYWHEEL.defaultBlockState().setValue(BlockStateProperties.AXIS, axis);
         float speed = be.visualSpeed.getValue(partialTicks) * 3 / 10f;
         float angle = be.angle + speed * partialTicks;
-        state.wheelAngle = new Quaternionf().setAngleAxis(AngleHelper.rad(angle),
-                axis == Direction.Axis.X ? 1 : 0, axis == Direction.Axis.Y ? 1 : 0, axis == Direction.Axis.Z ? 1 : 0);
-        state.wheel = CachedBuffers.block(wheelState).center().scale(0.2f, 0.2f, 0.2f).uncenter()
-                .cardinalLighting(level).light(state.lightCoords).extractRenderState();
+        state.wheelAngle = rotation(axis, AngleHelper.rad(angle));
+        state.wheel = new Part(CachedBuffers.block(wheelState), RenderTypes.solidMovingBlock(), state.lightCoords, -1,
+                wheel -> wheel.center().scale(0.2f, 0.2f, 0.2f).uncenter());
     }
 
     @Override
@@ -76,9 +75,9 @@ public class StirlingEngineRenderer implements BlockEntityRenderer<StirlingEngin
     }
 
     public static class State extends BlockEntityRenderState {
-        public @Nullable SuperByteBufferRenderState shaft;
+        public @Nullable Part shaft;
         public @Nullable Quaternionf shaftAngle;
-        public SuperByteBufferRenderState wheel;
+        public Part wheel;
         public Quaternionf wheelAngle;
     }
 }

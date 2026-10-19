@@ -53,7 +53,7 @@ public class ElectricWireItem extends Item {
 
         if (boundToPos != null && player.isShiftKeyDown()) {
             playUnboundSound(player);
-            player.sendOverlayMessage(Component.translatable("item.create_new_age.wire.message.unbound"));
+            player.displayClientMessage(Component.translatable("item.create_new_age.wire.message.unbound"), true);
             item.remove(BOUND_TO);
             return InteractionResult.SUCCESS;
         }
@@ -77,7 +77,7 @@ public class ElectricWireItem extends Item {
                 stack.remove(BOUND_TO);
                 playUnboundSound(entity);
                 if (entity instanceof Player pl)
-                    pl.sendOverlayMessage(Component.translatable("item.create_new_age.wire.message.too_far", maxLength));
+                    pl.displayClientMessage(Component.translatable("item.create_new_age.wire.message.too_far", maxLength), true);
             }
         }
     }
@@ -97,14 +97,14 @@ public class ElectricWireItem extends Item {
                 int maxLength = CNAConfig.getServer().maxWireLength.get();
 
                 if (boundToPos.equals(clickedPos)) {
-                    context.getPlayer().sendOverlayMessage(Component.translatable("item.create_new_age.wire.message.self_connect"));
+                    context.getPlayer().displayClientMessage(Component.translatable("item.create_new_age.wire.message.self_connect"), true);
                     context.getItemInHand().remove(BOUND_TO);
                     return InteractionResult.FAIL;
                 } else if (clickedPos.distSqr(boundToPos) > Mth.square(maxLength)) {
-                    context.getPlayer().sendOverlayMessage(Component.translatable("item.create_new_age.wire.message.too_far", maxLength));
+                    context.getPlayer().displayClientMessage(Component.translatable("item.create_new_age.wire.message.too_far", maxLength), true);
                     return InteractionResult.FAIL;
                 } else if (clickedConnector.isConnected(boundToPos)) {
-                    context.getPlayer().sendOverlayMessage(Component.translatable("item.create_new_age.wire.message.already_connected"));
+                    context.getPlayer().displayClientMessage(Component.translatable("item.create_new_age.wire.message.already_connected"), true);
                     context.getItemInHand().remove(BOUND_TO);
                     return InteractionResult.FAIL;
                 }
@@ -120,7 +120,7 @@ public class ElectricWireItem extends Item {
 
                     playBoundSound(context.getPlayer());
 
-                    context.getPlayer().sendOverlayMessage(Component.translatable("item.create_new_age.wire.message.connected"));
+                    context.getPlayer().displayClientMessage(Component.translatable("item.create_new_age.wire.message.connected"), true);
 
                     return InteractionResult.CONSUME;
                 } else

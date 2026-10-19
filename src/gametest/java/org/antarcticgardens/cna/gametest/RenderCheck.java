@@ -27,7 +27,7 @@ public class RenderCheck implements FabricClientGameTest {
     @Override
     public void runTest(ClientGameTestContext context) {
         try (TestSingleplayerContext singleplayer = context.worldBuilder().setUseConsistentSettings(true).create()) {
-            singleplayer.getConnection().waitForChunksRender();
+            singleplayer.getClientWorld().waitForChunksRender();
             TestServerContext server = singleplayer.getServer();
 
             server.runCommand("gamemode creative @p");
@@ -100,7 +100,7 @@ public class RenderCheck implements FabricClientGameTest {
 
             look(context, server, 8, Y + 5, -9, 8, Y, 4);
             context.waitTicks(40);
-            singleplayer.getConnection().waitForChunksRender();
+            singleplayer.getClientWorld().waitForChunksRender();
             look(context, server, 8, Y + 5, -9, 8, Y, 4);
             context.waitTicks(5);
             context.takeScreenshot("cna_overview");

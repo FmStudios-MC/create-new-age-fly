@@ -1,5 +1,5 @@
 plugins {
-    id "net.fabricmc.fabric-loom" version "${loom_version}"
+    id "net.fabricmc.fabric-loom-remap" version "${loom_version}"
 }
 
 version = project.mod_version
@@ -12,7 +12,7 @@ base {
 loom {
     // One source set, like the NeoForge original: renderers and blocks live side by side, and
     // client-only classes are kept off the server by @Environment(EnvType.CLIENT).
-    accessWidenerPath = file("src/main/resources/create_new_age.classtweaker")
+    accessWidenerPath = file("src/main/resources/create_new_age.accesswidener")
 
     mods {
         "create_new_age" {
@@ -21,8 +21,8 @@ loom {
     }
 }
 
-// JSONs that Registrate generated for 1.21.1. There is no Registrate on 26.2, so they are kept
-// and migrated to the 26.2 formats instead of being regenerated.
+// JSONs that Registrate generated for 1.21.1. There is no Registrate on Create Fly, so they are kept
+// and migrated to the 1.21.11 formats instead of being regenerated.
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 // Datagen only: these produced the JSONs under src/generated, which are migrated by hand now.
@@ -81,36 +81,37 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    // MC 26.x ships unobfuscated (Mojang names), so there is no remapping and no mod* configurations.
-    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    // 1.21.11 is still obfuscated: compiled against Mojang names, remapped to intermediary for the jar.
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // The fabric-api artifact only nests the module jars, so each module used must be named.
-    implementation fabricApi.module("fabric-api-base", project.fabric_version)
-    implementation fabricApi.module("fabric-api-lookup-api-v1", project.fabric_version)
-    implementation fabricApi.module("fabric-creative-tab-api-v1", project.fabric_version)
-    implementation fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version)
-    implementation fabricApi.module("fabric-networking-api-v1", project.fabric_version)
-    implementation fabricApi.module("fabric-object-builder-api-v1", project.fabric_version)
-    implementation fabricApi.module("fabric-resource-conditions-api-v1", project.fabric_version)
-    implementation fabricApi.module("fabric-resource-loader-v1", project.fabric_version)
-    implementation fabricApi.module("fabric-transfer-api-v1", project.fabric_version)
-    implementation fabricApi.module("fabric-biome-api-v1", project.fabric_version)
-    implementation fabricApi.module("fabric-rendering-v1", project.fabric_version)
-    implementation fabricApi.module("fabric-recipe-api-v1", project.fabric_version)
-    implementation fabricApi.module("fabric-model-loading-api-v1", project.fabric_version)
-    runtimeOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation fabricApi.module("fabric-api-base", project.fabric_version)
+    modImplementation fabricApi.module("fabric-api-lookup-api-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-item-group-api-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-networking-api-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-object-builder-api-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-resource-conditions-api-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-resource-loader-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-transfer-api-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-biome-api-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-rendering-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-recipe-api-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-model-loading-api-v1", project.fabric_version)
+    modRuntimeOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    implementation "maven.modrinth:create-fly:${project.create_fly_version}"
+    modImplementation "maven.modrinth:create-fly:${project.create_fly_version}"
 
-    implementation include("teamreborn:energy:${project.team_reborn_energy_version}")
+    modImplementation include("teamreborn:energy:${project.team_reborn_energy_version}")
 
     // JEI finds the plugin through the jei_mod_plugin entrypoint; optional at runtime.
-    compileOnly "maven.modrinth:jei:${project.jei_version}"
+    modCompileOnly "maven.modrinth:jei:${project.jei_version}"
     // Peripherals are only registered when CC: Tweaked is installed.
     // Not transitive: its POM pulls the whole fabric-api, whose interface injections then name
     // modules that are not on the compile classpath.
-    compileOnly("cc.tweaked:cc-tweaked-${project.minecraft_version}-fabric-api:${project.cct_version}") { transitive = false }
-    compileOnly("cc.tweaked:cc-tweaked-${project.minecraft_version}-core-api:${project.cct_version}") { transitive = false }
+    modCompileOnly("cc.tweaked:cc-tweaked-${project.minecraft_version}-fabric-api:${project.cct_version}") { transitive = false }
+    modCompileOnly("cc.tweaked:cc-tweaked-${project.minecraft_version}-core-api:${project.cct_version}") { transitive = false }
 }
 
 processResources {
@@ -132,15 +133,15 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = 'UTF-8'
-    it.options.release = 25
+    it.options.release = 21
     // While porting, the full error list is the worklist, not javac's default first 100.
     it.options.compilerArgs << '-Xmaxerrs' << '10000'
 }
 
 java {
     withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_25
-    targetCompatibility = JavaVersion.VERSION_25
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
@@ -163,11 +164,17 @@ fabricApi {
 }
 
 dependencies {
-    gametestImplementation fabricApi.module("fabric-client-gametest-api-v1", project.fabric_version)
+    modGametestImplementation fabricApi.module("fabric-client-gametest-api-v1", project.fabric_version)
     // JEI in the test run only, to screenshot the energising category
-    gametestImplementation "maven.modrinth:jei:${project.jei_version}"
+    modGametestImplementation "maven.modrinth:jei:${project.jei_version}"
     // CC: Tweaked in the test run only, to check that the peripherals are found
-    gametestImplementation("cc.tweaked:cc-tweaked-${project.minecraft_version}-fabric-api:${project.cct_version}") { transitive = false }
-    gametestImplementation("cc.tweaked:cc-tweaked-${project.minecraft_version}-core-api:${project.cct_version}") { transitive = false }
-    gametestRuntimeOnly("cc.tweaked:cc-tweaked-${project.minecraft_version}-fabric:${project.cct_version}") { transitive = false }
+    modGametestImplementation("cc.tweaked:cc-tweaked-${project.minecraft_version}-fabric-api:${project.cct_version}") { transitive = false }
+    modGametestImplementation("cc.tweaked:cc-tweaked-${project.minecraft_version}-core-api:${project.cct_version}") { transitive = false }
+    modGametestRuntimeOnly("cc.tweaked:cc-tweaked-${project.minecraft_version}-fabric:${project.cct_version}") { transitive = false }
+    // The dev runtime does not load the libraries CC: Tweaked nests; these are the ones its POM lists.
+    gametestRuntimeOnly "com.electronwill.night-config:core:3.8.3"
+    gametestRuntimeOnly "com.electronwill.night-config:toml:3.8.3"
+    gametestRuntimeOnly "cc.tweaked:cobalt:0.9.7"
+    gametestRuntimeOnly "io.netty:netty-codec-socks:4.2.7.Final"
+    gametestRuntimeOnly "io.netty:netty-handler-proxy:4.2.7.Final"
 }

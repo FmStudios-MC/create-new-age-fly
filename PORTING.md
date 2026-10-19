@@ -1,4 +1,4 @@
-# Porting notes: Create: New Age → Create Fly (Fabric, MC 26.2)
+# Porting notes: Create: New Age → Create Fly (Fabric, MC 26.2, ported back to 1.21.11)
 
 Working document. Read *State* first.
 
@@ -26,6 +26,13 @@ key; `remove()`/`connect()` dereferenced a network a never-ticked connector does
 efficiency divided by zero. `GameplayCheck` covers the energiser and connector cases (test-only
 energy items: amethyst and echo shards).
 
+**1.21.11 port, 2026-10-19 (branch `1.21.11`, version `1.2.1-fly.1.21.11-beta.1`).** The 26.2 code moved
+back to Minecraft 1.21.11 with Create Fly `1.21.11-6.0.9-5`; see *1.21.11 port* for what changed.
+`runClientGameTest` passes (all `GameplayCheck` lines, `MultiplayerCheck` with a dedicated server,
+CC: Tweaked finds the peripherals) and the `RenderCheck` screenshots look right (blocks, connected
+textures, wires, items, JEI, ponders, goggle overlay). The renderers' own shafts, drawn only when
+Flywheel is off, are not covered by the screenshots.
+
 Still only checkable by playing: balance and feel, the energiser's beam and the stirling engine's
 flywheel in motion, placing wires by hand, reactor overheating and corium, other energy mods
 through Team Reborn Energy, and long sessions.
@@ -33,11 +40,11 @@ through Team Reborn Energy, and long sessions.
 | | |
 |---|---|
 | Upstream | https://gitlab.com/antarcticgardens/create-new-age, branch `1.21.1` (NeoForge) |
-| Port repo | https://github.com/FmStudios-MC/create-new-age-fly, branch `main` (was `fly/26.2`). Upstream is not a remote; fetch it by URL when merging upstream changes |
-| Target | Minecraft 26.2, Fabric Loader 0.19.3, Fabric API 0.160.0+26.2 (CC: Tweaked 1.120.2 needs >= 0.156) |
-| Optional | JEI 30.26.0.182 (Modrinth id `x6nG9OT2`), CC: Tweaked 1.120.2 |
-| Create Fly | `maven.modrinth:create-fly:26.2-rc-2-6.0.9-1` (latest 26.2 release on Modrinth) |
-| JDK | 25, requested via `gradle/gradle-daemon-jvm.properties` (Gradle finds an installed JDK 25 even when `JAVA_HOME` is 21) |
+| Port repo | https://github.com/FmStudios-MC/create-new-age-fly, branch `main` (was `fly/26.2`). Upstream is not a remote; fetch it by URL when merging upstream changes. Branch `1.21.11` is the port to Minecraft 1.21.11 (see *1.21.11 port*) |
+| Target | This branch: Minecraft 1.21.11 (Mojang mappings, remapped to intermediary), Fabric Loader 0.18.4, Fabric API 0.141.6+1.21.11. `main`: Minecraft 26.2, Fabric Loader 0.19.3, Fabric API 0.160.0+26.2 (CC: Tweaked 1.120.2 needs >= 0.156) |
+| Optional | This branch: JEI 27.7.0.30 (Modrinth id `Mia233qP`), CC: Tweaked 1.117.1. `main`: JEI 30.26.0.182 (`x6nG9OT2`), CC: Tweaked 1.120.2 |
+| Create Fly | This branch: `maven.modrinth:create-fly:1.21.11-6.0.9-5` (latest 1.21.11 release, built from Create Fly's `1.21.11_obfuscation` branch). `main`: `26.2-rc-2-6.0.9-1` |
+| JDK | Gradle runs on 25, requested via `gradle/gradle-daemon-jvm.properties` (Gradle finds an installed JDK 25 even when `JAVA_HOME` is 21). This branch compiles for Java 21 |
 | Licence | Upstream is BSD-3-Clause style: keep `LICENSE` + copyright notice, do not use the authors' name to promote the port |
 
 Sibling folders in `D:\Documents\Claude\Create Ported`:
@@ -121,6 +128,49 @@ All client rendering lives in `client/render` and is registered from `CreateNewA
 - Recipes: sequenced assembly steps are expanded into ordinary recipes, so `recipeAccess().getRecipeFor(type, SingleRecipeInput, level)` finds them; recipes only exist on the server.
 - Inventories: a block exposes one by implementing `ItemInventoryProvider` (a `WorldlyContainerHolder`); hoppers, funnels and Fabric's transfer API read it. Used by the fuel acceptor.
 - `KineticBlockEntity` subclasses need `KineticTooltipBehaviour`/`GeneratingKineticTooltipBehaviour` and `KineticAudioBehaviour` registered client-side, or they lose stress tooltips and sounds.
+
+## 1.21.11 port
+
+The branch `1.21.11` is `main` moved back to Minecraft 1.21.11 with Create Fly `1.21.11-6.0.9-5`.
+Create Fly's own `1.21.11_obfuscation` and `26.1` branches differ mostly where vanilla does, so
+`git diff` between them answers most "what was X called on 1.21.11" questions.
+
+- **Build**: 1.21.11 is still obfuscated. Loom's `net.fabricmc.fabric-loom-remap` plugin with
+  `loom.officialMojangMappings()`, `mod*` configurations, Java 21. The classtweaker became
+  `create_new_age.accesswidener` (`accessWidener v2 named`; the jar carries it remapped to
+  intermediary) and also opens `BlockEntityType`'s constructor and supplier, as on 26.1.
+- **Dependencies**: Fabric API's creative tab module is `fabric-item-group-api-v1`; Team Reborn
+  Energy 4.2.0 (5.0.0 needs 26.1). JEI is pinned to 27.7.0.30: every later 1.21.11 build was made
+  with Loom 1.17, which Loom 1.16 refuses to read, and Loom 1.17 needs Gradle 9.5. The gametest run
+  lists CC: Tweaked's libraries (night-config, cobalt, netty) itself; the dev runtime does not load
+  the ones it nests.
+- **Rendering**: Create Fly 1.21.11 has no `SuperByteBufferRenderState`,
+  `SmartBlockEntityRenderer.extractBase`, `getTintColor`, `getRotateAngleWithoutBeOffset` or
+  `cardinalLighting`. `client/render/KineticRenderSupport` rebuilds the first four: a `Part` keeps
+  a cached `SuperByteBuffer` with its render type, light, colour and transform and applies them
+  when the geometry is rendered (cached buffers are shared, and `renderInto` resets their
+  transforms, so nothing may be set on them while extracting). Shafts and the flywheel use
+  `solidMovingBlock`, the brushes' coil `cutoutMovingBlock`.
+- **Chunk layers**: 1.21.11 does not derive them from the textures. `client/CNABlockLayers` puts
+  the blocks upstream gave a cutout layer (Registrate's `addLayer`, and the NeoForge-only
+  `render_type` in the motor, connector, street light and solar plate models) on `CUTOUT` through
+  Fabric's `BlockRenderLayerMap`. A new block with see-through pixels needs an entry there.
+- **Connected textures**: Create Fly 1.21.11 reads Create's 8x8 `*_connected.png` sheets again,
+  not the per-tile folders. Both are in the tree; only the sheets are used here.
+- **Models**: `QuadListModel` bakes with `BakedQuad(..., tintIndex, direction, sprite, shade,
+  lightEmission)` and `baker.sprites().resolveSlot(...)`; there is no interner or
+  `Material.Baked`.
+- Vanilla and API names: `GuiGraphicsExtractor`→`GuiGraphics` (`text`→`drawString`,
+  `item`→`renderItem`); `LightCoordsUtil`→`LightTexture`; `state.level.CameraRenderState`→
+  `state.CameraRenderState`; `sendOverlayMessage(c)`→`displayClientMessage(c, true)`;
+  `RecipeSerializer` is an interface (`codec()`, `streamCodec()`); `ItemStack.typeHolder()`→
+  `getItem().builtInRegistryHolder()`; `ServerTickEvents.START_LEVEL_TICK`→`START_WORLD_TICK`;
+  client gametests use `getClientWorld()`; plus the 26.1.2 differences (`getMainCamera()`,
+  `WHITE_CONCRETE`, `COPPER_BLOCK`, `EntityType.CREEPER`, `TestServerConnection`).
+- `fabric.mod.json` requires Minecraft `>=1.21.11 <1.21.12-`, Java 21, Fabric API `>=0.141.6`,
+  Create `>=6.0.9-5`.
+
+Changes on `main` usually carry over; renderers and anything touching the names above need a look.
 
 ## Vanilla 1.21.1 → 26.2 changes hit so far
 

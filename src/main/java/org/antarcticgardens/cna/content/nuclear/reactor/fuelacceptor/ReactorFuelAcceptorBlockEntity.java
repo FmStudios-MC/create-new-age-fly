@@ -73,7 +73,7 @@ public class ReactorFuelAcceptorBlockEntity extends RodFindingReactorBlockEntity
             for (int i = 0 ; i < container.getContainerSize() ; i++) {
                 ItemStack stack = container.getItem(i);
                 if (stack.is(CNATags.Item.NUCLEAR_FUEL.tag)) {
-                    stack.typeHolder().tags().forEach(itemTagKey -> {
+                    stack.getItem().builtInRegistryHolder().tags().forEach(itemTagKey -> {
                         if (itemTagKey.location().getNamespace().equals(CreateNewAge.MOD_ID)) {
                             String path = itemTagKey.location().getPath();
                             if (path.startsWith("nuclear/energy_")) {

@@ -73,7 +73,7 @@ public class CreateNewAge implements ModInitializer {
 
         // Was LevelTickEvent.Pre on both sides. Networks only ever tick with a server level, since
         // the client never builds them.
-        ServerTickEvents.START_LEVEL_TICK.register(NetworkTicker::tickWorld);
+        ServerTickEvents.START_WORLD_TICK.register(NetworkTicker::tickWorld);
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> NetworkTicker.clear());
 
         // Replaces the NeoForge biome modifiers under data/create_new_age/neoforge/biome_modifier.
