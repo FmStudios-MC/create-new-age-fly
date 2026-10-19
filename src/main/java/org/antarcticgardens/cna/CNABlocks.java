@@ -173,7 +173,7 @@ public class CNABlocks {
             Properties.of().strength(3.5f).requiresCorrectToolForDrops(), AssemblyOperatorBlockItem::new);
 
     public static final RotatedPillarBlock COPPER_WIRE_BLOCK = register("copper_wire_block", RotatedPillarBlock::new,
-            Properties.ofFullCopy(Blocks.COPPER_BLOCK.weathering().unaffected()).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.COPPER));
+            Properties.ofFullCopy(Blocks.COPPER_BLOCK).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.COPPER));
 
     public static final RotatedPillarBlock OVERCHARGED_IRON_WIRE_BLOCK = register("overcharged_iron_wire_block", RotatedPillarBlock::new,
             Properties.ofFullCopy(Blocks.IRON_BLOCK).requiresCorrectToolForDrops().noOcclusion().sound(SoundType.COPPER));

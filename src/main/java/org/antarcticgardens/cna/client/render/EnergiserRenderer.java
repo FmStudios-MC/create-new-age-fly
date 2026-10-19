@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.antarcticgardens.cna.content.energising.EnergiserBlockEntity;
@@ -52,7 +51,7 @@ public class EnergiserRenderer implements BlockEntityRenderer<EnergiserBlockEnti
         state.beam = null;
         if (be.size > 0f) {
             float scalar = (1 - be.size * 0.12f) * 0.5f;
-            state.beam = CachedBuffers.block(Blocks.CONCRETE.pick(DyeColor.WHITE).defaultBlockState())
+            state.beam = CachedBuffers.block(Blocks.WHITE_CONCRETE.defaultBlockState())
                     .color(100, 150, 200, 200)
                     .translate(scalar, -1.2f, scalar)
                     .scale(be.size * 0.12f, 1.3f, be.size * 0.12f)

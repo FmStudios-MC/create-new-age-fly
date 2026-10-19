@@ -1,4 +1,11 @@
 ------------------------------------------------------
+Version 1.2.1-fly.26.1.2 (unofficial Fabric port)
+------------------------------------------------------
+Backport of 1.2.1-fly.26.2 to Minecraft 26.1.2, with the same features and fixes.
+#### Changes from 1.2.1-fly.26.2
+- Runs on Minecraft 26.1.2 with Create Fly 26.1.2-6.0.9-4 or newer and Fabric API 0.155.3 or newer
+
+------------------------------------------------------
 Version 1.2.1-fly.26.2 (unofficial Fabric port)
 ------------------------------------------------------
 First full release of the port.

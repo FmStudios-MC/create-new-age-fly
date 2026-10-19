@@ -1,4 +1,4 @@
-# Porting notes: Create: New Age → Create Fly (Fabric, MC 26.2)
+# Porting notes: Create: New Age → Create Fly (Fabric, MC 26.2, backported to 26.1.2)
 
 Working document. Read *State* first.
 
@@ -26,6 +26,12 @@ key; `remove()`/`connect()` dereferenced a network a never-ticked connector does
 efficiency divided by zero. `GameplayCheck` covers the energiser and connector cases (test-only
 energy items: amethyst and echo shards).
 
+**26.1.2 backport, 2026-10-19 (branch `26.1.2`, version `1.2.1-fly.26.1.2`).** The 26.2 code moved
+back to Minecraft 26.1.2 with Create Fly `26.1.2-6.0.9-4`; see *26.1.2 backport* for what changed.
+`runClientGameTest` passes (all `GameplayCheck` lines, `MultiplayerCheck` with a dedicated server,
+CC: Tweaked finds the peripherals) and the `RenderCheck` screenshots look right (blocks, connected textures, wires, items, JEI,
+ponders, goggle overlay).
+
 Still only checkable by playing: balance and feel, the energiser's beam and the stirling engine's
 flywheel in motion, placing wires by hand, reactor overheating and corium, other energy mods
 through Team Reborn Energy, and long sessions.
@@ -33,10 +39,10 @@ through Team Reborn Energy, and long sessions.
 | | |
 |---|---|
 | Upstream | https://gitlab.com/antarcticgardens/create-new-age, branch `1.21.1` (NeoForge) |
-| Port repo | https://github.com/FmStudios-MC/create-new-age-fly, branch `main` (was `fly/26.2`). Upstream is not a remote; fetch it by URL when merging upstream changes |
-| Target | Minecraft 26.2, Fabric Loader 0.19.3, Fabric API 0.160.0+26.2 (CC: Tweaked 1.120.2 needs >= 0.156) |
-| Optional | JEI 30.26.0.182 (Modrinth id `x6nG9OT2`), CC: Tweaked 1.120.2 |
-| Create Fly | `maven.modrinth:create-fly:26.2-rc-2-6.0.9-1` (latest 26.2 release on Modrinth) |
+| Port repo | https://github.com/FmStudios-MC/create-new-age-fly, branch `main` (was `fly/26.2`). Upstream is not a remote; fetch it by URL when merging upstream changes. Branch `26.1.2` is the backport to Minecraft 26.1.2 (see *26.1.2 backport*) |
+| Target | This branch: Minecraft 26.1.2, Fabric Loader 0.19.3, Fabric API 0.155.3+26.1.2. `main`: Minecraft 26.2, Fabric API 0.160.0+26.2 (CC: Tweaked 1.120.2 needs >= 0.156) |
+| Optional | This branch: JEI 29.47.0.111 (Modrinth id `b5BXTIh2`), CC: Tweaked 1.120.0. `main`: JEI 30.26.0.182 (`x6nG9OT2`), CC: Tweaked 1.120.2 |
+| Create Fly | This branch: `maven.modrinth:create-fly:26.1.2-6.0.9-4` (latest 26.1.2 release). `main`: `26.2-rc-2-6.0.9-1` |
 | JDK | 25, requested via `gradle/gradle-daemon-jvm.properties` (Gradle finds an installed JDK 25 even when `JAVA_HOME` is 21) |
 | Licence | Upstream is BSD-3-Clause style: keep `LICENSE` + copyright notice, do not use the authors' name to promote the port |
 
@@ -121,6 +127,25 @@ All client rendering lives in `client/render` and is registered from `CreateNewA
 - Recipes: sequenced assembly steps are expanded into ordinary recipes, so `recipeAccess().getRecipeFor(type, SingleRecipeInput, level)` finds them; recipes only exist on the server.
 - Inventories: a block exposes one by implementing `ItemInventoryProvider` (a `WorldlyContainerHolder`); hoppers, funnels and Fabric's transfer API read it. Used by the fuel acceptor.
 - `KineticBlockEntity` subclasses need `KineticTooltipBehaviour`/`GeneratingKineticTooltipBehaviour` and `KineticAudioBehaviour` registered client-side, or they lose stress tooltips and sounds.
+
+## 26.1.2 backport
+
+The branch `26.1.2` is `main` moved back to Minecraft 26.1.2. 26.1 and 26.2 are close: the code,
+the resources (recipes, item models, connected texture tiles, ponder structures) and the data
+formats carried over unchanged, apart from these differences:
+
+- `BlockEntityType`'s constructor and `BlockEntitySupplier` are private on 26.1; opened in our
+  classtweaker, as Create Fly does.
+- `GameRenderer.mainCamera()` → `getMainCamera()`; `Blocks.CONCRETE.pick(DyeColor.WHITE)` →
+  `Blocks.WHITE_CONCRETE`; `COPPER_BLOCK.weathering().unaffected()` → `COPPER_BLOCK`;
+  `EntityTypes.CREEPER` → `EntityType.CREEPER`.
+- Client gametest API (Fabric API 0.155): `TestSingleplayerContext.getClientLevel()` instead of
+  `getConnection()`, and `TestServerConnection` instead of `TestDedicatedServerConnection`; the
+  chunk waits live on `getClientLevel()`.
+- `fabric.mod.json` requires Minecraft `>=26.1.2 <26.2-`, Fabric API `>=0.155.3`, Create
+  `>=6.0.9-4` (the 26.1.2 build the backport was tested with).
+
+Changes on `main` usually carry over as they are; check them for the API names above.
 
 ## Vanilla 1.21.1 → 26.2 changes hit so far
 

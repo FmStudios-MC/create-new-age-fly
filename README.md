@@ -4,7 +4,7 @@
 
 <p align="center">
 An <b>unofficial</b> port of <a href="https://gitlab.com/antarcticgardens/create-new-age">Create: New Age</a>
-to <a href="https://github.com/ZurrTum/Create-Fly">Create Fly</a>, for Fabric and Minecraft 26.2.
+to <a href="https://github.com/ZurrTum/Create-Fly">Create Fly</a>, for Fabric and Minecraft 26.1.2.
 </p>
 
 > [!IMPORTANT]
@@ -17,7 +17,7 @@ to <a href="https://github.com/ZurrTum/Create-Fly">Create Fly</a>, for Fabric an
 
 Create: New Age is an addon for Create that brings electricity and nuclear power into the world
 of rotational force. This port carries the mod over, feature for feature, from NeoForge 1.21.1
-to Create Fly, the Fabric port of Create for Minecraft 26.2.
+to Create Fly, the Fabric port of Create for Minecraft 26.1.2.
 
 - **Generating power**: generator coils spun inside rings of magnets, collected with carbon brushes
 - **Wiring**: electrical connectors joined by copper wire and overcharged iron, gold and
@@ -33,10 +33,10 @@ to Create Fly, the Fabric port of Create for Minecraft 26.2.
 
 | | Version |
 |---|---|
-| Minecraft | 26.2 |
+| Minecraft | 26.1.2 |
 | Fabric Loader | 0.19.3 or newer |
-| [Fabric API](https://modrinth.com/mod/fabric-api) | 0.160.0+26.2 or newer |
-| [Create Fly](https://modrinth.com/mod/create-fly) | 26.2-rc-2-6.0.9-1 or newer |
+| [Fabric API](https://modrinth.com/mod/fabric-api) | 0.155.3+26.1.2 or newer |
+| [Create Fly](https://modrinth.com/mod/create-fly) | 26.1.2-6.0.9-4 or newer |
 
 Optional:
 
@@ -58,7 +58,7 @@ The mod is needed on both the server and the client.
 
 ## Installation
 
-1. Install Fabric Loader for Minecraft 26.2.
+1. Install Fabric Loader for Minecraft 26.1.2.
 2. Put Fabric API, Create Fly and this mod's `.jar` from the
    [releases](../../releases) into your `mods` folder.
 

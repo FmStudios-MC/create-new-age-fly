@@ -3,12 +3,12 @@
   "id": "create_new_age",
   "version": "${version}",
   "name": "Create: New Age (Fly Port)",
-  "description": "Unofficial Fabric / Minecraft 26.2 port of Create: New Age by Antarctic Gardens, an addon for the Create mod that adds integration with electricity. Built on ZurrTum's Create Fly. Not made, maintained or supported by Antarctic Gardens; all rights to Create: New Age belong to them.",
+  "description": "Unofficial Fabric / Minecraft 26.1.2 port of Create: New Age by Antarctic Gardens, an addon for the Create mod that adds integration with electricity. Built on ZurrTum's Create Fly. Not made, maintained or supported by Antarctic Gardens; all rights to Create: New Age belong to them.",
   "authors": [
     "Antarctic Gardens"
   ],
   "contributors": [
-    "FabiMvurice Interactive (Fabric / 26.2 port)",
+    "FabiMvurice Interactive (Fabric / 26.1.2 port)",
     "ZurrTum (Create Fly)"
   ],
   "contact": {
@@ -36,9 +36,9 @@
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
-    "minecraft": ">=26.2- <26.3-",
+    "minecraft": ">=26.1.2 <26.2-",
     "java": ">=25",
-    "fabric-api": ">=0.160.0",
+    "fabric-api": ">=0.155.3",
     "create": "${create_fly_version_range}"
   },
   "suggests": {

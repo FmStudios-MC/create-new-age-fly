@@ -2,7 +2,7 @@ package org.antarcticgardens.cna.gametest;
 
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
-import net.fabricmc.fabric.api.client.gametest.v1.context.TestDedicatedServerConnection;
+import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerConnection;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestDedicatedServerContext;
 import net.minecraft.server.level.ServerLevel;
 import org.antarcticgardens.cna.content.electricity.connector.AbstractElectricalConnector;
@@ -21,8 +21,8 @@ public class MultiplayerCheck implements FabricClientGameTest {
     @Override
     public void runTest(ClientGameTestContext context) {
         try (TestDedicatedServerContext server = context.worldBuilder().setUseConsistentSettings(true).createServer();
-             TestDedicatedServerConnection connection = server.connect()) {
-            connection.waitForChunksRender();
+             TestServerConnection connection = server.connect()) {
+            connection.getClientLevel().waitForChunksRender();
 
             server.runCommand("gamemode creative @a");
             // the floor is right under the lowest magnet, so the player can stand at eye level with the scene
@@ -53,7 +53,7 @@ public class MultiplayerCheck implements FabricClientGameTest {
             server.runCommand("item replace entity @a armor.head with create:goggles");
             RenderCheck.look(context, server, MOTOR.getX() + 0.5, Y - 2, MOTOR.getZ() - 2.5, MOTOR.getX(), Y, MOTOR.getZ());
             context.waitTicks(20);
-            connection.waitForChunksRender();
+            connection.getClientLevel().waitForChunksRender();
             System.out.println("CNA-TEST INFO | client camera | " + context.computeOnClient(mc -> mc.player.position() + " yaw "
                     + mc.player.getYRot() + " pitch " + mc.player.getXRot() + ", block at motor " + mc.level.getBlockState(MOTOR)
                     + ", hit " + mc.hitResult.getType()));

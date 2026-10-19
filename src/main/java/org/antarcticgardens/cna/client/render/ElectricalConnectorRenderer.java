@@ -93,7 +93,7 @@ public class ElectricalConnectorRenderer implements BlockEntityRenderer<Abstract
         if (bound == null || !bound.equals(blockEntity.getBlockPos()))
             return;
 
-        Vec3 eyePos = minecraft.gameRenderer.mainCamera().position();
+        Vec3 eyePos = minecraft.gameRenderer.getMainCamera().position();
         Vec3 viewVector = player.getViewVector(partialTick);
         Vec3 wireEnd = eyePos.add(viewVector.scale(player.blockInteractionRange()));
         Vec3 wireStart = blockEntity.getConnectionPoint().add(Vec3.atLowerCornerOf(bound));
