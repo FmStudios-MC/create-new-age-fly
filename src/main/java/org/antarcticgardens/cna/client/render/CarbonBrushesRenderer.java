@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -42,11 +42,11 @@ public class CarbonBrushesRenderer implements BlockEntityRenderer<CarbonBrushesB
         state.angle = rotationWithoutBeOffset(axis, be, state, level);
 
         state.shaft = VisualizationManager.supportsVisualization(level) ? null
-                : new Part(CachedBuffers.block(KINETIC_BLOCK, shaft(axis)), RenderTypes.solidMovingBlock(), state.lightCoords, color);
+                : new Part(CachedBuffers.block(KINETIC_BLOCK, shaft(axis)), RenderType.solid(), state.lightCoords, color);
 
         // The coil model stands along Y; turn it onto the shaft's axis before spinning it with the shaft.
         Direction facing = state.blockState.getValue(BlockStateProperties.FACING);
-        state.coil = new Part(CachedBuffers.partial(CNAPartialModels.COIL, state.blockState), RenderTypes.cutoutMovingBlock(),
+        state.coil = new Part(CachedBuffers.partial(CNAPartialModels.COIL, state.blockState), RenderType.cutout(),
                 state.lightCoords, color, coil -> {
             coil.center();
             switch (facing.getAxis()) {

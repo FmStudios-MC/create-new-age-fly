@@ -1,6 +1,6 @@
 package org.antarcticgardens.cna.content.electricity.wire;
 
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.antarcticgardens.cna.CNAItems;
 import org.antarcticgardens.cna.CreateNewAge;
@@ -20,8 +20,8 @@ public enum WireType {
         this.dropProvider = dropProvider;
     }
 
-    public Identifier getTextureLocation() {
-        return Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "textures/wire/" + name().toLowerCase() + ".png");
+    public ResourceLocation getTextureLocation() {
+        return ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, "textures/wire/" + name().toLowerCase() + ".png");
     }
 
     public long getConductivity() {

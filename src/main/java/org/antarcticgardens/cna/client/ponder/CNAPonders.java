@@ -4,7 +4,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.ItemLike;
 import com.zurrtum.create.client.ponder.api.level.PonderLevel;
 import com.zurrtum.create.client.ponder.api.registration.*;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import org.antarcticgardens.cna.CNABlocks;
 import org.antarcticgardens.cna.CNAItems;
 import org.antarcticgardens.cna.CreateNewAge;
@@ -16,12 +16,12 @@ public class CNAPonders implements PonderPlugin {
     }
 
     @Override
-    public void registerScenes(PonderSceneRegistrationHelper<Identifier> helper) {
+    public void registerScenes(PonderSceneRegistrationHelper<ResourceLocation> helper) {
         register(helper);
     }
 
     @Override
-    public void registerTags(PonderTagRegistrationHelper<Identifier> helper) {
+    public void registerTags(PonderTagRegistrationHelper<ResourceLocation> helper) {
         register(helper);
     }
 
@@ -40,7 +40,7 @@ public class CNAPonders implements PonderPlugin {
         PonderPlugin.super.indexExclusions(helper);
     }
 
-    public static void register(PonderSceneRegistrationHelper<Identifier> helper) {
+    public static void register(PonderSceneRegistrationHelper<ResourceLocation> helper) {
         // Keyed by item, as Create Fly does; blocks and items both qualify.
         PonderSceneRegistrationHelper<ItemLike> HELPER = helper.withKeyFunction(item -> BuiltInRegistries.ITEM.getKey(item.asItem()));
 
@@ -85,15 +85,15 @@ public class CNAPonders implements PonderPlugin {
 
     }
 
-    static Identifier ELECTRICAL = Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "electrical");
-    static Identifier WIRING = Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "wiring");
-    static Identifier MAGNETS = Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "magnets");
-    static Identifier ELECTRICITY_GENERATION = Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "electricity_generation");
-    static Identifier HEATING = Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "heating");
-    static Identifier REACTOR = Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "reactor");
-    static Identifier MOTOR_EXTENSION = Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "motor_extension");
+    static ResourceLocation ELECTRICAL = ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, "electrical");
+    static ResourceLocation WIRING = ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, "wiring");
+    static ResourceLocation MAGNETS = ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, "magnets");
+    static ResourceLocation ELECTRICITY_GENERATION = ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, "electricity_generation");
+    static ResourceLocation HEATING = ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, "heating");
+    static ResourceLocation REACTOR = ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, "reactor");
+    static ResourceLocation MOTOR_EXTENSION = ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, "motor_extension");
 
-    public static void register(PonderTagRegistrationHelper<Identifier> helper) {
+    public static void register(PonderTagRegistrationHelper<ResourceLocation> helper) {
         PonderTagRegistrationHelper<ItemLike> HELPER = helper.withKeyFunction(item -> BuiltInRegistries.ITEM.getKey(item.asItem()));
 
         HELPER.registerTag(ELECTRICAL)

@@ -9,12 +9,12 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
-import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
-import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.levelgen.GenerationStep;
@@ -37,7 +37,7 @@ public class CreateNewAge implements ModInitializer {
 
     public static final String MOD_ID = "create_new_age";
     public static final ResourceKey<CreativeModeTab> CREATIVE_TAB_KEY = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            Identifier.fromNamespaceAndPath(MOD_ID, "tab"));
+            ResourceLocation.fromNamespaceAndPath(MOD_ID, "tab"));
 
     private static int magnetPlacementHelperId;
 
@@ -81,9 +81,9 @@ public class CreateNewAge implements ModInitializer {
         BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Decoration.UNDERGROUND_ORES, CNAPlacedFeatures.MAGNETITE_BLOCK);
 
         // The optional "Monkey Edition" datapack shipped inside the jar, off by default.
-        FabricLoader.getInstance().getModContainer(MOD_ID).ifPresent(mod -> ResourceLoader.registerBuiltinPack(
-                Identifier.fromNamespaceAndPath(MOD_ID, "create_new_age_monkey_edition"), mod,
-                Component.translatable("create_new_age.monkey_edition"), PackActivationType.NORMAL));
+        FabricLoader.getInstance().getModContainer(MOD_ID).ifPresent(mod -> ResourceManagerHelper.registerBuiltinResourcePack(
+                ResourceLocation.fromNamespaceAndPath(MOD_ID, "create_new_age_monkey_edition"), mod,
+                Component.translatable("create_new_age.monkey_edition"), ResourcePackActivationType.NORMAL));
     }
 
     public static int getMagnetPlacementHelperId() {

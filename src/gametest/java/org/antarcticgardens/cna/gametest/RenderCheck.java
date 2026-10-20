@@ -9,7 +9,7 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import com.zurrtum.create.client.ponder.foundation.ui.PonderUI;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.level.ServerLevel;
@@ -88,15 +88,8 @@ public class RenderCheck implements FabricClientGameTest {
                     a.connect(b, WireType.COPPER);
             });
 
-            // ComputerCraft: the peripherals CC: Tweaked finds on CNA's block entities
+            // No ComputerCraft check: CC: Tweaked has no 1.21.10 build to run against.
             context.waitTicks(20);
-            server.runOnServer(minecraftServer -> {
-                ServerLevel level = minecraftServer.overworld();
-                for (BlockPos pos : new BlockPos[]{new BlockPos(0, Y, 0), new BlockPos(13, Y, 1), new BlockPos(11, Y, 0)}) {
-                    var peripheral = dan200.computercraft.api.peripheral.PeripheralLookup.get().find(level, pos, null);
-                    System.out.println("CNA-CHECK peripheral at " + pos + ": " + (peripheral == null ? "none" : peripheral.getType()));
-                }
-            });
 
             look(context, server, 8, Y + 5, -9, 8, Y, 4);
             context.waitTicks(40);
@@ -162,7 +155,7 @@ public class RenderCheck implements FabricClientGameTest {
                     JeiRuntimeGrabber.runtime.getJeiHelpers().getFocusFactory().createFocus(
                             mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT,
                             mezz.jei.api.constants.VanillaTypes.ITEM_STACK,
-                            new ItemStack(BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath("create_new_age", "nuclear_fuel"))))));
+                            new ItemStack(BuiltInRegistries.ITEM.getValue(ResourceLocation.fromNamespaceAndPath("create_new_age", "nuclear_fuel"))))));
             context.waitTicks(20);
             context.takeScreenshot("jei_nuclear_fuel");
             context.setScreen(() -> null);
@@ -170,7 +163,7 @@ public class RenderCheck implements FabricClientGameTest {
             // one ponder per scene file; each opens its first storyboard
             for (String item : new String[]{"basic_energiser", "generator_coil", "heater", "heat_pipe", "basic_motor",
                     "basic_motor_extension", "reactor_rod", "electrical_connector"}) {
-                Item ponderItem = BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath("create_new_age", item));
+                Item ponderItem = BuiltInRegistries.ITEM.getValue(ResourceLocation.fromNamespaceAndPath("create_new_age", item));
                 context.setScreen(() -> PonderUI.of(new ItemStack(ponderItem)));
                 context.waitTicks(120);
                 context.takeScreenshot("ponder_" + item);

@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -36,7 +36,7 @@ public class MotorRenderer implements BlockEntityRenderer<MotorBlockEntity, Moto
         Level level = extractBase(be, state, breakProgress);
         Direction facing = state.blockState.getValue(BlockStateProperties.FACING);
         state.shaft = new Part(CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, state.blockState, facing),
-                RenderTypes.solidMovingBlock(), state.lightCoords, tintColor(be));
+                RenderType.solid(), state.lightCoords, tintColor(be));
         state.angle = rotationWithoutBeOffset(facing.getAxis(), be, state, level);
     }
 

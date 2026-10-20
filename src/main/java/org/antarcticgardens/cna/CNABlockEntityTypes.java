@@ -3,7 +3,7 @@ package org.antarcticgardens.cna;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -102,7 +102,7 @@ public class CNABlockEntityTypes {
 
     /**
      * CNA's block entities take their type as a constructor argument, as they did under Registrate.
-     * 1.21.11's {@link BlockEntityType.BlockEntitySupplier} only passes the position and state, so the
+     * 1.21.10's {@link BlockEntityType.BlockEntitySupplier} only passes the position and state, so the
      * type is handed over once it exists: the supplier runs when a block entity is created, long
      * after registration has returned.
      */
@@ -118,6 +118,6 @@ public class CNABlockEntityTypes {
                 (pos, state) -> ((Factory<T>) factory).create((BlockEntityType<T>) self[0], pos, state),
                 Set.of(blocks));
         self[0] = type;
-        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, name), type);
+        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, name), type);
     }
 }

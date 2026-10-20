@@ -3,7 +3,7 @@ package org.antarcticgardens.cna;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
@@ -23,7 +23,7 @@ public class CNASounds {
     }
 
     private static SoundEvent register(String name) {
-        Identifier id = Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, name);
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, name);
         return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
     }
 }

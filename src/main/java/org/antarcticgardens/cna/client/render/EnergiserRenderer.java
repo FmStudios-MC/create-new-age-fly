@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -47,7 +47,7 @@ public class EnergiserRenderer implements BlockEntityRenderer<EnergiserBlockEnti
         state.shaft = null;
         if (!VisualizationManager.supportsVisualization(level)) {
             Direction.Axis axis = ((IRotate) state.blockState.getBlock()).getRotationAxis(state.blockState);
-            state.shaft = new Part(CachedBuffers.block(KINETIC_BLOCK, shaft(axis)), RenderTypes.solidMovingBlock(),
+            state.shaft = new Part(CachedBuffers.block(KINETIC_BLOCK, shaft(axis)), RenderType.solid(),
                     state.lightCoords, tintColor(be));
             state.angle = rotationWithoutBeOffset(axis, be, state, level);
         }
@@ -56,7 +56,7 @@ public class EnergiserRenderer implements BlockEntityRenderer<EnergiserBlockEnti
         if (be.size > 0f) {
             float scalar = (1 - be.size * 0.12f) * 0.5f;
             float width = be.size * 0.12f;
-            state.beam = new Part(CachedBuffers.block(Blocks.WHITE_CONCRETE.defaultBlockState()), RenderTypes.lightning(),
+            state.beam = new Part(CachedBuffers.block(Blocks.WHITE_CONCRETE.defaultBlockState()), RenderType.lightning(),
                     state.lightCoords, BEAM_COLOR,
                     buffer -> buffer.translate(scalar, -1.2f, scalar).scale(width, 1.3f, width));
         }

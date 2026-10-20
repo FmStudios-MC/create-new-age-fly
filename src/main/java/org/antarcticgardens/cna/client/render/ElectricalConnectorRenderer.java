@@ -8,10 +8,10 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -35,7 +35,7 @@ import java.util.List;
  * {@code entityCutout} now.
  */
 public class ElectricalConnectorRenderer implements BlockEntityRenderer<AbstractElectricalConnector, ElectricalConnectorRenderer.State> {
-    private static final Identifier TOO_LONG = Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "textures/wire/red.png");
+    private static final ResourceLocation TOO_LONG = ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, "textures/wire/red.png");
 
     public ElectricalConnectorRenderer(BlockEntityRendererProvider.Context ignored) {
     }
@@ -121,7 +121,7 @@ public class ElectricalConnectorRenderer implements BlockEntityRenderer<Abstract
             }
         }
 
-        Identifier texture = wireItem.getWireType().getTextureLocation();
+        ResourceLocation texture = wireItem.getWireType().getTextureLocation();
         double distanceSqr = wireEnd.distanceToSqr(wireStart);
         int maxDistance = CNAConfig.getServer().maxWireLength.get();
 
@@ -147,7 +147,7 @@ public class ElectricalConnectorRenderer implements BlockEntityRenderer<Abstract
     @Override
     public void submit(State state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState camera) {
         for (TexturedMesh wire : state.wires)
-            queue.submitCustomGeometry(matrices, RenderTypes.entityCutout(wire.texture()), wire.mesh()::emit);
+            queue.submitCustomGeometry(matrices, RenderType.entityCutout(wire.texture()), wire.mesh()::emit);
     }
 
     // Wires reach far beyond the connector's own block.
@@ -156,7 +156,7 @@ public class ElectricalConnectorRenderer implements BlockEntityRenderer<Abstract
         return true;
     }
 
-    public record TexturedMesh(Identifier texture, Wire.Mesh mesh) {
+    public record TexturedMesh(ResourceLocation texture, Wire.Mesh mesh) {
     }
 
     public static class State extends BlockEntityRenderState {

@@ -8,6 +8,8 @@ import net.fabricmc.fabric.api.client.model.loading.v1.UnbakedModelDeserializer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.TextureSlots;
+import net.minecraft.client.renderer.block.model.FaceBakery;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelDebugName;
@@ -15,9 +17,8 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.QuadCollection;
 import net.minecraft.client.resources.model.UnbakedGeometry;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.client.model.geom.builders.UVPair;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import org.antarcticgardens.cna.CreateNewAge;
 import org.jetbrains.annotations.Nullable;
@@ -40,9 +41,9 @@ import java.util.List;
  * </pre>
  * Positions and UVs are in model units (0 to 16), as in element JSON.
  */
-public record QuadListModel(@Nullable Identifier parent, TextureSlots.Data textureSlots, @Nullable ItemTransforms transforms,
+public record QuadListModel(@Nullable ResourceLocation parent, TextureSlots.Data textureSlots, @Nullable ItemTransforms transforms,
                             @Nullable Boolean ambientOcclusion, List<Quad> quads) implements UnbakedModel {
-    public static final Identifier ID = Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "quads");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, "quads");
 
     public record Quad(String texture, Vector3fc[] positions, float[] u, float[] v) {
     }
@@ -52,8 +53,8 @@ public record QuadListModel(@Nullable Identifier parent, TextureSlots.Data textu
     }
 
     private static QuadListModel deserialize(JsonObject json, JsonDeserializationContext context) {
-        Identifier parent = json.has("parent") ? Identifier.parse(GsonHelper.getAsString(json, "parent")) : null;
-        TextureSlots.Data textures = TextureSlots.parseTextureMap(GsonHelper.getAsJsonObject(json, "textures", new JsonObject()));
+        ResourceLocation parent = json.has("parent") ? ResourceLocation.parse(GsonHelper.getAsString(json, "parent")) : null;
+        TextureSlots.Data textures = TextureSlots.parseTextureMap(GsonHelper.getAsJsonObject(json, "textures", new JsonObject()), TextureAtlas.LOCATION_BLOCKS);
         ItemTransforms transforms = json.has("display") ? context.deserialize(json.get("display"), ItemTransforms.class) : null;
         Boolean ao = json.has("ambientocclusion") ? GsonHelper.getAsBoolean(json, "ambientocclusion") : null;
 
@@ -91,21 +92,28 @@ public record QuadListModel(@Nullable Identifier parent, TextureSlots.Data textu
             TextureAtlasSprite sprite = baker.sprites().resolveSlot(textureSlots, slot, name);
 
             Vector3fc[] positions = new Vector3fc[4];
-            long[] uvs = new long[4];
+            // Vanilla's block vertex layout, as FaceBakery.fillVertex writes it: position, colour, UV;
+            // light and normal stay 0.
+            int[] vertices = new int[FaceBakery.VERTEX_COUNT * FaceBakery.VERTEX_INT_SIZE];
             for (int i = 0; i < 4; i++) {
                 // Rotated about the block centre, as vanilla's FaceBakery does with blockstate rotations.
                 Vector3f position = new Vector3f(quad.positions()[i]).sub(0.5f, 0.5f, 0.5f);
                 transform.transformPosition(position);
                 positions[i] = position.add(0.5f, 0.5f, 0.5f);
-                uvs[i] = UVPair.pack(sprite.getU(quad.u()[i]), sprite.getV(quad.v()[i]));
+                int offset = i * FaceBakery.VERTEX_INT_SIZE;
+                vertices[offset] = Float.floatToRawIntBits(position.x());
+                vertices[offset + 1] = Float.floatToRawIntBits(position.y());
+                vertices[offset + 2] = Float.floatToRawIntBits(position.z());
+                vertices[offset + 3] = -1;
+                vertices[offset + FaceBakery.UV_INDEX] = Float.floatToRawIntBits(sprite.getU(quad.u()[i]));
+                vertices[offset + FaceBakery.UV_INDEX + 1] = Float.floatToRawIntBits(sprite.getV(quad.v()[i]));
             }
 
             Vector3f normal = new Vector3f(positions[1]).sub(positions[0])
                     .cross(new Vector3f(positions[3]).sub(positions[0]));
             Direction direction = Direction.getApproximateNearest(normal.x, normal.y, normal.z);
 
-            builder.addUnculledFace(new BakedQuad(positions[0], positions[1], positions[2], positions[3],
-                    uvs[0], uvs[1], uvs[2], uvs[3], -1, direction, sprite, true, 0));
+            builder.addUnculledFace(new BakedQuad(vertices, -1, direction, sprite, true, 0));
         }
         return builder.build();
     }

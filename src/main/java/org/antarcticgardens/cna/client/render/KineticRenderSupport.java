@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -24,7 +24,7 @@ import java.util.function.UnaryOperator;
 /**
  * The render helpers Create Fly gained after 1.21.11 ({@code SmartBlockEntityRenderer.extractBase},
  * {@code getTintColor}, {@code getRotateAngleWithoutBeOffset}, {@code SuperByteBufferRenderState}),
- * rebuilt on what Create Fly offers on 1.21.11.
+ * rebuilt on what Create Fly offers on 1.21.10.
  */
 public final class KineticRenderSupport {
     private KineticRenderSupport() {

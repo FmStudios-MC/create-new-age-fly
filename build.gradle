@@ -22,7 +22,7 @@ loom {
 }
 
 // JSONs that Registrate generated for 1.21.1. There is no Registrate on Create Fly, so they are kept
-// and migrated to the 1.21.11 formats instead of being regenerated.
+// and migrated to the 1.21.10 formats instead of being regenerated.
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 // Datagen only: these produced the JSONs under src/generated, which are migrated by hand now.
@@ -81,7 +81,7 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    // 1.21.11 is still obfuscated: compiled against Mojang names, remapped to intermediary for the jar.
+    // 1.21.10 is still obfuscated: compiled against Mojang names, remapped to intermediary for the jar.
     mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
@@ -93,7 +93,7 @@ dependencies {
     modImplementation fabricApi.module("fabric-networking-api-v1", project.fabric_version)
     modImplementation fabricApi.module("fabric-object-builder-api-v1", project.fabric_version)
     modImplementation fabricApi.module("fabric-resource-conditions-api-v1", project.fabric_version)
-    modImplementation fabricApi.module("fabric-resource-loader-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-resource-loader-v0", project.fabric_version)
     modImplementation fabricApi.module("fabric-transfer-api-v1", project.fabric_version)
     modImplementation fabricApi.module("fabric-biome-api-v1", project.fabric_version)
     modImplementation fabricApi.module("fabric-rendering-v1", project.fabric_version)
@@ -110,8 +110,8 @@ dependencies {
     // Peripherals are only registered when CC: Tweaked is installed.
     // Not transitive: its POM pulls the whole fabric-api, whose interface injections then name
     // modules that are not on the compile classpath.
-    modCompileOnly("cc.tweaked:cc-tweaked-${project.minecraft_version}-fabric-api:${project.cct_version}") { transitive = false }
-    modCompileOnly("cc.tweaked:cc-tweaked-${project.minecraft_version}-core-api:${project.cct_version}") { transitive = false }
+    modCompileOnly("cc.tweaked:cc-tweaked-${project.cct_minecraft_version}-fabric-api:${project.cct_version}") { transitive = false }
+    modCompileOnly("cc.tweaked:cc-tweaked-${project.cct_minecraft_version}-core-api:${project.cct_version}") { transitive = false }
 }
 
 processResources {
@@ -167,14 +167,5 @@ dependencies {
     modGametestImplementation fabricApi.module("fabric-client-gametest-api-v1", project.fabric_version)
     // JEI in the test run only, to screenshot the energising category
     modGametestImplementation "maven.modrinth:jei:${project.jei_version}"
-    // CC: Tweaked in the test run only, to check that the peripherals are found
-    modGametestImplementation("cc.tweaked:cc-tweaked-${project.minecraft_version}-fabric-api:${project.cct_version}") { transitive = false }
-    modGametestImplementation("cc.tweaked:cc-tweaked-${project.minecraft_version}-core-api:${project.cct_version}") { transitive = false }
-    modGametestRuntimeOnly("cc.tweaked:cc-tweaked-${project.minecraft_version}-fabric:${project.cct_version}") { transitive = false }
-    // The dev runtime does not load the libraries CC: Tweaked nests; these are the ones its POM lists.
-    gametestRuntimeOnly "com.electronwill.night-config:core:3.8.3"
-    gametestRuntimeOnly "com.electronwill.night-config:toml:3.8.3"
-    gametestRuntimeOnly "cc.tweaked:cobalt:0.9.7"
-    gametestRuntimeOnly "io.netty:netty-codec-socks:4.2.7.Final"
-    gametestRuntimeOnly "io.netty:netty-handler-proxy:4.2.7.Final"
+    // No CC: Tweaked in the test run: it has no 1.21.10 build.
 }

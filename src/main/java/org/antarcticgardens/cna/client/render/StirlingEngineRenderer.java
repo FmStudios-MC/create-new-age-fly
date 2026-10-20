@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -49,7 +49,7 @@ public class StirlingEngineRenderer implements BlockEntityRenderer<StirlingEngin
 
         state.shaft = null;
         if (!VisualizationManager.supportsVisualization(level)) {
-            state.shaft = new Part(CachedBuffers.block(KINETIC_BLOCK, shaft(axis)), RenderTypes.solidMovingBlock(), state.lightCoords, color);
+            state.shaft = new Part(CachedBuffers.block(KINETIC_BLOCK, shaft(axis)), RenderType.solid(), state.lightCoords, color);
             state.shaftAngle = rotationWithoutBeOffset(axis, be, state, level);
         }
 
@@ -57,7 +57,7 @@ public class StirlingEngineRenderer implements BlockEntityRenderer<StirlingEngin
         float speed = be.visualSpeed.getValue(partialTicks) * 3 / 10f;
         float angle = be.angle + speed * partialTicks;
         state.wheelAngle = rotation(axis, AngleHelper.rad(angle));
-        state.wheel = new Part(CachedBuffers.block(wheelState), RenderTypes.solidMovingBlock(), state.lightCoords, -1,
+        state.wheel = new Part(CachedBuffers.block(wheelState), RenderType.solid(), state.lightCoords, -1,
                 wheel -> wheel.center().scale(0.2f, 0.2f, 0.2f).uncenter());
     }
 

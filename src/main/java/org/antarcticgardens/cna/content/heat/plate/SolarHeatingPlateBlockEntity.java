@@ -1,6 +1,5 @@
 package org.antarcticgardens.cna.content.heat.plate;
 
-import net.minecraft.world.attribute.EnvironmentAttributes;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
 import com.zurrtum.create.foundation.blockEntity.SmartBlockEntity;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -91,7 +90,7 @@ public class SolarHeatingPlateBlockEntity extends SmartBlockEntity implements He
             // update sky could also work but this feels more right.
             double d = 1.0 - (double)(world.getRainLevel(1.0F) * 5.0F) / 16.0;
             double e = 1.0 - (double)(world.getThunderLevel(1.0F) * 5.0F) / 16.0;
-            double f = 0.5 + 2.0 * Mth.clamp(Mth.cos(world.environmentAttributes().getValue(EnvironmentAttributes.SUN_ANGLE, blockPos) * Mth.DEG_TO_RAD), -0.25, 0.25);
+            double f = 0.5 + 2.0 * Mth.clamp(Mth.cos(world.getSunAngle(1.0F)), -0.25, 0.25);
             dark = (int)((1.0 - f * d * e) * 11.0);
         } else {
             dark = world.getSkyDarken();

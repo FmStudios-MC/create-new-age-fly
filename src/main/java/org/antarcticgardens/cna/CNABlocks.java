@@ -8,7 +8,7 @@ import com.zurrtum.create.content.processing.AssemblyOperatorBlockItem;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -228,7 +228,7 @@ public class CNABlocks {
     }
 
     private static <B extends Block> B registerWithoutItem(String name, Function<Properties, B> factory, Properties properties) {
-        ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, name));
+        ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, name));
         return Registry.register(BuiltInRegistries.BLOCK, key, factory.apply(properties.setId(key)));
     }
 }

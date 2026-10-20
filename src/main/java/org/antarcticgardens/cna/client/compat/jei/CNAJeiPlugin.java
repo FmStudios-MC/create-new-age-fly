@@ -9,7 +9,7 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.common.Internal;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.antarcticgardens.cna.CNABlocks;
@@ -27,11 +27,11 @@ public class CNAJeiPlugin implements IModPlugin {
     @SuppressWarnings("unchecked")
     public static final IRecipeType<RecipeHolder<EnergisingRecipe>> ENERGISING =
             (IRecipeType<RecipeHolder<EnergisingRecipe>>) (Object) IRecipeType.create(
-                    Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "energising"), RecipeHolder.class);
+                    ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, "energising"), RecipeHolder.class);
 
     @Override
-    public Identifier getPluginUid() {
-        return Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "jei_plugin");
+    public ResourceLocation getPluginUid() {
+        return ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, "jei_plugin");
     }
 
     @Override

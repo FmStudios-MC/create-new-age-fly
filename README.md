@@ -4,7 +4,7 @@
 
 <p align="center">
 An <b>unofficial</b> port of <a href="https://gitlab.com/antarcticgardens/create-new-age">Create: New Age</a>
-to <a href="https://github.com/ZurrTum/Create-Fly">Create Fly</a>, for Fabric and Minecraft 1.21.11.
+to <a href="https://github.com/ZurrTum/Create-Fly">Create Fly</a>, for Fabric and Minecraft 1.21.10.
 </p>
 
 > [!IMPORTANT]
@@ -17,7 +17,7 @@ to <a href="https://github.com/ZurrTum/Create-Fly">Create Fly</a>, for Fabric an
 
 Create: New Age is an addon for Create that brings electricity and nuclear power into the world
 of rotational force. This port carries the mod over, feature for feature, from NeoForge 1.21.1
-to Create Fly, the Fabric port of Create for Minecraft 1.21.11.
+to Create Fly, the Fabric port of Create for Minecraft 1.21.10.
 
 - **Generating power**: generator coils spun inside rings of magnets, collected with carbon brushes
 - **Wiring**: electrical connectors joined by copper wire and overcharged iron, gold and
@@ -33,16 +33,17 @@ to Create Fly, the Fabric port of Create for Minecraft 1.21.11.
 
 | | Version |
 |---|---|
-| Minecraft | 1.21.11 |
+| Minecraft | 1.21.10 |
 | Fabric Loader | 0.18.4 or newer |
-| [Fabric API](https://modrinth.com/mod/fabric-api) | 0.141.6+1.21.11 or newer |
-| [Create Fly](https://modrinth.com/mod/create-fly) | 1.21.11-6.0.9-5 or newer |
+| [Fabric API](https://modrinth.com/mod/fabric-api) | 0.138.4+1.21.10 or newer |
+| [Create Fly](https://modrinth.com/mod/create-fly) | 1.21.10-6.0.9-2 or newer |
 
 Optional:
 
 - [JEI](https://modrinth.com/mod/jei) shows the energising recipes.
 - [CC: Tweaked](https://modrinth.com/mod/cc-tweaked) exposes motors, energisers and carbon brushes
-  as peripherals.
+  as peripherals. CC: Tweaked has no build for 1.21.10 yet; the support is there for when one
+  appears, but it is untested on this version.
 
 The mod is needed on both the server and the client.
 
@@ -58,7 +59,7 @@ The mod is needed on both the server and the client.
 
 ## Installation
 
-1. Install Fabric Loader for Minecraft 1.21.11.
+1. Install Fabric Loader for Minecraft 1.21.10.
 2. Put Fabric API, Create Fly and this mod's `.jar` from the
    [releases](../../releases) into your `mods` folder.
 

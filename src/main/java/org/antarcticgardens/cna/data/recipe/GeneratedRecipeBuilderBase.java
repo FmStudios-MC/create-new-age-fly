@@ -6,7 +6,7 @@ import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
@@ -56,12 +56,12 @@ public abstract class GeneratedRecipeBuilderBase<SELF> {
         return (SELF) this;
     }
 
-    protected Identifier createLocation() {
+    protected ResourceLocation createLocation() {
         return createLocation("");
     }
 
-    protected Identifier createLocation(String type) {
+    protected ResourceLocation createLocation(String type) {
         String name = this.name == null ? RegisteredObjectsHelper.getKeyOrThrow(result.asItem()).getPath() : this.name;
-        return Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, type + (type.isEmpty() ? "" : "/") + name + suffix);
+        return ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, type + (type.isEmpty() ? "" : "/") + name + suffix);
     }
 }

@@ -1,7 +1,7 @@
 package org.antarcticgardens.cna;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 
 import java.util.Locale;
@@ -20,7 +20,7 @@ public class CNATags {
         public final TagKey<net.minecraft.world.item.Item> itemTag;
 
         Block(boolean hasItemTag) {
-            Identifier location = Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, name().toLowerCase(Locale.ROOT));
+            ResourceLocation location = ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, name().toLowerCase(Locale.ROOT));
             this.hasItemTag = hasItemTag;
             this.blockTag = TagKey.create(Registries.BLOCK, location);
             this.itemTag = hasItemTag ? TagKey.create(Registries.ITEM, location) : null;
@@ -34,15 +34,15 @@ public class CNATags {
         public final TagKey<net.minecraft.world.item.Item> tag;
 
         Item(String id) {
-            tag = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, id));
+            tag = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, id));
         }
     }
 
     public static TagKey<net.minecraft.world.item.Item> createNuclearEnergyTag(int energy) {
-        return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "nuclear/energy_" + energy));
+        return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, "nuclear/energy_" + energy));
     }
 
     public static TagKey<net.minecraft.world.level.block.Block> createMagneticForgeTag(int force) {
-        return TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, "magnet/force_" + force));
+        return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, "magnet/force_" + force));
     }
 }

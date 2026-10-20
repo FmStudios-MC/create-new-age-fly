@@ -185,7 +185,7 @@ public class EnergiserBehaviour extends BeltProcessingBehaviour {
         sinceUpdate = 10;
 
         if (charged >= needed) {
-            List<TransportedItemStack> out = currentRecipe.assemble(new SingleRecipeInput(transportedItemStack.stack), handler.getLevel().getRandom()).stream()
+            List<TransportedItemStack> out = currentRecipe.craft(new SingleRecipeInput(transportedItemStack.stack), be.getLevel().getRandom()).stream()
                     .map(stack -> {
                         TransportedItemStack copy = transportedItemStack.copy();
                         boolean centered = BeltHelper.isItemUpright(stack);

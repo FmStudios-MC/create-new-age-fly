@@ -2,7 +2,7 @@ package org.antarcticgardens.cna;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -16,7 +16,7 @@ public class CNARecipeTypes {
     }
 
     private static <T extends Recipe<?>> RecipeType<T> registerType(String name) {
-        Identifier id = Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, name);
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, name);
         return Registry.register(BuiltInRegistries.RECIPE_TYPE, id, new RecipeType<T>() {
             @Override
             public String toString() {
@@ -26,6 +26,6 @@ public class CNARecipeTypes {
     }
 
     private static <T extends Recipe<?>> RecipeSerializer<T> registerSerializer(String name, RecipeSerializer<T> serializer) {
-        return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, Identifier.fromNamespaceAndPath(CreateNewAge.MOD_ID, name), serializer);
+        return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, ResourceLocation.fromNamespaceAndPath(CreateNewAge.MOD_ID, name), serializer);
     }
 }

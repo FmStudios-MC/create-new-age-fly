@@ -1,4 +1,15 @@
 ------------------------------------------------------
+Version 1.2.1-fly.1.21.10-beta.1 (unofficial Fabric port)
+------------------------------------------------------
+First beta of the port to Minecraft 1.21.10, ported from 1.2.1-fly.1.21.11-beta.1 with the same
+features and fixes. The automated gameplay, multiplayer and render checks pass, but it has not been
+play-tested at length; please report problems to this port's issue tracker.
+#### Changes from 1.2.1-fly.1.21.11-beta.1
+- Runs on Minecraft 1.21.10 with Create Fly 1.21.10-6.0.9-2 or newer and Fabric API 0.138.4 or newer
+- Tested with JEI 26.3.0.31 (optional)
+- CC: Tweaked has no 1.21.10 build, so the ComputerCraft peripherals are untested here
+
+------------------------------------------------------
 Version 1.2.1-fly.1.21.11-beta.1 (unofficial Fabric port)
 ------------------------------------------------------
 First beta of the port to Minecraft 1.21.11, with the same features and fixes as 1.2.1-fly.26.2.

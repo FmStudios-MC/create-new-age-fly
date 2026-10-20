@@ -1,7 +1,7 @@
 package org.antarcticgardens.cna.content.electricity.light;
 
 import org.antarcticgardens.cna.util.SmartTicker;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.level.redstone.Orientation;
 import com.zurrtum.create.content.equipment.wrench.IWrenchable;
 import com.zurrtum.create.foundation.block.IBE;
