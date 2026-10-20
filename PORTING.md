@@ -1,4 +1,4 @@
-# Porting notes: Create: New Age → Create Fly (Fabric, MC 26.2, ported back to 1.21.11 and 1.21.10)
+# Porting notes: Create: New Age → Create Fly (Fabric, MC 26.2, ported back to 1.21.11, 1.21.10 and 1.21.8)
 
 Working document. Read *State* first.
 
@@ -37,6 +37,12 @@ Flywheel is off, are not covered by the screenshots.
 moved back to Minecraft 1.21.10 with Create Fly `1.21.10-6.0.9-2`; see *1.21.10 port*. CC: Tweaked has
 no 1.21.10 build, so the peripherals are compiled but not tested.
 
+**1.21.8 port, 2026-10-20 (branch `1.21.8`, version `1.2.1-fly.1.21.8-beta.1`).** The 1.21.10 branch
+moved back to Minecraft 1.21.8 with Create Fly `1.21.8-6.0.9-2`; see *1.21.8 port*. The renderers are
+back on the pre-1.21.9 immediate API (close to upstream's), and the recipe viewer is REI instead of JEI. `runClientGameTest`
+passes (all `GameplayCheck` lines, `MultiplayerCheck`, CC: Tweaked finds the peripherals) and the
+`RenderCheck` screenshots look right, including the REI energising category.
+
 Still only checkable by playing: balance and feel, the energiser's beam and the stirling engine's
 flywheel in motion, placing wires by hand, reactor overheating and corium, other energy mods
 through Team Reborn Energy, and long sessions.
@@ -44,10 +50,10 @@ through Team Reborn Energy, and long sessions.
 | | |
 |---|---|
 | Upstream | https://gitlab.com/antarcticgardens/create-new-age, branch `1.21.1` (NeoForge) |
-| Port repo | https://github.com/FmStudios-MC/create-new-age-fly, branch `main` (was `fly/26.2`). Upstream is not a remote; fetch it by URL when merging upstream changes. Branch `1.21.11` is the port to Minecraft 1.21.11 (see *1.21.11 port*), branch `1.21.10` the one to 1.21.10 (see *1.21.10 port*) |
-| Target | This branch: Minecraft 1.21.10 (Mojang mappings, remapped to intermediary), Fabric Loader 0.18.4, Fabric API 0.138.4+1.21.10. `1.21.11`: Minecraft 1.21.11, Fabric API 0.141.6+1.21.11. `main`: Minecraft 26.2, Fabric Loader 0.19.3, Fabric API 0.160.0+26.2 (CC: Tweaked 1.120.2 needs >= 0.156) |
-| Optional | This branch: JEI 26.3.0.31 (Modrinth id `8yGN172x`); CC: Tweaked has no 1.21.10 build, the peripherals compile against the 1.21.11 API 1.117.1. `1.21.11`: JEI 27.7.0.30 (`Mia233qP`), CC: Tweaked 1.117.1. `main`: JEI 30.26.0.182 (`x6nG9OT2`), CC: Tweaked 1.120.2 |
-| Create Fly | This branch: `maven.modrinth:create-fly:1.21.10-6.0.9-2` (latest 1.21.10 release). `1.21.11`: `1.21.11-6.0.9-5` (built from Create Fly's `1.21.11_obfuscation` branch). `main`: `26.2-rc-2-6.0.9-1` |
+| Port repo | https://github.com/FmStudios-MC/create-new-age-fly, branch `main` (was `fly/26.2`). Upstream is not a remote; fetch it by URL when merging upstream changes. Branch `1.21.11` is the port to Minecraft 1.21.11 (see *1.21.11 port*), branch `1.21.10` the one to 1.21.10 (see *1.21.10 port*), branch `1.21.8` the one to 1.21.8 (see *1.21.8 port*) |
+| Target | This branch: Minecraft 1.21.8 (Mojang mappings, remapped to intermediary), Fabric Loader 0.18.4, Fabric API 0.136.1+1.21.8. `1.21.10`: Minecraft 1.21.10, Fabric API 0.138.4+1.21.10. `1.21.11`: Minecraft 1.21.11, Fabric API 0.141.6+1.21.11. `main`: Minecraft 26.2, Fabric Loader 0.19.3, Fabric API 0.160.0+26.2 (CC: Tweaked 1.120.2 needs >= 0.156) |
+| Optional | This branch: REI 20.0.811 (with Architectury 17.0.8 and Cloth Config 19.0.147), CC: Tweaked 1.116.1. `1.21.10`: JEI 26.3.0.31 (Modrinth id `8yGN172x`); CC: Tweaked has no 1.21.10 build. `1.21.11`: JEI 27.7.0.30 (`Mia233qP`), CC: Tweaked 1.117.1. `main`: JEI 30.26.0.182 (`x6nG9OT2`), CC: Tweaked 1.120.2 |
+| Create Fly | This branch: `maven.modrinth:create-fly:1.21.8-6.0.9-2` (latest 1.21.8 release). `1.21.10`: `1.21.10-6.0.9-2`. `1.21.11`: `1.21.11-6.0.9-5` (built from Create Fly's `1.21.11_obfuscation` branch). `main`: `26.2-rc-2-6.0.9-1` |
 | JDK | Gradle runs on 25, requested via `gradle/gradle-daemon-jvm.properties` (Gradle finds an installed JDK 25 even when `JAVA_HOME` is 21). This branch compiles for Java 21 |
 | Licence | Upstream is BSD-3-Clause style: keep `LICENSE` + copyright notice, do not use the authors' name to promote the port |
 
@@ -198,6 +204,37 @@ names, with sources, under `.gradle/loom-cache/remapped_mods`; diffing those ans
   `TextureSlots.parseTextureMap` takes the atlas (`TextureAtlas.LOCATION_BLOCKS`).
 - **Create Fly**: `CreateRollableRecipe.assemble(input, random)` is called `craft`.
 - `fabric.mod.json` requires Minecraft `>=1.21.10 <1.21.11-`, Fabric API `>=0.138.4`, Create
+  `>=6.0.9-2`.
+
+## 1.21.8 port
+
+The branch `1.21.8` is `1.21.10` moved back to Minecraft 1.21.8 with Create Fly `1.21.8-6.0.9-2`.
+Apart from rendering and the recipe viewer, the code compiled unchanged.
+
+- **Rendering**: 1.21.8 has no render states and no `SubmitNodeCollector`; block entity renderers
+  draw straight into a `MultiBufferSource` in `render(be, partialTicks, ms, buffers, light, overlay,
+  cameraPos)`. Create Fly 1.21.8 still has `SafeBlockEntityRenderer`, `KineticBlockEntityRenderer`
+  and `ShaftRenderer`, so the renderers are upstream's again (with the port's fixes: the coil on
+  `cutout`, the stirling flywheel always drawn). `KineticRenderSupport` and the classtweaker entry
+  for `BlockEntityRenderState` are gone. Wires are built into a `Wire.Mesh` and written out at once.
+- **Registration**: Create Fly 1.21.8's `AllBlockEntityRenders.visual/normal/render` are private;
+  `CNABlockEntityRenders` has its own copies (vanilla `BlockEntityRenderers.register` plus
+  `SimpleBlockEntityVisualizer.builder`).
+- **Value boxes**: `ValueBoxTransform` takes `(LevelAccessor, BlockPos, BlockState)`.
+- **Recipe viewer: REI instead of JEI.** JEI 24.2 on Fabric 1.21.8 never receives the server's
+  recipes (it warns "JEI is missing recipes"), Fabric API 1.21.8 has no `RecipeSynchronization`,
+  and Create Fly 1.21.8 has no JEI support, only REI and EIV. `compat/rei` holds the display and its
+  serializer (`rei_common`: REI builds displays on the server and syncs them), `client/compat/rei`
+  the category on Create Fly's REI `CreateCategory` and the sequenced assembly step icon
+  (`rei_client`). Compiled against `RoughlyEnoughItems-api-fabric`, Architectury and Cloth's
+  `basic-math` (REI's `Rectangle`/`Point`, nested in Cloth Config).
+  **Dev-only trap**: in `runClientGameTest`, opening Create Fly's sequenced assembly category with a
+  repeat count crashes with `AbstractMethodError: TooltipWidget.children()`. Loom remapped Create Fly
+  without REI on the classpath, so its override is still called `method_25396`. In a real (intermediary)
+  game the names match; the render check therefore leaves that tab closed.
+- **CC: Tweaked** 1.116.1 has a 1.21.8 build again, so the gametest run loads it (with the
+  libraries its POM lists) and prints the peripheral lines.
+- `fabric.mod.json` requires Minecraft `>=1.21.8 <1.21.9-`, Fabric API `>=0.136.1`, Create
   `>=6.0.9-2`.
 
 ## Vanilla 1.21.1 → 26.2 changes hit so far

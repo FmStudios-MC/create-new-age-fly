@@ -1,4 +1,15 @@
 ------------------------------------------------------
+Version 1.2.1-fly.1.21.8-beta.1 (unofficial Fabric port)
+------------------------------------------------------
+First beta of the port to Minecraft 1.21.8, ported from 1.2.1-fly.1.21.10-beta.1 with the same
+features and fixes. The automated gameplay, multiplayer and render checks pass, but it has not been
+play-tested at length; please report problems to this port's issue tracker.
+#### Changes from 1.2.1-fly.1.21.10-beta.1
+- Runs on Minecraft 1.21.8 with Create Fly 1.21.8-6.0.9-2 or newer and Fabric API 0.136.1 or newer
+- Energising recipes are shown in REI instead of JEI: JEI gets no recipes from the server on Fabric 1.21.8, and Create Fly 1.21.8 supports REI
+- Tested with REI 20.0.811 and CC: Tweaked 1.116.1 (both optional)
+
+------------------------------------------------------
 Version 1.2.1-fly.1.21.10-beta.1 (unofficial Fabric port)
 ------------------------------------------------------
 First beta of the port to Minecraft 1.21.10, ported from 1.2.1-fly.1.21.11-beta.1 with the same

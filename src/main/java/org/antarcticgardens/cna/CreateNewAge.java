@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -52,9 +51,6 @@ public class CreateNewAge implements ModInitializer {
         CNABlockEntityTypes.init();
         CNAItems.init();
         CNARecipeTypes.init();
-
-        // 26.2 keeps recipes on the server; recipe viewers only see the types synced to clients.
-        RecipeSynchronization.synchronizeRecipeSerializer(CNARecipeTypes.ENERGISING_SERIALIZER);
 
         MotorBlockEntity.registerEnergyStorage();
         ElectricalConnectorBlockEntity.registerEnergyStorage();

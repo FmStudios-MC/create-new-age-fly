@@ -88,8 +88,15 @@ public class RenderCheck implements FabricClientGameTest {
                     a.connect(b, WireType.COPPER);
             });
 
-            // No ComputerCraft check: CC: Tweaked has no 1.21.10 build to run against.
+            // ComputerCraft: the peripherals CC: Tweaked finds on CNA's block entities
             context.waitTicks(20);
+            server.runOnServer(minecraftServer -> {
+                ServerLevel level = minecraftServer.overworld();
+                for (BlockPos pos : new BlockPos[]{new BlockPos(0, Y, 0), new BlockPos(13, Y, 1), new BlockPos(11, Y, 0)}) {
+                    var peripheral = dan200.computercraft.api.peripheral.PeripheralLookup.get().find(level, pos, null);
+                    System.out.println("CNA-CHECK peripheral at " + pos + ": " + (peripheral == null ? "none" : peripheral.getType()));
+                }
+            });
 
             look(context, server, 8, Y + 5, -9, 8, Y, 4);
             context.waitTicks(40);
@@ -145,19 +152,20 @@ public class RenderCheck implements FabricClientGameTest {
             context.takeScreenshot("cna_items");
             context.setScreen(() -> null);
 
-            // JEI: the energising category, and the sequenced assemblies that contain energising steps
-            context.waitFor(mc -> JeiRuntimeGrabber.runtime != null);
-            context.runOnClient(mc -> JeiRuntimeGrabber.runtime.getRecipesGui()
-                    .showTypes(java.util.List.of(org.antarcticgardens.cna.client.compat.jei.CNAJeiPlugin.ENERGISING)));
+            // REI: the energising category, and the recipes for nuclear fuel. Not the sequenced assembly tab:
+            // in this dev run Create Fly's REI TooltipWidget throws AbstractMethodError (see PORTING.md).
+            context.waitFor(mc -> !me.shedaniel.rei.api.client.registry.display.DisplayRegistry.getInstance()
+                    .get(org.antarcticgardens.cna.compat.rei.CNAReiCommonPlugin.ENERGISING).isEmpty(), 1200);
+            context.runOnClient(mc -> me.shedaniel.rei.api.client.view.ViewSearchBuilder.builder()
+                    .addCategory(org.antarcticgardens.cna.compat.rei.CNAReiCommonPlugin.ENERGISING).open());
             context.waitTicks(20);
-            context.takeScreenshot("jei_energising");
-            context.runOnClient(mc -> JeiRuntimeGrabber.runtime.getRecipesGui().show(
-                    JeiRuntimeGrabber.runtime.getJeiHelpers().getFocusFactory().createFocus(
-                            mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT,
-                            mezz.jei.api.constants.VanillaTypes.ITEM_STACK,
-                            new ItemStack(BuiltInRegistries.ITEM.getValue(ResourceLocation.fromNamespaceAndPath("create_new_age", "nuclear_fuel"))))));
+            context.takeScreenshot("rei_energising");
+            context.runOnClient(mc -> me.shedaniel.rei.api.client.view.ViewSearchBuilder.builder()
+                    .addRecipesFor(me.shedaniel.rei.api.common.util.EntryStacks.of(
+                            BuiltInRegistries.ITEM.getValue(ResourceLocation.fromNamespaceAndPath("create_new_age", "nuclear_fuel"))))
+                    .open());
             context.waitTicks(20);
-            context.takeScreenshot("jei_nuclear_fuel");
+            context.takeScreenshot("rei_nuclear_fuel");
             context.setScreen(() -> null);
 
             // one ponder per scene file; each opens its first storyboard

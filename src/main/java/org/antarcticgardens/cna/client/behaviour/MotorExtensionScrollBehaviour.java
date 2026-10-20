@@ -13,6 +13,8 @@ import com.zurrtum.create.client.foundation.utility.CreateLang;
 import com.zurrtum.create.content.kinetics.motor.CreativeMotorBlock;
 import com.zurrtum.create.foundation.blockEntity.behaviour.ValueSettings;
 import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -50,17 +52,17 @@ public class MotorExtensionScrollBehaviour extends ScrollValueBehaviour<MotorExt
         }
 
         @Override
-        public Vec3 getLocalOffset(BlockState state) {
+        public Vec3 getLocalOffset(LevelAccessor level, BlockPos pos, BlockState state) {
             Direction facing = state.getValue(CreativeMotorBlock.FACING);
             Vec3 normal = Vec3.atLowerCornerOf(facing.getUnitVec3i());
-            return super.getLocalOffset(state)
+            return super.getLocalOffset(level, pos, state)
                     .add(normal.scale(-1 / 16f))
                     .add(normal.scale(2 / 16f));
         }
 
         @Override
-        public void rotate(BlockState state, PoseStack ms) {
-            super.rotate(state, ms);
+        public void rotate(LevelAccessor level, BlockPos pos, BlockState state, PoseStack ms) {
+            super.rotate(level, pos, state, ms);
             Direction facing = state.getValue(CreativeMotorBlock.FACING);
             if (facing.getAxis() == Direction.Axis.Y)
                 return;

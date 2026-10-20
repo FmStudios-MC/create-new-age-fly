@@ -102,7 +102,7 @@ public class CNABlockEntityTypes {
 
     /**
      * CNA's block entities take their type as a constructor argument, as they did under Registrate.
-     * 1.21.10's {@link BlockEntityType.BlockEntitySupplier} only passes the position and state, so the
+     * 1.21.8's {@link BlockEntityType.BlockEntitySupplier} only passes the position and state, so the
      * type is handed over once it exists: the supplier runs when a block entity is created, long
      * after registration has returned.
      */
