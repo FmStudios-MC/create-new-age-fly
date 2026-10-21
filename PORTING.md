@@ -33,6 +33,14 @@ CC: Tweaked finds the peripherals) and the `RenderCheck` screenshots look right 
 textures, wires, items, JEI, ponders, goggle overlay). The renderers' own shafts, drawn only when
 Flywheel is off, are not covered by the screenshots.
 
+**Release review, 2026-10-21 → first full release `1.2.1-fly.1.21.11`.** Fixed: `KineticRenderSupport.Part`
+went through `SuperByteBuffer.color(int)`, which is RGB and forces alpha 255, so the energiser's
+beam lost upstream's alpha 200 (it now passes ARGB as four channels); the Monkey Edition datapack
+still declared `pack_format` 48 (1.21.1) and showed as made for an older version (now
+`min_format`/`max_format` 94, 1.21.11's data format). `runClientGameTest` passes again, also with
+Flywheel's backend set to `OFF` (set in code before the world loads: the run directory, config
+included, is recreated on every run), and those screenshots match the Flywheel ones.
+
 Still only checkable by playing: balance and feel, the energiser's beam and the stirling engine's
 flywheel in motion, placing wires by hand, reactor overheating and corium, other energy mods
 through Team Reborn Energy, and long sessions.
