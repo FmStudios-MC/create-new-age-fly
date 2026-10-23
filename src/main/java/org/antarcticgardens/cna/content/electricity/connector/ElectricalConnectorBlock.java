@@ -88,7 +88,9 @@ public class ElectricalConnectorBlock extends DirectionalBlock implements IBE<El
             ElectricalConnectorMode nextMode = ElectricalConnectorMode.values()[(state.getValue(MODE).ordinal() + 1) % ElectricalConnectorMode.values().length];
             world.setBlock(context.getClickedPos(), state.setValue(MODE, nextMode), 1 | 2);
             
-            if (world.getBlockEntity(context.getClickedPos()) instanceof ElectricalConnectorBlockEntity connector)
+            // A connector that has not ticked yet has no network; it reads its mode on the first tick.
+            if (world.getBlockEntity(context.getClickedPos()) instanceof ElectricalConnectorBlockEntity connector
+                    && connector.getNetwork() != null)
                 connector.getNetwork().updateConsumersAndSources();
             
             IWrenchable.playRotateSound(world, context.getClickedPos());

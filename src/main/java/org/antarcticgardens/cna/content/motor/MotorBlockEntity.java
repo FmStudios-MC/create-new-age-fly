@@ -108,7 +108,7 @@ public class MotorBlockEntity extends GeneratingKineticBlockEntity {
         compound.putBoolean("needsPower", needsPower);
         compound.putFloat("lastGeneratedStress", stress);
         compound.putFloat("lastGeneratedSpeed", speed);
-        compound.putFloat("eUse", e);
+        compound.putLong("eUse", e); // read as a long; upstream wrote a float
         compound.putFloat("actualStress", actualStress);
         super.write(compound, clientPacket);
     }

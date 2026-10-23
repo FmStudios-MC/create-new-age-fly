@@ -16,9 +16,9 @@ import org.joml.Vector3f;
 /**
  * A sagging wire between two points, as a strip of crossed quads.
  * <p>
- * 26.2 renders block entities in two passes: state is extracted while the level is readable, and
- * geometry is submitted later without it. So {@link #build} computes every vertex, including its
- * light, up front, and {@link Mesh#emit} only writes them out. The maths is upstream's unchanged.
+ * {@link #build} computes every vertex, including its per-section light, and {@link Mesh#emit} only
+ * writes them out (a split kept from the 26.2 port, whose renderers cannot read the level while
+ * submitting). The maths is upstream's unchanged.
  */
 public class Wire {
     public static final float SAG_FACTOR = 0.9f;

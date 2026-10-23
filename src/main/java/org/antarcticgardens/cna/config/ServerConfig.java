@@ -145,7 +145,7 @@ public class ServerConfig {
             .defineInRange("basicMotorExtensionMultiplier", 2.0, 1.0, Double.MAX_VALUE);
 
         advancedMotorExtensionMultiplier = builder
-            .comment("Power Multiplier of a basic motor extension")
+            .comment("Power Multiplier of an advanced motor extension")
             .defineInRange("advancedMotorExtensionMultiplier", 8.0, 1.0, Double.MAX_VALUE);
 
         basicMotorExtensionExtraCapacity = builder

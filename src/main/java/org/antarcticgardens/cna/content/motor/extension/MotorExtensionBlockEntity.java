@@ -63,7 +63,8 @@ public class MotorExtensionBlockEntity extends SmartBlockEntity {
 
     @Override
     protected void read(ValueInput tag, boolean clientPacket) {
-        multiplier = tag.getFloatOr("stressMultiplier", 0f);
+        // Defaults to the field's 1, not 0: a multiplier of 0 stalls the motor.
+        multiplier = tag.getFloatOr("stressMultiplier", 1f);
         stressBehavior.setRawValue(Math.round(multiplier * 100)); // upstream cast before multiplying
         super.read(tag, clientPacket);
     }

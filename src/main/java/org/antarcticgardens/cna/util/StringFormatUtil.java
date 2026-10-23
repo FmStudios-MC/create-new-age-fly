@@ -13,7 +13,8 @@ public class StringFormatUtil {
     public static String formatLong(long l) {
         int d = 0;
         double number = l;
-        while (number >= 1000 && d < postfixes.length) {
+        // Stops at the last postfix: upstream indexed past it from 10^18 on.
+        while (number >= 1000 && d < postfixes.length - 1) {
             number /= 1000;
             d++;
         }
@@ -27,7 +28,7 @@ public class StringFormatUtil {
 
     public static String formatFloat(float f) {
         int d = 0;
-        while (f >= 1000 && d < postfixes.length) {
+        while (f >= 1000 && d < postfixes.length - 1) {
             f/=1000;
             d++;
         }

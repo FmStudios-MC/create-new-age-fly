@@ -69,6 +69,8 @@ public class ElectricWireItem extends Item {
                 return;
             if (!(level.getBlockEntity(boundToPos) instanceof AbstractElectricalConnector)) {
                 stack.remove(BOUND_TO);
+                // Upstream went on to the distance check and could report a gone connector as too far.
+                return;
             }
 
             int maxLength = CNAConfig.getServer().maxWireLength.get();

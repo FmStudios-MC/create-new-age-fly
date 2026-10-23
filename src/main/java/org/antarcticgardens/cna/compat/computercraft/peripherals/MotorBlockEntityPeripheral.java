@@ -10,7 +10,7 @@ public class MotorBlockEntityPeripheral  extends SyncedPeripheral<MotorBlockEnti
     }
 
     @LuaFunction(mainThread = true)
-    public int getTier()
+    public final int getTier()
     {
         return blockEntity.tier;
     }

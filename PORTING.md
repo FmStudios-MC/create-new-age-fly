@@ -43,6 +43,16 @@ back on the pre-1.21.9 immediate API (close to upstream's), and the recipe viewe
 passes (all `GameplayCheck` lines, `MultiplayerCheck`, CC: Tweaked finds the peripherals) and the
 `RenderCheck` screenshots look right, including the REI energising category.
 
+**Release review, 2026-10-23 → first full release `1.2.1-fly.1.21.8`.** Of the two fixes of the
+1.21.10/1.21.11 releases only the Monkey Edition datapack's format applied (`pack_format` 81,
+1.21.8's data format; `min_format`/`max_format` only exist from 1.21.9). The energiser's beam keeps
+its alpha here: `EnergiserRenderer` passes four channels to `SuperByteBuffer.color`. Also fixed:
+`ElectricalConnectorBlock.onWrenched` dereferenced the network of a never-ticked connector, a motor
+extension read without `stressMultiplier` got 0 (stalling its motor), the wire item went on to the
+distance check after dropping a removed connector, `StringFormatUtil` indexed past its postfixes from
+10^18 on, the motor wrote `eUse` as a float and read it as a long, and CC: Tweaked's motor
+`getTier` was not final.
+
 Still only checkable by playing: balance and feel, the energiser's beam and the stirling engine's
 flywheel in motion, placing wires by hand, reactor overheating and corium, other energy mods
 through Team Reborn Energy, and long sessions.

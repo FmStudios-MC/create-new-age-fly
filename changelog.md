@@ -1,4 +1,16 @@
 ------------------------------------------------------
+Version 1.2.1-fly.1.21.8 (unofficial Fabric port)
+------------------------------------------------------
+First full release of the port to Minecraft 1.21.8.
+#### Bug Fixes
+- The bundled "Monkey Edition" datapack is no longer marked as made for an older version
+- Wrenching an electrical connector before its first tick no longer causes an error
+- A motor extension loaded without a saved multiplier no longer stops its motor
+- A wire bound to a removed connector no longer reports "too far" when unbound
+- Number formatting in tooltips no longer crashes on values of 10^18 and above
+- The motor's energy use is saved as a whole number
+
+------------------------------------------------------
 Version 1.2.1-fly.1.21.8-beta.1 (unofficial Fabric port)
 ------------------------------------------------------
 First beta of the port to Minecraft 1.21.8, ported from 1.2.1-fly.1.21.10-beta.1 with the same
