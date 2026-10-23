@@ -63,7 +63,7 @@ public final class KineticRenderSupport {
     /**
      * A cached buffer to draw on submit. Cached buffers are shared between block entities, and their
      * transforms are reset by every {@code renderInto}, so the transform, light and colour are applied
-     * when the geometry is rendered, not when the state is extracted.
+     * when the geometry is rendered, not when the state is extracted. {@code color} is ARGB.
      */
     public record Part(SuperByteBuffer buffer, RenderType renderType, int light, int color,
                        @Nullable UnaryOperator<SuperByteBuffer> transform) implements SubmitNodeCollector.CustomGeometryRenderer {
@@ -78,7 +78,9 @@ public final class KineticRenderSupport {
         @Override
         public void render(PoseStack.Pose pose, VertexConsumer consumer) {
             SuperByteBuffer transformed = transform != null ? transform.apply(buffer) : buffer;
-            transformed.light(light).color(color).renderInto(pose, consumer);
+            // SuperByteBuffer.color(int) is RGB and draws opaque; the energiser's beam needs its alpha.
+            transformed.light(light).color(color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, color >>> 24)
+                    .renderInto(pose, consumer);
         }
     }
 }

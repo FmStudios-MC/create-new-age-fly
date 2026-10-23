@@ -1,4 +1,12 @@
 ------------------------------------------------------
+Version 1.2.1-fly.1.21.10 (unofficial Fabric port)
+------------------------------------------------------
+First full release of the port to Minecraft 1.21.10, with the fixes of 1.2.1-fly.1.21.11.
+#### Bug Fixes
+- The energiser's beam is drawn as faint as on the original again instead of at full brightness
+- The bundled "Monkey Edition" datapack is no longer marked as made for an older version
+
+------------------------------------------------------
 Version 1.2.1-fly.1.21.10-beta.1 (unofficial Fabric port)
 ------------------------------------------------------
 First beta of the port to Minecraft 1.21.10, ported from 1.2.1-fly.1.21.11-beta.1 with the same

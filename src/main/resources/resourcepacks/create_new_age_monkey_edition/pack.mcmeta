@@ -1,6 +1,7 @@
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": 88,
+    "max_format": 88,
     "description": [
       {
         "text": "Removes recipes for less realistic items.",

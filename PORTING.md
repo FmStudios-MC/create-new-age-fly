@@ -37,6 +37,12 @@ Flywheel is off, are not covered by the screenshots.
 moved back to Minecraft 1.21.10 with Create Fly `1.21.10-6.0.9-2`; see *1.21.10 port*. CC: Tweaked has
 no 1.21.10 build, so the peripherals are compiled but not tested.
 
+**Release review, 2026-10-23 → first full release `1.2.1-fly.1.21.10`.** The two fixes of the
+`1.2.1-fly.1.21.11` release were missing here, as the branch was cut from the 1.21.11 beta: the
+energiser's beam alpha (`KineticRenderSupport.Part` passes ARGB as four channels, since Create Fly
+1.21.10's `SuperByteBuffer.color(int)` forces alpha 255 too) and the Monkey Edition datapack's
+format (now `min_format`/`max_format` 88, 1.21.10's data format).
+
 Still only checkable by playing: balance and feel, the energiser's beam and the stirling engine's
 flywheel in motion, placing wires by hand, reactor overheating and corium, other energy mods
 through Team Reborn Energy, and long sessions.
